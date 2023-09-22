@@ -10,24 +10,52 @@ datasource db {
   url      = env("pgsql://sats@localhost:5432/sats")
 }
 
-model Student {
-  id           Int    @id @default(autoincrement())
-  registration String
-  givenName    String
-  familyName   String
-
-  tutor   Tutor @relation(fields: [tutorId], references: [id])
-  tutorId Int
-
-  biometricData String
+model User {
+  id        Int    @id @default(autoincrement())
+  givenName String
 }
 
 model Tutor {
-  id      Int       @id @default(autoincrement())
-  Student Student[]
-
+  id          Int       @id @default(autoincrement())
+  Student     Student[]
   givenName   String
   familyName  String
   phoneNumber String
   email       String
+}
+
+model Student {
+  id            Int    @id @default(autoincrement())
+  registration  String
+  givenName     String
+  familyName    String
+  tutor         Tutor  @relation(fields: [tutorId], references: [id])
+  tutorId       Int
+  biometricData String
+}
+
+model Group {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  // falta checar lo del IDalumno relacion
+  groupStatus Boolean
+  name        String!
+  color       String!
+  description String
+  entryHour   DateTime
+  exitHour    DateTime
+}
+
+model Attendance {
+  // checar IDAlumno relacion
+  attendanceDate      DateTime
+  attendanceEntryHour DateTime
+  attendanceExitHour  DateTime
+}
+
+model Message {
+  // checar IDAlumno y IDprofeso relacion
+  message     String
+  messageHour DateTime
 }
