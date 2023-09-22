@@ -10,6 +10,14 @@ datasource db {
   url      = env("pgsql://sats@localhost:5432/sats")
 }
 
+model User {
+  id         Int     @id @default(autoincrement())
+  authId     String  @unique
+  givenName  String
+  familyName String
+  isAdmin    Boolean
+}
+
 model Student {
   id           Int    @id @default(autoincrement())
   registration String
