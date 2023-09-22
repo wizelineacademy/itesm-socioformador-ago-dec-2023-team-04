@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("pgsql://sats@localhost:5432/sats")
+}
+
+model Student {
+  id           Int    @id @default(autoincrement())
+  registration String
+  givenName    String
+  familyName   String
+
+  tutor   Tutor @relation(fields: [tutorId], references: [id])
+  tutorId Int
+
+  biometricData String
+}
+
+model Tutor {
+  id      Int       @id @default(autoincrement())
+  Student Student[]
+
+  givenName   String
+  familyName  String
+  phoneNumber String
+  email       String
+}
