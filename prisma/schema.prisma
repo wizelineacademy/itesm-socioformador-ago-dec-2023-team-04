@@ -7,21 +7,28 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("pgsql://sats@localhost:5432/sats")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  givenName String
+  id         Int     @id @default(autoincrement())
+  authId     String  @unique
+  givenName  String
+  familyName String
+  groups     Group[]
 }
 
 model Tutor {
-  id          Int       @id @default(autoincrement())
-  Student     Student[]
+  id Int @id @default(autoincrement())
+
   givenName   String
   familyName  String
   phoneNumber String
   email       String
+
+  students Student[]
+
+  tutorNotifications TutorNotification[]
 }
 
 model Student {
@@ -29,40 +36,61 @@ model Student {
   registration  String
   givenName     String
   familyName    String
-  tutor         Tutor  @relation(fields: [tutorId], references: [id])
-  tutorId       Int
-  biometricData String
+  biometricData Bytes
+
+  tutors Tutor[]
+
+  attendances        Attendance[]
+  tutorNotifications TutorNotification[]
+}
+
+model Color {
+  id     Int     @id @default(autoincrement())
+  code   String  @db.VarChar(6)
+  groups Group[]
 }
 
 model Group {
-  id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  groupStatus Boolean
-  name        String!
-  color       String!
+  id Int @id @default(autoincrement())
+
+  name        String
+  active      Boolean
   description String
-  entryHour   DateTime
-  exitHour    DateTime
+  entryHour   DateTime @db.Time()
+  exitHour    DateTime @db.Time()
+  tz          String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  color   Color @relation(fields: [colorId], references: [id])
+  colorId Int
+
+  attendances Attendance[]
 }
 
 model Attendance {
   id                  Int      @id @default(autoincrement())
-  studentId           Int
-  tutorId             Int
-  attendanceDate      DateTime
-  attendanceEntryHour DateTime
-  attendanceExitHour  DateTime
-  group               Group    @relation(fields: [groupId], references: [id])
-  groupId             Int
+  attendanceDate      DateTime @db.Date()
+  attendanceEntryHour DateTime @db.Time()
+  attendanceExitHour  DateTime @db.Time()
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
 }
 
-model Message {
-  id          Int      @id @default(autoincrement())
-  studentId   Int
-  tutorId     Int
-  message     String
-  messageHour DateTime
-  group       Group    @relation(fields: [groupId], references: [id])
-  groupId     Int
+model TutorNotification {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  tutor   Tutor @relation(fields: [tutorId], references: [id])
+  tutorId Int
+
+  message  String
+  sentTime DateTime
 }
