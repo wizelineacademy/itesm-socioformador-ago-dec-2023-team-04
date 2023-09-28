@@ -28,21 +28,21 @@ export default async function RootLayout({
         <html lang="en" className={sourceSans.className}>
         <UserProvider>
             <body className="bg-stone-900 min-w-full h-screen">
-            <div className="bg-stone-800 h-full absolute flex flex-col w-48 p-4 justify-start items-center">
+            <div className="bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center">
                 <Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
-                <nav className="flex flex-col h-full w-full items-stretch">
-                    <SidebarButton label='Inicio' href='/' iconName='home' className='w-auto'/>
-                    <SidebarButton label='Grupos' href='/groups' iconName='groups' className='w-auto'/>
-                    <SidebarButton label='Alumnos' href='/students' iconName='school' className='w-auto'/>
-                    <SidebarButton label='Estadisticas' href='/statistics' iconName='bar_chart' className='w-auto'/>
-                    <SidebarButton label='Notificaciones' href='/notifications' iconName='notifications' className='w-auto'/>
-                    <SidebarButton label='Mi cuenta' href='/account' iconName='account_circle' className='w-auto'/>
+                <nav className="flex flex-col h-full w-full">
+                    <SidebarButton label='Inicio' href='/' iconName='home' className='w-full'/>
+                    <SidebarButton label='Grupos' href='/groups' iconName='groups' className='w-full'/>
+                    <SidebarButton label='Alumnos' href='/students' iconName='school' className='w-full'/>
+                    <SidebarButton label='Estadisticas' href='/statistics' iconName='bar_chart' className='w-full'/>
+                    <SidebarButton label='Notificaciones' href='/notifications' iconName='notifications' className='w-full'/>
+                    <SidebarButton label='Mi cuenta' href='/account' iconName='account_circle' className='w-full'/>
                     <div className="grow"/>
-                    <SidebarButton label='Administración' href='/admin' iconName='admin_panel_settings' className='w-auto'/>
+                    <SidebarButton label='Administración' href='/admin' iconName='admin_panel_settings' className='w-full'/>
                 </nav>
 
             </div>
-            <div className="min-w-full ml-48">
+            <div className="max-w-[calc(100%-192px)] ml-48">
                 {children}
             </div>
             </body>
