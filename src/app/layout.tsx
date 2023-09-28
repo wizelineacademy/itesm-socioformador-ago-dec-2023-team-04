@@ -6,6 +6,10 @@ import Image from 'next/image';
 import Logo from './logo_full-nobg_196.png';
 import {SidebarButton} from '@/components/SidebarButton';
 import {Source_Sans_3} from "@next/font/google";
+import AccountSidebarButton from '@/components/AccountSidebarButton';
+import {getUserFromSession} from '@/lib/user';
+import {Button} from '@/components/Button';
+import Link from 'next/link';
 
 const sourceSans = Source_Sans_3({
     subsets: ["latin"],
@@ -23,7 +27,7 @@ export default async function RootLayout({
                                          }: {
     children: React.ReactNode
 }) {
-
+    const user = await getUserFromSession();
     return (
         <html lang="en" className={sourceSans.className}>
         <UserProvider>
@@ -35,12 +39,27 @@ export default async function RootLayout({
                     <SidebarButton label='Grupos' href='/groups' iconName='groups' className='w-full'/>
                     <SidebarButton label='Alumnos' href='/students' iconName='school' className='w-full'/>
                     <SidebarButton label='Estadisticas' href='/statistics' iconName='bar_chart' className='w-full'/>
-                    <SidebarButton label='Notificaciones' href='/notifications' iconName='notifications' className='w-full'/>
-                    <SidebarButton label='Mi cuenta' href='/account' iconName='account_circle' className='w-full'/>
+                    <SidebarButton label='Notificaciones' href='/notifications' iconName='notifications'
+                                   className='w-full'/>
                     <div className="grow"/>
-                    <SidebarButton label='Administración' href='/admin' iconName='admin_panel_settings' className='w-full'/>
+                    <AccountSidebarButton className='w-full'>
+                        <p className='text-stone-300 text-lg'>
+                            {`${user.givenName} ${user.familyName}`}
+                        </p>
+                        <p className='text-xs mb-2'>
+                            {user.email}
+                        </p>
+                        <Link href='/account'>
+                            <Button label='Opciones de cuenta' size='xs' variant='tertiary' href='/account'/>
+                        </Link>
+                        <a href='/api/auth/logout'>
+                            <Button label='Cerrar sesión' size='xs' variant='tertiary'/>
+                        </a>
+                    </AccountSidebarButton>
+                    <SidebarButton href='/registration' label='Asistencia' iconName='photo_camera'/>
+                    <SidebarButton label='Administración' href='/admin' iconName='admin_panel_settings'
+                                   className='w-full'/>
                 </nav>
-
             </div>
             <div className="max-w-[calc(100%-192px)] ml-48">
                 {children}

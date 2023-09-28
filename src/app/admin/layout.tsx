@@ -16,7 +16,7 @@ export default function AdminLayout({children}: {
                     Usuarios
                 </AdminNavigationLink>
             </nav>
-            <div >
+            <div className='grow'>
                 {children}
             </div>
         </main>
