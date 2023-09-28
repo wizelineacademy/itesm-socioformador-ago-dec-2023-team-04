@@ -16,6 +16,7 @@ model User {
   givenName  String
   familyName String
   groups     Group[]
+  admin      Boolean
 }
 
 model Tutor {
