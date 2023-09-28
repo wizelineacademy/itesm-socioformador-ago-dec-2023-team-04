@@ -13,6 +13,7 @@ datasource db {
 model User {
   id         Int     @id @default(autoincrement())
   authId     String  @unique
+  email      String  @unique
   givenName  String
   familyName String
   groups     Group[]
