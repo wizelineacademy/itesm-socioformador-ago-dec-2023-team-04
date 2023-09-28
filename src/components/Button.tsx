@@ -6,16 +6,13 @@ import clsx from 'clsx';
 export const Button = React.forwardRef(
     ({
          className,
-         label,
          size = 'md',
          variant = 'primary',
-         iconName,
+         children,
          ...props
      }: {
-        label: string,
         size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
         variant?: 'primary' | 'secondary' | 'tertiary',
-        iconName?: string,
     } & ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
         return <BaseButton {...props}
                            className={clsx(className,
@@ -31,9 +28,8 @@ export const Button = React.forwardRef(
                            )}
                            ref={ref}>
             {
-                iconName ? <span className='material-symbols-rounded me-2'>{iconName}</span> : null
+                children
             }
-            {label}
         </BaseButton>
 
     }

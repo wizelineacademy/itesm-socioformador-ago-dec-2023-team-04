@@ -1,6 +1,7 @@
-@import 'material-symbols';
+@import 'material-symbols/rounded.css';
 
 .material-symbols-rounded {
+    width: 24px;
     font-variation-settings: 'FILL' 1;
 }
 

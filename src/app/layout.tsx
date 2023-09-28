@@ -5,11 +5,13 @@ import './globals.css'
 import Image from 'next/image';
 import Logo from './logo_full-nobg_196.png';
 import {SidebarButton} from '@/components/SidebarButton';
-import {Source_Sans_3} from "@next/font/google";
 import AccountSidebarButton from '@/components/AccountSidebarButton';
 import {getUserFromSession} from '@/lib/user';
 import {Button} from '@/components/Button';
 import Link from 'next/link';
+
+import {Source_Sans_3} from "@next/font/google";
+import Icon from '@/components/Icon';
 
 const sourceSans = Source_Sans_3({
     subsets: ["latin"],
@@ -35,12 +37,26 @@ export default async function RootLayout({
             <div className="bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center">
                 <Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
                 <nav className="flex flex-col h-full w-full">
-                    <SidebarButton label='Inicio' href='/' iconName='home' className='w-full'/>
-                    <SidebarButton label='Grupos' href='/groups' iconName='groups' className='w-full'/>
-                    <SidebarButton label='Alumnos' href='/students' iconName='school' className='w-full'/>
-                    <SidebarButton label='Estadisticas' href='/statistics' iconName='bar_chart' className='w-full'/>
-                    <SidebarButton label='Notificaciones' href='/notifications' iconName='notifications'
-                                   className='w-full'/>
+                    <SidebarButton href='/' className='w-full'>
+                        <Icon name='home' className='me-2'/>
+                        Inicio
+                    </SidebarButton>
+                    <SidebarButton href='/groups' className='w-full'>
+                        <Icon name='groups' className='me-2'/>
+                        Grupos
+                    </SidebarButton>
+                    <SidebarButton href='/students' className='w-full'>
+                        <Icon name='school' className='me-2'/>
+                        Alumnos
+                    </SidebarButton>
+                    <SidebarButton href='/statistics' className='w-full'>
+                        <Icon name='bar_chart' className='me-2'/>
+                        Estadísticas
+                    </SidebarButton>
+                    <SidebarButton href='/notifications' className='w-full'>
+                        <Icon name='notifications' className='me-2'/>
+                        Notificaciones
+                    </SidebarButton>
                     <div className="grow"/>
                     <AccountSidebarButton className='w-full'>
                         <p className='text-stone-300 text-lg'>
@@ -50,15 +66,24 @@ export default async function RootLayout({
                             {user.email}
                         </p>
                         <Link href='/account'>
-                            <Button label='Opciones de cuenta' size='xs' variant='tertiary' href='/account'/>
+                            <Button size='xs' variant='tertiary' href='/account'>
+                                Opciones de cuenta
+                            </Button>
                         </Link>
                         <a href='/api/auth/logout'>
-                            <Button label='Cerrar sesión' size='xs' variant='tertiary'/>
+                            <Button  size='xs' variant='tertiary'>
+                                Cerrar sesión
+                            </Button>
                         </a>
                     </AccountSidebarButton>
-                    <SidebarButton href='/registration' label='Asistencia' iconName='photo_camera'/>
-                    <SidebarButton label='Administración' href='/admin' iconName='admin_panel_settings'
-                                   className='w-full'/>
+                    <SidebarButton href='/assistance' className='w-full'>
+                        <Icon name='photo_camera' className='me-2'/>
+                        Asistencia
+                    </SidebarButton>
+                    <SidebarButton href='/admin' className='w-full'>
+                        <Icon name='admin_panel_settings' className='me-2'/>
+                        Administración
+                    </SidebarButton>
                 </nav>
             </div>
             <div className="max-w-[calc(100%-192px)] ml-48">

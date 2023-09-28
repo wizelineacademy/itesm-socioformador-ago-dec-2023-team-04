@@ -9,8 +9,6 @@ import {Button} from '@/components/Button';
 export const SidebarButton = React.forwardRef(
     ({
          className,
-         label,
-         iconName,
          href,
          slots,
          ...props
@@ -21,12 +19,9 @@ export const SidebarButton = React.forwardRef(
         const selected = (layoutSegment == null && href === '/') || href === `/${layoutSegment}`;
         return <Link href={href}>
             <Button {...props}
-                    iconName={iconName}
-                    label={label}
                     variant='tertiary'
                     className={clsx(selected && 'bg-wRed-600 hover:bg-wRed-600', className)}
-                    ref={ref}>
-            </Button>
+                    ref={ref}/>
         </Link>
 
 
