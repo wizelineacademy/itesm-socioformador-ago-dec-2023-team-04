@@ -10,7 +10,7 @@ import {getUserFromSession} from '@/lib/user';
 import {Button} from '@/components/Button';
 import Link from 'next/link';
 
-import {Source_Sans_3} from "@next/font/google";
+import {Source_Sans_3} from "next/font/google";
 import Icon from '@/components/Icon';
 
 const sourceSans = Source_Sans_3({
