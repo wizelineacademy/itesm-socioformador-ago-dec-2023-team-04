@@ -3,10 +3,16 @@ import {createColumnHelper, getCoreRowModel} from '@tanstack/table-core';
 import {User} from '@prisma/client';
 import {flexRender, useReactTable} from '@tanstack/react-table';
 import clsx from 'clsx';
+import Checkbox from '@/components/Checkbox';
 
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
+    columnHelper.display({
+        id: 'select',
+        header: () => <Checkbox/>,
+        cell: () => <Checkbox/>,
+    }),
     columnHelper.accessor('email', {
         header: 'Correo electrónico',
         cell: info => info.getValue(),
@@ -33,11 +39,11 @@ export default function UserAdminTable({users, className}: { users: User[], clas
     })
 
     return <table className={clsx(className)}>
-        <thead>
+        <thead className="border-stone-700 border-b">
         {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                    <th key={header.id} className='text-left'>
+                    <th key={header.id} className='text-left py-2'>
                         {
                             header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())
                         }
@@ -50,7 +56,7 @@ export default function UserAdminTable({users, className}: { users: User[], clas
         {table.getRowModel().rows.map(row => (
             <tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
-                    <td key={cell.id}>
+                    <td key={cell.id} className='py-2'>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                 ))}
