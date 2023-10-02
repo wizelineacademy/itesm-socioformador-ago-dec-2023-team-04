@@ -1,39 +1,77 @@
 {
-  "name": "itesm-socioformador-ago-dec-2023-team-04",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@auth0/nextjs-auth0": "^3.1.0",
-    "@mui/base": "^5.0.0-beta.17",
-    "@prisma/client": "^5.3.1",
-    "@radix-ui/react-avatar": "^1.0.4",
-    "@radix-ui/react-checkbox": "^1.0.4",
-    "@radix-ui/react-popover": "^1.0.7",
-    "@radix-ui/react-separator": "^1.0.3",
-    "@tanstack/react-table": "^8.10.3",
-    "@types/node": "20.7.1",
-    "@types/react": "18.2.23",
-    "@types/react-dom": "18.2.8",
-    "autoprefixer": "10.4.16",
-    "axios": "^1.5.1",
-    "clsx": "^2.0.0",
-    "eslint": "8.50.0",
-    "eslint-config-next": "13.5.3",
-    "material-symbols": "^0.13.0",
-    "next": "13.5.3",
-    "postcss": "8.4.31",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.2.2"
-  },
-  "devDependencies": {
-    "prisma": "^5.3.1"
-  }
+	"name": "itesm-socioformador-ago-dec-2023-team-04",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "xo",
+		"test": "xo"
+	},
+	"dependencies": {
+		"@auth0/nextjs-auth0": "^3.1.0",
+		"@mui/base": "^5.0.0-beta.17",
+		"@next/eslint-plugin-next": "^13.5.3",
+		"@prisma/client": "^5.3.1",
+		"@radix-ui/react-avatar": "^1.0.4",
+		"@radix-ui/react-checkbox": "^1.0.4",
+		"@radix-ui/react-popover": "^1.0.7",
+		"@radix-ui/react-separator": "^1.0.3",
+		"@tanstack/react-table": "^8.10.3",
+		"@tanstack/table-core": "^8.10.3",
+		"@types/node": "20.7.1",
+		"@types/react": "18.2.23",
+		"@types/react-dom": "18.2.8",
+		"autoprefixer": "10.4.16",
+		"axios": "^1.5.1",
+		"clsx": "^2.0.0",
+		"material-symbols": "^0.13.0",
+		"next": "13.5.3",
+		"postcss": "8.4.31",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"tailwindcss": "3.3.3",
+		"typescript": "5.2.2"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^6.7.3",
+		"@typescript-eslint/parser": "^6.7.3",
+		"eslint": "^8.50.0",
+		"eslint-config-xo": "^0.43.1",
+		"eslint-config-xo-react": "^0.27.0",
+		"eslint-config-xo-typescript": "^1.0.1",
+		"eslint-plugin-ava": "^14.0.0",
+		"eslint-plugin-import": "^2.28.1",
+		"eslint-plugin-no-use-extend-native": "^0.5.0",
+		"eslint-plugin-promise": "^6.1.1",
+		"eslint-plugin-unicorn": "^48.0.1",
+		"prisma": "^5.3.1",
+		"xo": "^0.56.0"
+	},
+	"eslintConfig": {
+		"env": {
+			"node": true,
+			"es6": true
+		},
+		"rules": {
+			"react/require-default-props": "off",
+			"n/file-extension-in-import": "off",
+			"n/prefer-global/process": "off",
+			"new-cap": "off"
+		},
+		"extends": [
+			"plugin:@next/next/recommended",
+			"xo",
+			"xo-typescript",
+			"xo-react",
+			"./node_modules/xo/config/plugins.cjs"
+		],
+		"ignorePatterns": [
+			"tailwind.config.ts",
+			"postcss.config.js",
+			"next.config.js",
+			"next-env.d.ts"
+		]
+	}
 }

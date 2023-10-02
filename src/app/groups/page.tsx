@@ -1,5 +1,7 @@
-export default function Home() {
-    return <main className="w-full">
+import React from 'react';
 
-    </main>
+export default function Home() {
+	return (
+		<main className='w-full'/>
+	);
 }
