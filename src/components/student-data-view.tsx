@@ -10,6 +10,5 @@ export default function StudentDataView({className}: {readonly className?: strin
 				Seleccione a un alumno para mostrar su información
 			</p>
 		</div>
-
 	);
 }
