@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import {createColumnHelper, getCoreRowModel} from '@tanstack/table-core';
 import {type Student} from '@prisma/client';
 import {flexRender, useReactTable} from '@tanstack/react-table';
