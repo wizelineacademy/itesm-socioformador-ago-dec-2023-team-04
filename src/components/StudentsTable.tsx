@@ -3,7 +3,7 @@ import {createColumnHelper, getCoreRowModel} from '@tanstack/table-core';
 import {Student} from '@prisma/client';
 import {flexRender, useReactTable} from '@tanstack/react-table';
 import clsx from 'clsx';
-import Checkbox from '@/components/Checkbox';
+import Checkbox from '@/components/checkbox.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
