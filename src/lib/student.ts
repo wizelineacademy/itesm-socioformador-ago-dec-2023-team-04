@@ -1,6 +1,6 @@
-import prisma from '@/lib/prisma';
-import {Student} from '@prisma/client';
+import {type Student} from '@prisma/client';
+import prisma from '@/lib/prisma.ts';
 
 export async function getAllStudents(): Promise<Student[]> {
-    return prisma.student.findMany();
+	return prisma.student.findMany();
 }

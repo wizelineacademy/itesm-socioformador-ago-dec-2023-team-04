@@ -6,6 +6,8 @@ export default async function middleware(request: NextRequest) {
 	const response = new NextResponse();
 	const session = await getSession(request, response);
 
+	console.log(session);
+
 	if (session === null || session === undefined) {
 		return NextResponse.redirect(new URL('/api/auth/login', request.url));
 	}
