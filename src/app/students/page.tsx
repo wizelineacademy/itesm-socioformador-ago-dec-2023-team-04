@@ -14,7 +14,7 @@ export default async function Students() {
 					<div className='p-6 w-auto rounded-lg bg-stone-800 flex-1'>
 						<StudentsTable students={students} className='w-full'/>
 					</div>
-					<StudentDataView className='p-12 w-96 h rounded-lg bg-stone-800 text-center text-base flex justify-center flex-col items-center'/>
+					<StudentDataView className='p-12 w-80 h rounded-lg bg-stone-800 text-center text-base flex justify-center flex-col items-center'/>
 				</div>
 			</div>
 		</main>
