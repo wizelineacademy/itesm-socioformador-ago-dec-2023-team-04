@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import {createColumnHelper, getCoreRowModel} from '@tanstack/table-core';
 import {type User} from '@prisma/client';
@@ -41,10 +40,6 @@ const columns = [
 			</div>
 		),
 	}),
-	columnHelper.accessor('id', {
-		header: 'ID',
-		cell: info => info.getValue(),
-	}),
 	columnHelper.accessor('email', {
 		header: 'Correo electrónico',
 		cell: info => info.getValue(),
@@ -73,27 +68,37 @@ const columns = [
 	}),
 ];
 
-export default function UserAdminTable({users, className}: {readonly users: User[]; readonly className?: string}) {
+export default function UserAdminTable(
+	{
+		initialUsers,
+		className,
+		userSelection,
+		onUserSelectionChange,
+	}: {
+		readonly initialUsers: User[];
+		readonly className?: string;
+		readonly userSelection: Record<string, boolean>;
+		readonly onUserSelectionChange: (newSelection: (Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>))) => void;
+	}) {
 	const {data} = useQuery('users', async () => {
 		const result = await axios.get<User[]>('/api/users');
 		console.log(result);
 		return result.data;
 	}, {
-		initialData: users,
+		initialData: initialUsers,
 		staleTime: 5000,
 	});
-
-	const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
 	const table = useReactTable({
 		data: data ?? [],
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		state: {
-			rowSelection,
+			rowSelection: userSelection,
 		},
 		enableRowSelection: true,
-		onRowSelectionChange: setRowSelection,
+		onRowSelectionChange: onUserSelectionChange,
+		getRowId: ({id}) => id.toString(),
 	});
 
 	const router = useRouter();
