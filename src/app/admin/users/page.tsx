@@ -1,18 +1,14 @@
 import React from 'react';
-import UserAdminTable from '@/components/user-admin-table.tsx';
-import {getAllUsers} from '@/lib/user.ts';
+import Icon from '@/components/icon.tsx';
 
-export default async function Users() {
-	const users = await getAllUsers();
+export default function UsersPage() {
 	return (
-		<div>
-			<h1 className='text-4xl mb-4'>
-				Usuarios
-			</h1>
-
-			<div className='bg-stone-800 p-4 rounded'>
-				<UserAdminTable users={users} className='w-full'/>
-			</div>
+		<div className='flex flex-col justify-center items-center w-full h-full text-stone-400'>
+			<Icon name='person'/>
+			<h2 className='text-center w-32'>
+				Selecciona un usuario para ver sus detalles.
+			</h2>
 		</div>
+
 	);
 }

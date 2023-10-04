@@ -29,6 +29,23 @@ export async function getUserFromSession(): Promise<User> {
 	return getUserByAuthId(session.user.sub as string);
 }
 
-export async function getAllUsers(): Promise<User[]> {
-	return prisma.user.findMany();
-}
+/**
+ * Retrieves all users.
+ *
+ * @function getAllUsers
+ * @returns {Promise<Array>} - A promise that resolves to an array of all users.
+ */
+export const getAllUsers = cache(async () => prisma.user.findMany());
+
+/**
+ * Retrieves a user based on the given id.
+ *
+ * @param {number} id - The id of the user.
+ * @returns {Promise<User>} - A promise that resolves to the user object, or null if user does not exist.
+ */
+export const getUser = cache(async (id: number) => prisma.user.findUnique({
+	where: {
+		id,
+	},
+}));
+
