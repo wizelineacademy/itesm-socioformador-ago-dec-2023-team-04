@@ -1,4 +1,8 @@
-type ServerActionSuccess<Data=never> = {
+type ServerActionSuccess = {
+	success: true;
+};
+
+type ServerActionSuccessWithData<Data> = {
 	success: true;
 	data: Data;
 };
@@ -9,4 +13,4 @@ type ServerActionFailure = {
 	message: string;
 };
 
-export type ServerActionResult<Data=never> = ServerActionSuccess<Data> | ServerActionFailure;
+export type ServerActionResult<Data=undefined> = (Data extends undefined ? ServerActionSuccess : ServerActionSuccessWithData<Data>) | ServerActionFailure;

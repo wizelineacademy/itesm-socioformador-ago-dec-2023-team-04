@@ -18,7 +18,7 @@ export const Button = React.forwardRef(
 		<BaseButton
 			{...props}
 			ref={ref}
-			disabled
+			disabled={disabled}
 			className={clsx(className,
 				'flex items-center text-stone-300  w-fit rounded ',
 				variant === 'primary' && !disabled && 'bg-wRed-600 hover:bg-wRed-500',

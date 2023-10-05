@@ -78,10 +78,13 @@ export default async function RootLayout({
 								<Icon name='photo_camera' className='me-2'/>
 								Asistencia
 							</SidebarButton>
-							<SidebarButton href='/admin' className='w-full'>
-								<Icon name='admin_panel_settings' className='me-2'/>
-								Administración
-							</SidebarButton>
+							{
+								user.admin
+									? <SidebarButton href='/admin' className='w-full'>
+										<Icon name='admin_panel_settings' className='me-2'/>
+										Administración
+									</SidebarButton> : null
+							}
 						</nav>
 					</div>
 					<div className='max-w-[calc(100%-192px)] ml-48 min-h-screen'>
