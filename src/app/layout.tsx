@@ -4,8 +4,8 @@ import Link from 'next/link';
 import {Source_Sans_3} from 'next/font/google';
 import Image from 'next/image';
 import Logo from './logo_full-nobg_196.png';
-import './globals.css';
-import UserProvider from '@/components/user-provider.tsx';
+import '@/app/globals.css';
+import ClientProviders from '@/components/client-providers.tsx';
 import {SidebarButton} from '@/components/sidebar-button.tsx';
 import AccountSidebarButton from '@/components/account-sidebar-button.tsx';
 import {getUserFromSession} from '@/lib/user.ts';
@@ -29,8 +29,8 @@ export default async function RootLayout({
 }) {
 	const user = await getUserFromSession();
 	return (
-		<html lang='en' className={sourceSans.className}>
-			<UserProvider>
+		<html lang='es' className={sourceSans.variable}>
+			<ClientProviders>
 				<body className='bg-stone-900 min-w-full h-screen'>
 					<div className='bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center'>
 						<Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
@@ -78,17 +78,17 @@ export default async function RootLayout({
 								<Icon name='photo_camera' className='me-2'/>
 								Asistencia
 							</SidebarButton>
-							<SidebarButton href='/admin' className='w-full'>
-								<Icon name='admin_panel_settings' className='me-2'/>
-								Administración
-							</SidebarButton>
+							{
+								user.admin
+									? <SidebarButton href='/admin' className='w-full'> <Icon name='admin_panel_settings' className='me-2'/>Administración</SidebarButton> : null
+							}
 						</nav>
 					</div>
-					<div className='max-w-[calc(100%-192px)] ml-48'>
+					<div className='max-w-[calc(100%-192px)] ml-48 min-h-screen'>
 						{children}
 					</div>
 				</body>
-			</UserProvider>
+			</ClientProviders>
 		</html>
 	);
 }
