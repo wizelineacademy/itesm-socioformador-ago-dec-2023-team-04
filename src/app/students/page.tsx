@@ -1,6 +1,6 @@
 import React from 'react';
-import StudentsTable from '@/components/students-table.tsx';
-import StudentDataView from '@/components/student-data-view.tsx';
+import StudentsTable from '@/app/students/create/students-table.tsx';
+import StudentDataView from '@/app/students/create/student-data-view.tsx';
 import {getAllStudents} from '@/lib/student.ts';
 
 export default async function Students() {
