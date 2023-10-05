@@ -80,10 +80,7 @@ export default async function RootLayout({
 							</SidebarButton>
 							{
 								user.admin
-									? <SidebarButton href='/admin' className='w-full'>
-										<Icon name='admin_panel_settings' className='me-2'/>
-										Administración
-									</SidebarButton> : null
+									? <SidebarButton href='/admin' className='w-full'> <Icon name='admin_panel_settings' className='me-2'/>Administración</SidebarButton> : null
 							}
 						</nav>
 					</div>
