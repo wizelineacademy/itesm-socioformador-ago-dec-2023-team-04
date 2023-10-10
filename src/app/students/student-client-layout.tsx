@@ -11,11 +11,35 @@ import StudentsTable from '@/app/students/students-table.tsx';
 import deleteStudent from '@/app/students/delete-students-action.ts';
 import SearchBar from '@/components/search-bar.tsx';
 
+function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void;readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
+	return (
+		<Popover.Root>
+			<Popover.Trigger asChild>
+				<Button {...props} variant='destructive'> <Icon
+					name='delete'/>
+				</Button>
+			</Popover.Trigger>
+			<Popover.Portal>
+				<Popover.Content align='end'>
+					<Popover.Arrow className='fill-stone-700'/>
+					<div className='bg-stone-700 p-4 w-48 rounded'>
+						<p className='text-stone-200 mb-2 text-sm'>
+							{confirmationMessage}
+						</p>
+						<Button variant='destructive' size='sm' onClick={onClick}> Borrar </Button>
+					</div>
+				</Popover.Content>
+			</Popover.Portal>
+		</Popover.Root>
+	);
+}
+
 export default function StudentClientLayout({children, initialStudents}: {
 	readonly initialStudents: Student[];
 	readonly children: React.ReactNode;
 }) {
-	const [studentSelection, setStudentSelection] = React.useState<Record<string, boolean>>({});
+	const [studentSelection, setStudentSelection] = useState<Record<string, boolean>>({});
+	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const queryClient = useQueryClient();
 
 	const handleDeleteClick = async () => {
@@ -32,34 +56,20 @@ export default function StudentClientLayout({children, initialStudents}: {
 				<h1 className='text-4xl'>
 					Alumnos
 				</h1>
-				<SearchBar/>
 				<Spacer/>
-				<Popover.Root>
-					<Popover.Trigger asChild>
-						<Button variant='destructive' disabled={Object.keys(studentSelection).length === 0}> <Icon
-							name='delete'/>
-						</Button>
-					</Popover.Trigger>
-					<Popover.Portal>
-						<Popover.Content align='end'>
-							<Popover.Arrow className='fill-stone-700'/>
-							<div className='bg-stone-700 p-4 w-48 rounded'>
-								<p className='text-stone-200 mb-2 text-sm'>
-									¿Borrar los registros seleccionados?
-								</p>
-								<Button variant='destructive' size='sm' onClick={handleDeleteClick}> Borrar </Button>
-							</div>
-						</Popover.Content>
-					</Popover.Portal>
-				</Popover.Root>
-				<Link href='/students/create'>
-					<Button variant='secondary'><Icon name='add'/></Button>
-				</Link>
+				<SearchBar value={globalFilter} onChange={setGlobalFilter}/>
+				<div className='w-72 flex gap-4 justify-end'>
+					<DeleteButton confirmationMessage='¿Borrar los registros seleccionados?' disabled={Object.keys(studentSelection).length === 0} onClick={handleDeleteClick}/>
+					<Link href='/students/create'>
+						<Button variant='secondary'><Icon name='add'/></Button>
+					</Link>
+				</div>
 			</div>
 
 			<div className='flex gap-4 h-full'>
 				<div className='bg-stone-800 grow rounded'>
 					<StudentsTable
+						globalFilter={globalFilter}
 						initialStudents={initialStudents} className='w-full'
 						studentSelection={studentSelection} onStudentSelectionChange={setStudentSelection}/>
 				</div>

@@ -1,8 +1,7 @@
-'use client';
 import React, {useState} from 'react';
-import {createColumnHelper, getCoreRowModel} from '@tanstack/table-core';
+import {createColumnHelper, getCoreRowModel, type SortingState} from '@tanstack/table-core';
 import {type Student} from '@prisma/client';
-import {flexRender, useReactTable, getSortedRowModel, getFilteredRowModel} from '@tanstack/react-table';
+import {flexRender, getFilteredRowModel, getSortedRowModel, useReactTable} from '@tanstack/react-table';
 import clsx from 'clsx';
 import {useQuery} from 'react-query';
 import axios from 'axios';
@@ -10,7 +9,6 @@ import Link from 'next/link';
 import Checkbox from '@/components/checkbox.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import onChange from '@/components/search-bar.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -72,10 +70,12 @@ export default function StudentsTable(
 		className,
 		studentSelection,
 		onStudentSelectionChange,
+		globalFilter,
 	}:
 	{
 		readonly initialStudents: Student[];
 		readonly className?: string;
+		readonly globalFilter?: string;
 		readonly studentSelection: Record<string, boolean>;
 		readonly onStudentSelectionChange: (newSelection: (Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>))) => void;
 	},
@@ -89,8 +89,7 @@ export default function StudentsTable(
 		staleTime: 5000,
 	});
 
-	const [sorting, setSorting] = useState([]);
-	const [filtering, setFiltering] = useState('');
+	const [sorting, setSorting] = useState<SortingState>([]);
 	const table = useReactTable({
 		data: data ?? [],
 		columns,
@@ -100,33 +99,34 @@ export default function StudentsTable(
 		state: {
 			rowSelection: studentSelection,
 			sorting,
-			globalFilter: filtering,
+			globalFilter,
 		},
 		enableRowSelection: true,
 		onSortingChange: setSorting,
-		onGlobalFilterChange: setFiltering,
 		onRowSelectionChange: onStudentSelectionChange,
 		getRowId: ({id}) => id.toString(),
 	});
 
 	return (
 		<table className={clsx(className)}>
-			<input
-				type='text' value={filtering} onChange={event => {
-					setFiltering(event.target.value);
-				}}/>
 			<thead className='border-stone-700 border-b'>
 				{table.getHeaderGroups().map(headerGroup => (
-					<tr key={headerGroup.id}>
+					<tr key={headerGroup.id} className='h-14'>
 						{headerGroup.headers.map(header => (
 							<th
-								key={header.id} className='text-left py-2'
+								key={header.id} className='text-left p-2 hover:cursor-pointer'
 								onClick={header.column.getToggleSortingHandler()}
 							>
-								{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-								{{
-									asc: <Icon name='arrow_upward'/>, desc: <Icon name='arrow_downward'/>,
-								}[header.column.getIsSorted() ?? null]}
+								{header.id === 'select'
+									? flexRender(header.column.columnDef.header, header.getContext())
+									: <div className='flex gap-2 items-center'>
+										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+										{header.column.getIsSorted() === 'asc'
+											? <Icon name='arrow_upward' size='md'/> : null}
+										{header.column.getIsSorted() === 'desc'
+											? <Icon name='arrow_downward' size='md'/> : null}
+										{header.column.getIsSorted() === false ? <Icon name='sort' size='md'/> : null}
+									</div>}
 							</th>
 						))}
 					</tr>
