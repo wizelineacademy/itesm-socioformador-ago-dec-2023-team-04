@@ -1,0 +1,12 @@
+import React from 'react';
+import {getAllStudents} from '@/lib/student.ts';
+import StudentClientLayout from '@/app/students/student-client-layout.tsx';
+
+export default async function StudentsLayout({children}: {children: React.ReactNode}) {
+	const students = await getAllStudents();
+	return (
+		<StudentClientLayout initialStudents={students}>
+			{children}
+		</StudentClientLayout>
+	);
+}
