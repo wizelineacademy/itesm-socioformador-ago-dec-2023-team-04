@@ -1,6 +1,7 @@
 module.exports = {
     extends: ['plugin:@next/next/recommended', 'xo-react'],
     ignores: [
+        "./cypress/**",
         "./*",
     ],
     rules: {
