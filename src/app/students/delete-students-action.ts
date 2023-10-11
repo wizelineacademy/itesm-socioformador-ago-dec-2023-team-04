@@ -19,14 +19,10 @@ export default async function deleteUsers(studentIds: number[]): Promise<ServerA
 			// delete all users at the same time. As such, we are doing these operations sequentially,
 			// with a timeout in between all deletions.
 			/* eslint-disable no-await-in-loop */
-			const {authId} = await prisma.user.delete({
+			await prisma.student.delete({
 				where: {
 					id: studentId,
 				},
-			});
-
-			await management.users.delete({
-				id: authId,
 			});
 
 			await new Promise(resolve => {
