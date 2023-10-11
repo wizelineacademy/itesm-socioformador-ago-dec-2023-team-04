@@ -16,9 +16,12 @@ export default withPageAuthRequired(async ({params}) => {
 
 	return (
 		<div>
-			<h1>
-				{`${user.givenName} ${user.familyName}`}
+			<h1 className='text-2xl mb-4'>
+				Edición de usuario
 			</h1>
+			<h2>
+				{`${user.givenName} ${user.familyName}`}
+			</h2>
 		</div>
 	);
 }, {
