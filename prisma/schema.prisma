@@ -42,6 +42,8 @@ model Student {
 
   tutors Tutor[]
 
+  groups Group[]
+
   attendances        Attendance[]
   tutorNotifications TutorNotification[]
 }
@@ -67,6 +69,8 @@ model Group {
 
   color   Color @relation(fields: [colorId], references: [id])
   colorId Int
+
+  students Student[]
 
   attendances Attendance[]
 }
