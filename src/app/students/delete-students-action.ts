@@ -1,7 +1,6 @@
 'use server';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import prisma from '@/lib/prisma.ts';
-import {management} from '@/lib/auth0.ts';
 
 /**
  * Deletes users from the system.
@@ -12,7 +11,7 @@ import {management} from '@/lib/auth0.ts';
  *
  * @throws {Error} If an error occurs during the deletion process.
  */
-export default async function deleteUsers(studentIds: number[]): Promise<ServerActionResult> {
+export default async function deleteStudents(studentIds: number[]): Promise<ServerActionResult> {
 	try {
 		for (const studentId of studentIds) {
 			// This is inefficient. However, the management API will rate limit us if we attempt to
