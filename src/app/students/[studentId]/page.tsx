@@ -13,7 +13,6 @@ export default withPageAuthRequired(async ({params}: {
 }) => {
 	const studentId = params!.studentId!;
 	const student = await getStudentById(Number.parseInt(studentId, 10));
-
 	if (student === null) {
 		notFound();
 	}
@@ -32,6 +31,9 @@ export default withPageAuthRequired(async ({params}: {
 			<h2 className='text-stone-300'>Grupos</h2>
 			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>
 			<Button size='xl' variant='secondary'><Icon name='calendar_month'/>Asistencias</Button>
+			<h1>
+				{`${student.givenName} ${student.familyName}`}
+			</h1>
 		</div>
 	);
 }, {
