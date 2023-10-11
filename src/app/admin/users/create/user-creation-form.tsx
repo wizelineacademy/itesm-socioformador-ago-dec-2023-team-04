@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation';
 import {LabeledInput} from '@/components/labeled-input.tsx';
 import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
-import {userRegistrationSchema} from '@/lib/schemas/userRegistration.ts';
+import {userRegistrationSchema} from '@/lib/schemas/user-registration.ts';
 import LabeledCheckbox from '@/components/labeled-checkbox.tsx';
 import createUser from '@/app/admin/users/create/create-user-action.ts';
 
