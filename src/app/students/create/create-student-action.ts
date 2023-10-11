@@ -21,7 +21,7 @@ export default async function createStudent(formData: FormData): Promise<ServerA
 				registration: registrationData.registration,
 				givenName: registrationData.givenName,
 				familyName: registrationData.familyName,
-				biometricData: (new Uint8Array(32)).buffer,
+				biometricData: Buffer(8),
 			},
 		});
 		return {

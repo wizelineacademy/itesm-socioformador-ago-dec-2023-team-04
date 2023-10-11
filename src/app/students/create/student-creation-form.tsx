@@ -8,7 +8,6 @@ import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
 import createStudent from '@/app/students/create/create-student-action.ts';
-import {getCertainTutors} from '@/lib/student.ts';
 
 export default function StudentCreationForm({className}: {readonly className?: string}) {
 	const [issues, setIssues] = useState(new Map<string, string>());
@@ -25,7 +24,7 @@ export default function StudentCreationForm({className}: {readonly className?: s
 
 			if (result.success) {
 				setErrorMessage(undefined);
-				//   Await queryClient.invalidateQueries('students');
+				await queryClient.invalidateQueries('students');
 				console.log(result.data);
 				// Router.push(`/admin/users/${result.data}`);
 			} else {
@@ -40,6 +39,9 @@ export default function StudentCreationForm({className}: {readonly className?: s
 
 	return (
 		<form className={className} action={handleForm}>
+			<h2 className='mb-2'>
+				Registro de Alumnos
+			</h2>
 			{errorMessage === undefined ? null : <div className='bg-wRed-200 text-wRed-600 rounded p-2 mb-4'>{errorMessage}</div>}
 			<LabeledInput required name='registration' label='Matrícula' className='mb-4 w-full' issueText={issues.get('registration')}/>
 			<LabeledInput required name='givenName' label='Nombre(s)' className='mb-4' issueText={issues.get('givenName')}/>
@@ -52,7 +54,7 @@ export default function StudentCreationForm({className}: {readonly className?: s
 				id='tutor'
 				className='bg-stone-700'
 				onChange={async event => {
-					console.log(await getCertainTutors('Erick'));
+
 				}}
 			/> */}
 			<LabeledInput required name='tutorGivenName' label='Nombre(s)' className='mb-4 w-full' issueText={issues.get('tutorGivenName')}/>
