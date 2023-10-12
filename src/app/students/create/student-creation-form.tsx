@@ -26,7 +26,7 @@ export default function StudentCreationForm({className}: {readonly className?: s
 				setErrorMessage(undefined);
 				await queryClient.invalidateQueries('students');
 				console.log(result.data);
-				// Router.push(`/admin/users/${result.data}`);
+				router.push(`/students/${result.data}`);
 			} else {
 				setErrorMessage(result.message);
 			}
