@@ -28,6 +28,8 @@ export default function StudentCreationForm({className}: {readonly className?: s
 			const result = await createStudent(values);
 			if (result.success) {
 				formikBag.setStatus(undefined);
+				await queryClient.invalidateQueries('students');
+				console.log(result.data);
 				router.push(`/students/${result.data}`);
 			} else {
 				formikBag.setStatus(result.message);

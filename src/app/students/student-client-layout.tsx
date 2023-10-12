@@ -45,7 +45,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 	const handleDeleteClick = async () => {
 		const result = await deleteStudent(Object.entries(studentSelection).filter(([, value]) => value).map(([key]) => Number.parseInt(key, 10)));
 
-		await queryClient.invalidateQueries('users');
+		await queryClient.invalidateQueries('students');
 
 		console.log(result);
 	};
