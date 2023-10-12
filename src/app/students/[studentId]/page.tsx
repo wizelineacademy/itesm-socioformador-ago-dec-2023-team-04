@@ -5,6 +5,10 @@ import {getStudentById} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
 import {Button} from '@/components/button.tsx';
+import {getStudent} from '@/lib/student.ts';
+
+export default withPageAuthRequired(async ({params}) => {
+	const student = await getStudent(Number.parseInt(params.studentId as string, 10));
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {
