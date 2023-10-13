@@ -1,4 +1,5 @@
 'use server';
+import {omit} from 'next/dist/shared/lib/router/utils/omit';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import prisma from '@/lib/prisma.ts';
@@ -22,7 +23,7 @@ export default async function updateUser(formData: FormData, userId: number, aut
 			where: {
 				id: userId, // Use the extracted user ID
 			},
-			data: updatedData,
+			data: omit(updatedData, ['password', 'passwordConfirmation']),
 		});
 
 		if (!user.authId) {
