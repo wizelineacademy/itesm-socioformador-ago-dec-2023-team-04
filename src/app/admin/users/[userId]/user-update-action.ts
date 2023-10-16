@@ -21,7 +21,7 @@ export default async function updateUser(formData: FormData, userId: number, aut
 
 		const user = await prisma.user.update({
 			where: {
-				id: userId, // Use the extracted user ID
+				id: userId,
 			},
 			data: omit(updatedData, ['password', 'passwordConfirmation']),
 		});
@@ -33,10 +33,12 @@ export default async function updateUser(formData: FormData, userId: number, aut
 			};
 		}
 
-		if (updatedData.email !== undefined || updatedData.password !== undefined) {
-			await management.users.update({
-				id: authId,
-			}, {email: updatedData.email, password: updatedData.password});
+		if (updatedData.email !== undefined) {
+			await management.users.update({id: authId}, {email: updatedData.email});
+		}
+
+		if (updatedData.password !== undefined) {
+			await management.users.update({id: authId}, {password: updatedData.password});
 		}
 
 		return {

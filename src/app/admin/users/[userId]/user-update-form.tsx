@@ -2,19 +2,18 @@
 import React, {useState} from 'react';
 import {ZodError} from 'zod';
 import {useQueryClient} from 'react-query';
-import {useRouter} from 'next/navigation';
 import {type User} from '@prisma/client';
 import {LabeledInput} from '@/components/labeled-input.tsx';
 import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {userUpdateSchema} from '@/lib/schemas/user-update.ts';
 import updateUser from '@/app/admin/users/[userId]/user-update-action.ts';
+import LabeledCheckbox from '@/components/labeled-checkbox.tsx';
 
 export default function UserUpdateForm({user, className}: {readonly user: User; readonly className?: string}) {
 	const [issues, setIssues] = useState(new Map<string, string>());
 	const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 	const queryClient = useQueryClient();
-	const router = useRouter();
 
 	const handleForm = async (formData: FormData) => {
 		try {
@@ -87,6 +86,7 @@ export default function UserUpdateForm({user, className}: {readonly user: User; 
 				issueText={issues.get('passwordConfirmation')}
 				defaultValue=''
 			/>
+			<LabeledCheckbox name='admin' label='Es administrador' className='mb-4'/>
 			<Button variant='secondary' type='submit' size='sm'>
 				Actualizar
 			</Button>
