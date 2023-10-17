@@ -12,6 +12,18 @@ export function emptyStringToNull(arg: unknown) {
 	return arg;
 }
 
+export function emptyStringToUndifined(arg: unknown) {
+	if (typeof arg !== 'string') {
+		return arg;
+	}
+
+	if (arg.trim() === '') {
+		return undefined;
+	}
+
+	return arg;
+}
+
 export async function decodeForm<Schema extends z.ZodTypeAny>(
 	formDataOrRequest: FormData | Request,
 	schema: Schema,
