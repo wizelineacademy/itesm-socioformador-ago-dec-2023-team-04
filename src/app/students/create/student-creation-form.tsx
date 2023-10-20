@@ -8,7 +8,6 @@ import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
 import createStudent from '@/app/students/create/create-student-action.ts';
-import {getCertainTutors} from '@/lib/student.ts';
 
 export default function StudentCreationForm({className}: {readonly className?: string}) {
 	const [issues, setIssues] = useState(new Map<string, string>());

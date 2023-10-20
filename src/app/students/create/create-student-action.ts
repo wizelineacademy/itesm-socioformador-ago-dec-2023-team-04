@@ -1,4 +1,5 @@
 'use server';
+import {Buffer} from 'node:buffer';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
@@ -21,7 +22,7 @@ export default async function createStudent(formData: FormData): Promise<ServerA
 				registration: registrationData.registration,
 				givenName: registrationData.givenName,
 				familyName: registrationData.familyName,
-				biometricData: (new Uint8Array(32)).buffer,
+				biometricData: Buffer.alloc(32),
 			},
 		});
 		return {
