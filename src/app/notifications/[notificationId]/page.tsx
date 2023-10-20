@@ -1,33 +1,38 @@
 import React from 'react';
+import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
 import {getNotification} from '@/lib/notification.ts';
+import {getStudentName} from '@/lib/student.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
+import Icon from '@/components/icon.tsx';
 
-export default async function NotificationInfo() {
-	const notification = await getNotification(1);
+export default withPageAuthRequired(async ({params}) => {
+	const notification = await getNotification(Number.parseInt(params.notificationId as string, 10));
+	const student = await getStudentName(notification.studentId);
 
 	if (notification === null) {
 		notFound();
 	}
 
 	return (
-		<div>
-			<div className='text-2xl'>
-				Nombre
-				Apellido
+		<div className='flex flex-col h-full'>
+			<div className='flex justify-between w-full'>
+				<h1 className='text-2xl text-stone-50'>
+					{`${student.givenName} ${student.familyName}`}
+				</h1>
 			</div>
-			<div>
-				<TutorContactInfo infoId={notification.tutorId}/>
-			</div>
-			<div>Envío del mensaje:
-				SMS
-				Correo
-			</div>
-			<div>Fecha de envío:</div>
-			<div>Mensaje:</div>
-			<div className='flex bg-stone-700 justify-between w-full text-xs'>
+			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>
+			<h3 className='text-stone-200'>Fecha de envío:</h3>
+			<p
+				className='text-base text-stone-300 mb-4'
+			>{`${notification.sentTime.toLocaleString('es-MX', {timeZone: 'UTC'})}`}</p>
+			<h3 className='text-stone-200'>Mensaje:</h3>
+			<p className='flex bg-stone-700 justify-between w-full grow rounded text-xs'>
 				{`${notification.message}`}
-			</div>
+			</p>
 		</div>
 	);
-}
+}, {
+	returnTo: '/',
+});
+
