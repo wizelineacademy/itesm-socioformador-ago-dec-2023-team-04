@@ -1,9 +1,15 @@
 import React from 'react';
 import {notFound} from 'next/navigation';
+import clsx from 'clsx';
 import Icon from '@/components/icon.tsx';
 import {getTutorById} from '@/lib/tutor.ts';
 
-export default async function TutorContactInfo(infoId: number) {
+type TutorContactInfoProps = {
+	readonly infoId: number;
+	readonly className?: string;
+};
+
+export default async function TutorContactInfo({infoId, className}: TutorContactInfoProps) {
 	const info = await getTutorById(infoId);
 
 	if (info === null) {
@@ -11,20 +17,20 @@ export default async function TutorContactInfo(infoId: number) {
 	}
 
 	return (
-		<div className='flex rounded bg-stone-700 w-full justify-items-stretch p-6'>
-			<div className='grid grid-rows-3 grid-cols-2 w-full text-base text-stone-300 content-center items-center'>
+		<div className={clsx('flex rounded bg-stone-700 w-full justify-items-stretch p-3', className)}>
+			<div className='grid grid-rows-3 grid-cols-2 w-full text-xs text-stone-300 content-center items-center'>
 				<div className='col-span-2 text-xl text-stone-100'>
 					Tutor
 				</div>
-				<div>`${info.id}`</div>
+				<div className='text-sm'>{info.givenName}</div>
 				<div className='text-right'>
 					<Icon name='phone'/>
-					`${info.phoneNumber}`
+					{info.phoneNumber}
 				</div>
-				<div>`${info.familyName}`</div>
+				<div className='text-sm'>{info.familyName}</div>
 				<div className='text-right'>
 					<Icon name='mail'/>
-					`${info.email}`
+					{info.email}
 				</div>
 			</div>
 		</div>

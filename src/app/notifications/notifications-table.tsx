@@ -111,7 +111,7 @@ export default function NotificationsTable(
 		<table className={clsx(className)}>
 			<thead className='border-stone-700 border-b'>
 				{table.getHeaderGroups().map(headerGroup => (
-					<tr key={headerGroup.id} className='h-14'>
+					<tr key={headerGroup.id} className='h-14 text-stone-100'>
 						{headerGroup.headers.map(header => (
 							<th
 								key={header.id} className='text-left p-2 hover:cursor-pointer'
