@@ -21,7 +21,7 @@ export default withPageAuthRequired(async ({params}) => {
 				<Icon name='edit'/>
 			</div>
 			<div>
-				<TutorContactInfo/>
+				<TutorContactInfo infoId={1}/>
 			</div>
 		</div>
 	);
