@@ -59,8 +59,8 @@ export default function StudentCreationForm({className}: {readonly className?: s
 			<LabeledInput required name='tutorEmail' label='Correo' className='mb-4' issueText={issues.get('tutorEmail')}/>
 			<LabeledInput required name='tutorPhone' label='Teléfono' className='mb-4' issueText={issues.get('tutorPhone')}/>
 			<div className='flex justify-between'>
-				<Button variant='secondary' type='submit' size='sm'>Confirmar</Button>
-				<Button variant='destructive' type='reset' size='sm'>Cancelar</Button>
+				<Button color='secondary' type='submit' size='sm'>Confirmar</Button>
+				<Button color='destructive' type='reset' size='sm'>Cancelar</Button>
 			</div>
 		</form>
 	);

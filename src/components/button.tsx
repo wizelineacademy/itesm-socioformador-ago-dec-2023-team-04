@@ -1,39 +1,115 @@
 'use client';
-import React from 'react';
-import {Button as BaseButton, type ButtonProps} from '@mui/base';
-import clsx from 'clsx';
+import React, {type ReactNode} from 'react';
+import {type AriaButtonProps, useButton} from 'react-aria';
+import {useObjectRef} from '@react-aria/utils';
+import {cva, cx, type VariantProps} from '@/lib/cva.ts';
+
+const buttonVariant = cva({
+	base: 'flex items-center text-stone-300 w-fit rounded',
+	variants: {
+		color: {
+			primary: '',
+			secondary: '',
+			tertiary: '',
+			destructive: '',
+		},
+		variant: {
+			contained: 'enabled:hover:brightness-90 disabled:bg-stone-700 disabled:text-stone-500 disabled:cursor-not-allowed',
+			outlined: 'bg-transparent border',
+			text: 'enabled:hover:bg-stone-700',
+		},
+		size: {
+			xs: 'text-xs p-1',
+			sm: 'text-sm p-1',
+			md: 'text-base p-2',
+			lg: 'text-lg p-3',
+			xl: 'text-xl p-4',
+		},
+	},
+	compoundVariants: [
+		{
+			color: 'primary',
+			variant: 'contained',
+			className: 'bg-wRed-600',
+		},
+		{
+			color: 'secondary',
+			variant: 'contained',
+			className: 'bg-wBlue-700',
+		},
+		{
+			color: 'tertiary',
+			variant: 'contained',
+			className: 'bg-stone-600',
+		},
+		{
+			color: 'destructive',
+			variant: 'contained',
+			className: 'bg-red-600',
+		},
+		{
+			color: 'primary',
+			variant: 'outlined',
+			className: 'border-wRed-500 enabled:hover:bg-wRed-500',
+		},
+		{
+			color: 'secondary',
+			variant: 'outlined',
+			className: 'border-wBlue-500 enabled:hover:bg-wBlue-500',
+		},
+		{
+			color: 'tertiary',
+			variant: 'outlined',
+			className: 'border-stone-600 enabled:hover:bg-stone-600',
+		},
+		{
+			color: 'destructive',
+			variant: 'outlined',
+			className: 'border-red-500 enabled:hover:bg-red-500',
+		},
+		{
+			color: 'primary',
+			variant: 'text',
+			className: 'text-wRed-500',
+		},
+		{
+			color: 'secondary',
+			variant: 'text',
+			className: 'text-wBlue-300',
+		},
+		{
+			color: 'tertiary',
+			variant: 'text',
+			className: 'text-stone-300',
+		},
+		{
+			color: 'destructive',
+			variant: 'text',
+			className: 'text-red-500',
+		},
+	],
+	defaultVariants: {
+		color: 'primary',
+		variant: 'contained',
+		size: 'md',
+	},
+});
+
+export type ButtonProps = {
+	readonly className?: string;
+	readonly children: ReactNode;
+} & VariantProps<typeof buttonVariant> & AriaButtonProps;
 
 export const Button = React.forwardRef(
-	({
-		className,
-		size = 'md',
-		variant = 'primary',
-		children,
-		disabled,
-		...props
-	}: {
-		readonly size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-		readonly variant?: 'primary' | 'secondary' | 'tertiary' | 'destructive';
-	} & ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => (
-		<BaseButton
-			{...props}
-			ref={ref}
-			disabled={disabled}
-			className={clsx(className,
-				'flex items-center text-stone-300  w-fit rounded ',
-				variant === 'primary' && !disabled && 'bg-wRed-600 hover:bg-wRed-500',
-				variant === 'secondary' && !disabled && 'bg-wBlue-700 hover:bg-wBlue-600',
-				variant === 'tertiary' && !disabled && 'hover:bg-stone-700',
-				variant === 'destructive' && !disabled && 'bg-red-600 hover:bg-red-500',
-				disabled && 'bg-stone-600 text-stone-500',
-				size === 'xs' && 'text-xs p-1',
-				size === 'sm' && 'text-md p-1',
-				size === 'md' && 'text-md p-2',
-				size === 'lg' && 'text-md p-3',
-				size === 'xl' && 'text-md p-4',
-			)}
-		>
-			{children}
-		</BaseButton>
-	),
+	(props: ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
+		const {children, className} = props;
+		const buttonRef = useObjectRef(ref);
+		const {buttonProps} = useButton(props, buttonRef);
+		return (
+			// eslint-disable-next-line react/button-has-type
+			<button {...buttonProps} ref={buttonRef} className={cx(buttonVariant(props), className)}>
+				{children}
+			</button>
+		);
+	},
 );

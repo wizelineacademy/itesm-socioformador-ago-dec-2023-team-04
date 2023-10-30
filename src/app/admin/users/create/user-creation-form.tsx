@@ -47,7 +47,7 @@ export default function UserCreationForm({className}: {readonly className?: stri
 			<LabeledInput required name='password' label='Contraseña' className='mb-4' type='password' issueText={issues.get('password')}/>
 			<LabeledInput required name='passwordConfirmation' label='Repite la contraseña' className='mb-4' type='password' issueText={issues.get('passwordConfirmation')}/>
 			<LabeledCheckbox name='admin' label='Es administrador' className='mb-4'/>
-			<Button variant='secondary' type='submit' size='sm'>Confirmar</Button>
+			<Button color='secondary' type='submit' size='sm'>Confirmar</Button>
 		</form>
 	);
 }

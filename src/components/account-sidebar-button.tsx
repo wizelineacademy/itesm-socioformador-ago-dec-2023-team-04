@@ -7,15 +7,13 @@ import Icon from '@/components/icon.tsx';
 
 export default function AccountSidebarButton({
 	children,
-	className,
 }: {
 	readonly children: React.ReactNode;
-	readonly className: string;
 }) {
 	return (
 		<Popover.Root>
 			<Popover.Trigger asChild>
-				<Button className={clsx(className)} variant='tertiary'>
+				<Button variant='text' color='tertiary' className='w-full'>
 					<Icon name='account_circle' className='me-2'/>
 					Mi cuenta
 				</Button>

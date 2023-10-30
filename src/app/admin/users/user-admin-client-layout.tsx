@@ -31,7 +31,7 @@ export default function UserAdminClientLayout({children, initialUsers}: {readonl
 				<Spacer/>
 				<Popover.Root>
 					<Popover.Trigger asChild>
-						<Button variant='destructive' disabled={Object.keys(userSelection).length === 0}> <Icon name='delete'/></Button>
+						<Button color='destructive' isDisabled={Object.keys(userSelection).length === 0}> <Icon name='delete'/></Button>
 					</Popover.Trigger>
 					<Popover.Portal>
 						<Popover.Content align='end'>
@@ -40,13 +40,13 @@ export default function UserAdminClientLayout({children, initialUsers}: {readonl
 								<p className='text-stone-200 mb-2 text-sm'>
 									¿Borrar los registros seleccionados?
 								</p>
-								<Button variant='destructive' size='sm' onClick={handleDeleteClick}> Borrar </Button>
+								<Button color='destructive' size='sm' onPress={handleDeleteClick}> Borrar </Button>
 							</div>
 						</Popover.Content>
 					</Popover.Portal>
 				</Popover.Root>
 				<Link href='/admin/users/create'>
-					<Button variant='secondary'><Icon name='add'/></Button>
+					<Button color='secondary'><Icon name='add'/></Button>
 				</Link>
 			</div>
 

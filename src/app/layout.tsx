@@ -35,28 +35,28 @@ export default async function RootLayout({
 					<div className='bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center'>
 						<Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
 						<nav className='flex flex-col h-full w-full'>
-							<SidebarButton href='/' className='w-full'>
+							<SidebarButton href='/'>
 								<Icon name='home' className='me-2'/>
 								Inicio
 							</SidebarButton>
-							<SidebarButton href='/groups' className='w-full'>
+							<SidebarButton href='/groups'>
 								<Icon name='groups' className='me-2'/>
 								Grupos
 							</SidebarButton>
-							<SidebarButton href='/students' className='w-full'>
+							<SidebarButton href='/students'>
 								<Icon name='school' className='me-2'/>
 								Alumnos
 							</SidebarButton>
-							<SidebarButton href='/statistics' className='w-full'>
+							<SidebarButton href='/statistics'>
 								<Icon name='bar_chart' className='me-2'/>
 								Estadísticas
 							</SidebarButton>
-							<SidebarButton href='/notifications' className='w-full'>
+							<SidebarButton href='/notifications'>
 								<Icon name='notifications' className='me-2'/>
 								Notificaciones
 							</SidebarButton>
 							<div className='grow'/>
-							<AccountSidebarButton className='w-full'>
+							<AccountSidebarButton>
 								<p className='text-stone-300 text-lg'>
 									{`${user.givenName} ${user.familyName}`}
 								</p>
@@ -64,12 +64,12 @@ export default async function RootLayout({
 									{user.email}
 								</p>
 								<Link href='/account'>
-									<Button size='xs' variant='tertiary' href='/account'>
+									<Button size='xs' variant='text' color='secondary' className='mb-2' href='/account'>
 										Opciones de cuenta
 									</Button>
 								</Link>
 								<a href='/api/auth/logout'>
-									<Button size='xs' variant='tertiary'>
+									<Button size='xs' variant='contained' color='secondary'>
 										Cerrar sesión
 									</Button>
 								</a>
