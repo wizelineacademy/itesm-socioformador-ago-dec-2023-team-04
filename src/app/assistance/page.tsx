@@ -1,7 +1,11 @@
 import React from 'react';
+import VideoCaptureComponent from '@/app/assistance/webcam-component.tsx';
 
 export default function Home() {
 	return (
-		<main className='w-full'/>
+		<div>
+			<VideoCaptureComponent/>
+		</div>
+
 	);
 }
