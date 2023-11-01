@@ -1,13 +1,13 @@
 import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
-import {getNotification} from '@/lib/notification.ts';
+import {getNotificationById} from '@/lib/notification.ts';
 import {getStudentName} from '@/lib/student.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
 import Icon from '@/components/icon.tsx';
 
 export default withPageAuthRequired(async ({params}) => {
-	const notification = await getNotification(Number.parseInt(params.notificationId as string, 10));
+	const notification = await getNotificationById(Number.parseInt(params.notificationId as string, 10));
 	const student = await getStudentName(notification.studentId);
 
 	if (notification === null) {
