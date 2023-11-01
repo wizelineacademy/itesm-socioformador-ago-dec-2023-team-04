@@ -8,7 +8,7 @@ export async function getAllStudents(): Promise<Student[]> {
 	return prisma.student.findMany();
 }
 
-export const getStudent = cache(async (id: number) => prisma.student.findUnique({
+export const getStudentById = cache(async (id: number) => prisma.student.findUnique({
 	where: {
 		id,
 	}, include: {
@@ -20,14 +20,6 @@ export const getStudent = cache(async (id: number) => prisma.student.findUnique(
 	},
 }));
 
-export const getStudentName = cache(async (id: number) => prisma.student.findUnique({
-	where: {
-		id,
-	}, select: {
-		givenName: true,
-		familyName: true,
-	},
-}));
 /* Export const getAllStudents = cache(async () => prisma.student.findMany({
 		select: {
 			registration: true,
