@@ -11,6 +11,12 @@ export async function getAllStudents(): Promise<Student[]> {
 export const getStudent = cache(async (id: number) => prisma.student.findUnique({
 	where: {
 		id,
+	}, include: {
+		tutors: {
+			select: {
+				id: true,
+			},
+		},
 	},
 }));
 
