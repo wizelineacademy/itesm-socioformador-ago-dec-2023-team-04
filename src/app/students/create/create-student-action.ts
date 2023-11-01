@@ -1,4 +1,5 @@
 'use server';
+import {Buffer} from 'node:buffer';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
