@@ -21,7 +21,7 @@ export async function getAllNotifications() {
 	} */});
 }
 
-export const getNotification = cache(async (id: number) => prisma.tutorNotification.findUnique({
+export const getNotificationById = cache(async (id: number) => prisma.tutorNotification.findUnique({
 	where: {
 		id,
 	},
