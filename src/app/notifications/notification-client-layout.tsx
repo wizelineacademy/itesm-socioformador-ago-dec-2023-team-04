@@ -5,7 +5,7 @@ import {type TutorNotification} from '@prisma/client';
 import * as Popover from '@radix-ui/react-popover';
 import {useQueryClient} from 'react-query';
 import Spacer from '@/components/spacer.tsx';
-import {Button} from '@/components/button.tsx';
+import {type Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import NotificationsTable from '@/app/notifications/notifications-table.tsx';
 import SearchBar from '@/components/search-bar.tsx';
@@ -13,11 +13,7 @@ import SearchBar from '@/components/search-bar.tsx';
 function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void; readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
 	return (
 		<Popover.Root>
-			<Popover.Trigger asChild>
-				<Button {...props} variant='destructive'> <Icon
-					name='delete'/>
-				</Button>
-			</Popover.Trigger>
+			<Popover.Trigger asChild/>
 			<Popover.Portal>
 				<Popover.Content align='end'>
 					<Popover.Arrow className='fill-stone-700'/>
@@ -25,7 +21,6 @@ function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClic
 						<p className='text-stone-200 mb-2 text-sm'>
 							{confirmationMessage}
 						</p>
-						<Button variant='destructive' size='sm' onClick={onClick}> Borrar </Button>
 					</div>
 				</Popover.Content>
 			</Popover.Portal>
