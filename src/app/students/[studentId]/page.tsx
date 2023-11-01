@@ -3,7 +3,7 @@ import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
 import {getStudent} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
-import TutorContactInfo from '@/components/contact-display.tsx';
+import ContactDisplay from '@/components/contact-display.tsx';
 import {Button} from '@/components/button.tsx';
 
 export default withPageAuthRequired(async ({params}) => {
@@ -22,7 +22,7 @@ export default withPageAuthRequired(async ({params}) => {
 				<Icon name='edit'/>
 			</div>
 			<div>
-				<TutorContactInfo infoId={student.tutors[0].id}/>
+				<ContactDisplay infoId={student.tutors[0].id}/>
 			</div>
 			<h2 className='text-stone-300'>Grupos</h2>
 			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>

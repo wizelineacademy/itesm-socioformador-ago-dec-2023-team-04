@@ -9,7 +9,7 @@ type TutorContactInfoProps = {
 	readonly className?: string;
 };
 
-export default async function TutorContactInfo({infoId, className}: TutorContactInfoProps) {
+export default async function ContactDisplay({infoId, className}: TutorContactInfoProps) {
 	const info = await getTutorById(infoId);
 
 	if (info === null) {

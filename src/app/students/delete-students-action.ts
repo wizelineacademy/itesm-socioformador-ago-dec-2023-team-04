@@ -13,22 +13,11 @@ import prisma from '@/lib/prisma.ts';
  */
 export default async function deleteStudents(studentIds: number[]): Promise<ServerActionResult> {
 	try {
-		for (const studentId of studentIds) {
-			// This is inefficient. However, the management API will rate limit us if we attempt to
-			// delete all users at the same time. As such, we are doing these operations sequentially,
-			// with a timeout in between all deletions.
-			/* eslint-disable no-await-in-loop */
-			await prisma.student.delete({
-				where: {
-					id: studentId,
-				},
-			});
-
-			await new Promise(resolve => {
-				setTimeout(resolve, 500);
-			});
-			/* eslint-enable no-await-in-loop */
-		}
+		await prisma.student.deleteMany({
+			where: {
+				id: {in: studentIds},
+			},
+		});
 
 		return {
 			success: true,
