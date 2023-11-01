@@ -25,6 +25,12 @@ export const getStudentById = cache(async (id: number) => prisma.student.findUni
 export const getStudent = cache(async (id: number) => prisma.student.findUnique({
 	where: {
 		id,
+	}, include: {
+		tutors: {
+			select: {
+				id: true,
+			},
+		},
 	},
 }));
 >>>>>>> 5897b48 (student info view)
