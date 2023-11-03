@@ -6,11 +6,12 @@ import {Button, type ButtonProps} from '@/components/button.tsx';
 
 export type ButtonModalTriggerProps = {
 	readonly children: (close: () => void) => ReactElement;
+	readonly className?: string;
 	readonly label: ReactNode;
-} & OverlayTriggerStateProps & Pick<ButtonProps, 'variant' | 'color'>;
+} & OverlayTriggerStateProps & Pick<ButtonProps, 'size' | 'variant' | 'color'>;
 
 export default function ButtonModalTrigger(props: ButtonModalTriggerProps) {
-	const {children, label, variant, color} = props;
+	const {children, label, className} = props;
 	const state = useOverlayTriggerState(props);
 	const {triggerProps, overlayProps} = useOverlayTrigger({
 		type: 'dialog',
@@ -18,7 +19,7 @@ export default function ButtonModalTrigger(props: ButtonModalTriggerProps) {
 
 	return (
 		<>
-			<Button {...mergeProps(triggerProps, props)} variant={variant} color={color}>{label}</Button>
+			<Button {...mergeProps(triggerProps, props)} className={className}>{label}</Button>
 			{
 				state.isOpen
 					? <Modal {...props} state={state}>

@@ -25,7 +25,7 @@ export default function UserAdminClientLayout({children, initialUsers}: {readonl
 	return (
 		<div className='flex flex-col h-full'>
 			<div className='flex items-top mb-4 gap-4'>
-				<h1 className='text-4xl'>
+				<h1 className='text-4xl text-stone-300'>
 					Usuarios
 				</h1>
 				<Spacer/>
