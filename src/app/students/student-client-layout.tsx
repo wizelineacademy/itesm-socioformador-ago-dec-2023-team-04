@@ -45,13 +45,13 @@ export default function StudentClientLayout({children, initialStudents}: {
 	const handleDeleteClick = async () => {
 		const result = await deleteStudent(Object.entries(studentSelection).filter(([, value]) => value).map(([key]) => Number.parseInt(key, 10)));
 
-		await queryClient.invalidateQueries('users');
+		await queryClient.invalidateQueries('students');
 
 		console.log(result);
 	};
 
 	return (
-		<div className='flex flex-col h-full text-stone-400 p-16'>
+		<div className='flex flex-col h-screen text-stone-400 p-16'>
 			<div className='flex items-top mb-4 gap-4'>
 				<h1 className='text-4xl'>
 					Alumnos

@@ -1,7 +1,8 @@
 import React from 'react';
+import StudentCreationForm from '@/app/students/create/student-creation-form.tsx';
 
 export default function Page() {
 	return (
-		<h1>Hello world</h1>
+		<StudentCreationForm className='w-full'/>
 	);
 }

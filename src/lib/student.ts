@@ -1,4 +1,5 @@
 import {type Student} from '@prisma/client';
+import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 // Import {cache} from "react";
 // export const revalidate = 60;
@@ -6,6 +7,18 @@ import prisma from '@/lib/prisma.ts';
 export async function getAllStudents(): Promise<Student[]> {
 	return prisma.student.findMany();
 }
+
+export const getStudentById = cache(async (id: number) => prisma.student.findUnique({
+	where: {
+		id,
+	}, include: {
+		tutors: {
+			select: {
+				id: true,
+			},
+		},
+	},
+}));
 
 /* Export const getAllStudents = cache(async () => prisma.student.findMany({
 		select: {
