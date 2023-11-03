@@ -6,13 +6,19 @@ import {getStudentById} from '@/lib/student.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
 import Icon from '@/components/icon.tsx';
 
-export default withPageAuthRequired(async ({params}) => {
-	const notification = await getNotificationById(Number.parseInt(params.notificationId as string, 10));
-	const student = await getStudentById(notification.studentId);
+export default withPageAuthRequired(async ({params}: {
+	readonly params?: {
+		notificationId?: string;
+	};
+}) => {
+	const notificationId = params!.notificationId!;
+	const notification = await getNotificationById(Number.parseInt(notificationId, 10));
 
 	if (notification === null) {
 		notFound();
 	}
+
+	const student = await getStudentById(notification.studentId);
 
 	return (
 		<div className='flex flex-col h-full'>
