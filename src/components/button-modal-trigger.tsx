@@ -1,5 +1,5 @@
 import React, {cloneElement, type ReactElement, type ReactNode} from 'react';
-import {useOverlayTrigger} from 'react-aria';
+import {mergeProps, useOverlayTrigger} from 'react-aria';
 import {type OverlayTriggerProps as OverlayTriggerStateProps, useOverlayTriggerState} from 'react-stately';
 import Modal from '@/components/modal.tsx';
 import {Button, type ButtonProps} from '@/components/button.tsx';
@@ -18,7 +18,7 @@ export default function ButtonModalTrigger(props: ButtonModalTriggerProps) {
 
 	return (
 		<>
-			<Button {...triggerProps} variant={variant} color={color}>{label}</Button>
+			<Button {...mergeProps(triggerProps, props)} variant={variant} color={color}>{label}</Button>
 			{
 				state.isOpen
 					? <Modal {...props} state={state}>
