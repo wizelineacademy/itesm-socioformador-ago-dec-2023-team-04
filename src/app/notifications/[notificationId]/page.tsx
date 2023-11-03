@@ -20,6 +20,10 @@ export default withPageAuthRequired(async ({params}: {
 
 	const student = await getStudentById(notification.studentId);
 
+	if (student === null) {
+		notFound();
+	}
+  
 	return (
 		<div className='flex flex-col h-full'>
 			<div className='flex justify-between w-full'>

@@ -13,6 +13,7 @@ export default withPageAuthRequired(async ({params}: {
 }) => {
 	const studentId = params!.studentId!;
 	const student = await getStudentById(Number.parseInt(studentId, 10));
+
 	if (student === null) {
 		notFound();
 	}
