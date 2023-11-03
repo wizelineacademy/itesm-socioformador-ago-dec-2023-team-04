@@ -24,7 +24,7 @@ export default withPageAuthRequired(async ({params}: {
 		<div className='flex flex-col h-full'>
 			<div className='flex justify-between w-full'>
 				<h1 className='text-2xl text-stone-50'>
-					{`${student.givenName} ${student.familyName}`}
+					{/* {`${student.givenName} ${student.familyName}`} */}
 				</h1>
 			</div>
 			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>

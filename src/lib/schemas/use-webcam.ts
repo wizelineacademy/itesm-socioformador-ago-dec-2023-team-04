@@ -33,6 +33,7 @@ export default function useWebcam(props: WebcamProps) {
 				setSelectedCamera(cameraDevices[0].deviceId);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [permissionGranted]);
 
 	useEffect(() => {

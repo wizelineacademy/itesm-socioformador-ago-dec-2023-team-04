@@ -5,10 +5,6 @@ import {getStudentById} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
 import {Button} from '@/components/button.tsx';
-import {getStudent} from '@/lib/student.ts';
-
-export default withPageAuthRequired(async ({params}) => {
-	const student = await getStudent(Number.parseInt(params.studentId as string, 10));
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {
@@ -29,12 +25,21 @@ export default withPageAuthRequired(async ({params}: {
 				</h1>
 				<Icon name='edit'/>
 			</div>
-			<div>
-				<ContactDisplay infoId={student.tutors[0].id}/>
-			</div>
+			{
+				student.tutors.length > 0 && (
+					<div>
+						{
+							student.tutors.map(tutor => (
+								<ContactDisplay key={tutor.id} infoId={tutor.id}/>
+							))
+						}
+
+					</div>
+				)
+			}
 			<h2 className='text-stone-300'>Grupos</h2>
 			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>
-			<Button size='xl' variant='secondary'><Icon name='calendar_month'/>Asistencias</Button>
+			<Button size='xl' color='secondary'><Icon name='calendar_month'/>Asistencias</Button>
 			<h1>
 				{`${student.givenName} ${student.familyName}`}
 			</h1>

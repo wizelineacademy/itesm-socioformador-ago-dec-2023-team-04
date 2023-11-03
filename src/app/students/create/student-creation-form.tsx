@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {useFormik} from 'formik';
 import {toFormikValidate} from 'zod-formik-adapter';
+import {useQueryClient} from 'react-query';
 import BiometricDataDialog from './biometric-data-dialog.tsx';
 import {Button} from '@/components/button.tsx';
 import {type StudentRegistration, studentRegistrationSchema} from '@/lib/schemas/student.ts';
@@ -12,9 +13,8 @@ import TextField from '@/components/text-field.tsx';
 import Icon from '@/components/icon.tsx';
 
 export default function StudentCreationForm({className}: {readonly className?: string}) {
-	const [issues, setIssues] = useState(new Map<string, string>());
-	const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const formik = useFormik<StudentRegistration>({
 		initialValues: {
@@ -39,16 +39,9 @@ export default function StudentCreationForm({className}: {readonly className?: s
 
 	return (
 		<form className={className} onSubmit={formik.handleSubmit}>
-			{
-				formik.status && (
-					<div className='bg-red-600 text-stone-400'>
-						{formik.status}
-					</div>
-				)
-			}
 
-			{errorMessage === undefined ? null
-				: <div className='bg-wRed-200 text-wRed-600 rounded p-2 mb-4'>{errorMessage}</div>}
+			{formik.status && <div className='bg-wRed-200 text-wRed-600 rounded p-2 mb-4'>{formik.status}</div>}
+
 			<TextField
 				isRequired id='registration'
 				label='Matrícula'
