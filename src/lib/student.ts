@@ -12,11 +12,7 @@ export const getStudentById = cache(async (id: number) => prisma.student.findUni
 	where: {
 		id,
 	}, include: {
-		tutors: {
-			select: {
-				id: true,
-			},
-		},
+		tutors: true,
 	},
 }));
 

@@ -56,7 +56,7 @@ const columns = [
 		header: 'Información',
 		cell: info => (
 			<Link href={`/students/${info.getValue()}`}>
-				<Button variant='tertiary' size='sm' className='hover:bg-stone-600'>
+				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-600'>
 					<Icon name='chevron_right'/>
 				</Button>
 			</Link>

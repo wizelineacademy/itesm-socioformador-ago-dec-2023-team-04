@@ -1,4 +1,4 @@
-import type z from 'zod';
+import z from 'zod';
 
 export function emptyStringToNull(arg: unknown) {
 	if (typeof arg !== 'string') {
@@ -33,3 +33,8 @@ export async function decodeForm<Schema extends z.ZodTypeAny>(
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return schema.parse(Object.fromEntries(formData)) as z.infer<Schema>;
 }
+
+export const phoneSchema = (parameters: ({errorMap?: z.ZodErrorMap | undefined; invalid_type_error?: string | undefined; required_error?: string | undefined; description?: string | undefined} & {coerce?: true | undefined}) | undefined) => z
+	.string(parameters)
+	.regex(/\+?[()+\d ]+(x\d+)?/g, 'Ingresa un numero valido')
+	.transform(value => value.replaceAll(/[^+\dx]/g, ''));

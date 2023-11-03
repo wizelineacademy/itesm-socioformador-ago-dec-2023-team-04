@@ -60,7 +60,7 @@ const columns = [
 		header: 'Editar',
 		cell: info => (
 			<Link href={`/admin/users/${info.getValue()}`}>
-				<Button variant='tertiary' size='sm' className='hover:bg-stone-600'>
+				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-600'>
 					<Icon name='edit'/>
 				</Button>
 			</Link>

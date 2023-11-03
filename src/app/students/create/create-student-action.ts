@@ -1,30 +1,21 @@
 'use server';
 import {Buffer} from 'node:buffer';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
-import {decodeForm} from '@/lib/schemas/util.ts';
-import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
+import {type StudentRegistration, studentRegistrationSchema} from '@/lib/schemas/student.ts';
 import prisma from '@/lib/prisma.ts';
 
-export default async function createStudent(formData: FormData): Promise<ServerActionResult<number>> {
+export default async function createStudent(studentRegistration: StudentRegistration): Promise<ServerActionResult<number>> {
 	try {
-		const registrationData = await decodeForm(formData, studentRegistrationSchema);
+		const validatedStudent = studentRegistrationSchema.parse(studentRegistration);
+
+		const biometricData = new Float64Array(validatedStudent.biometricData);
 
 		const student = await prisma.student.create({
 			data: {
-				registration: registrationData.registration,
-				givenName: registrationData.givenName,
-				familyName: registrationData.familyName,
-				biometricData: Buffer(8),
-				tutors: {
-					create: [
-						{
-							givenName: registrationData.tutorGivenName,
-							familyName: registrationData.tutorFamilyName,
-							phoneNumber: registrationData.tutorPhone,
-							email: registrationData.tutorEmail,
-						},
-					],
-				},
+				registration: validatedStudent.registration,
+				givenName: validatedStudent.givenName,
+				familyName: validatedStudent.familyName,
+				biometricData: Buffer.from(biometricData.buffer),
 			},
 		});
 		return {

@@ -87,7 +87,7 @@ export default function UserUpdateForm({user, className}: {readonly user: User; 
 				defaultValue=''
 			/>
 			<LabeledCheckbox name='admin' label='Es administrador' className='mb-4'/>
-			<Button variant='secondary' type='submit' size='sm'>
+			<Button color='secondary' type='submit' size='sm'>
 				Actualizar
 			</Button>
 		</form>

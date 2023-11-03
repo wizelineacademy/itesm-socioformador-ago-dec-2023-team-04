@@ -11,11 +11,11 @@ import StudentsTable from '@/app/students/students-table.tsx';
 import deleteStudent from '@/app/students/delete-students-action.ts';
 import SearchBar from '@/components/search-bar.tsx';
 
-function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void;readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
+function DeleteButton({confirmationMessage, onPress, ...props}: {readonly onPress: () => void;readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'color' | 'children'>) {
 	return (
 		<Popover.Root>
 			<Popover.Trigger asChild>
-				<Button {...props} variant='destructive'> <Icon
+				<Button {...props} color='destructive'> <Icon
 					name='delete'/>
 				</Button>
 			</Popover.Trigger>
@@ -26,7 +26,7 @@ function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClic
 						<p className='text-stone-200 mb-2 text-sm'>
 							{confirmationMessage}
 						</p>
-						<Button variant='destructive' size='sm' onClick={onClick}> Borrar </Button>
+						<Button color='destructive' size='sm' onPress={onPress}> Borrar </Button>
 					</div>
 				</Popover.Content>
 			</Popover.Portal>
@@ -59,9 +59,9 @@ export default function StudentClientLayout({children, initialStudents}: {
 				<Spacer/>
 				<SearchBar value={globalFilter} onChange={setGlobalFilter}/>
 				<div className='w-72 flex gap-4 justify-end'>
-					<DeleteButton confirmationMessage='¿Borrar los registros seleccionados?' disabled={Object.keys(studentSelection).length === 0} onClick={handleDeleteClick}/>
+					<DeleteButton confirmationMessage='¿Borrar los registros seleccionados?' isDisabled={Object.keys(studentSelection).length === 0} onPress={handleDeleteClick}/>
 					<Link href='/students/create'>
-						<Button variant='secondary'><Icon name='add'/></Button>
+						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
 				</div>
 			</div>
