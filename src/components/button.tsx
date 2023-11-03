@@ -5,7 +5,7 @@ import {useObjectRef} from '@react-aria/utils';
 import {cva, cx, type VariantProps} from '@/lib/cva.ts';
 
 const buttonVariant = cva({
-	base: 'flex items-center text-stone-300 w-fit rounded',
+	base: 'flex items-center text-stone-300 w-fit rounded h-fit',
 	variants: {
 		color: {
 			primary: '',

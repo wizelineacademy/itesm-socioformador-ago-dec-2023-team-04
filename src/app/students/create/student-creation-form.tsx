@@ -1,19 +1,18 @@
 'use client';
 import React, {useState} from 'react';
 import {ZodError} from 'zod';
-import {useQueryClient} from 'react-query';
-import {useRouter} from 'next/navigation';
+import BiometricDataDialog from './biometric-data-dialog.tsx';
 import {LabeledInput} from '@/components/labeled-input.tsx';
 import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {studentRegistrationSchema} from '@/lib/schemas/student.ts';
 import createStudent from '@/app/students/create/create-student-action.ts';
+import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 
 export default function StudentCreationForm({className}: {readonly className?: string}) {
 	const [issues, setIssues] = useState(new Map<string, string>());
 	const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-	const queryClient = useQueryClient();
-	const router = useRouter();
+	const [biometricData, setBiometricData] = useState<number[]>();
 
 	const handleForm = async (formData: FormData) => {
 		try {
@@ -24,9 +23,7 @@ export default function StudentCreationForm({className}: {readonly className?: s
 
 			if (result.success) {
 				setErrorMessage(undefined);
-				//   Await queryClient.invalidateQueries('students');
 				console.log(result.data);
-				// Router.push(`/admin/users/${result.data}`);
 			} else {
 				setErrorMessage(result.message);
 			}
@@ -43,6 +40,17 @@ export default function StudentCreationForm({className}: {readonly className?: s
 			<LabeledInput required name='registration' label='Matrícula' className='mb-4 w-full' issueText={issues.get('registration')}/>
 			<LabeledInput required name='givenName' label='Nombre(s)' className='mb-4' issueText={issues.get('givenName')}/>
 			<LabeledInput required name='familyName' label='Apellido(s)' className='mb-4' issueText={issues.get('familyName')}/>
+			<ButtonModalTrigger label='Registrar datos biometricos'>
+				{
+					close => (
+						<BiometricDataDialog
+							close={close}
+							onBiometricDataSubmission={setBiometricData}
+						/>
+					)
+				}
+			</ButtonModalTrigger>
+
 			<h2>
 				Nuevo Tutor
 			</h2>
