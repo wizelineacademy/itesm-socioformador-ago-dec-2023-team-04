@@ -1,13 +1,18 @@
 import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
-import {getStudent} from '@/lib/student.ts';
+import {getStudentById} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
 import {Button} from '@/components/button.tsx';
 
-export default withPageAuthRequired(async ({params}) => {
-	const student = await getStudent(Number.parseInt(params.studentId as string, 10));
+export default withPageAuthRequired(async ({params}: {
+	readonly params?: {
+		studentId?: string;
+	};
+}) => {
+	const studentId = params!.studentId!;
+	const student = await getStudentById(Number.parseInt(studentId, 10));
 
 	if (student === null) {
 		notFound();
