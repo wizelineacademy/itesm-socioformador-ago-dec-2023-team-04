@@ -35,11 +35,11 @@ model Tutor {
 }
 
 model Student {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   registration  String
   givenName     String
   familyName    String
-  biometricData Bytes
+  biometricData Float[]
 
   tutors Tutor[]
 

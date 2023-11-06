@@ -84,9 +84,12 @@ export default async function RootLayout({
 							}
 						</nav>
 					</div>
-					<div className='max-w-[calc(100%-192px)] ml-48 min-h-screen'>
-						{children}
+					<div className='ml-48 h-full'>
+						<div className='max-w-7xl h-full min-h-screen p-4 pt-8 mx-auto'>
+							{children}
+						</div>
 					</div>
+
 				</body>
 			</ClientProviders>
 		</html>
