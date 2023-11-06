@@ -23,13 +23,11 @@ export default withPageAuthRequired(async ({params}: {
 	if (student === null) {
 		notFound();
 	}
-  
+
 	return (
 		<div className='flex flex-col h-full'>
 			<div className='flex justify-between w-full'>
-				<h1 className='text-2xl text-stone-50'>
-					{/* {`${student.givenName} ${student.familyName}`} */}
-				</h1>
+				<h1 className='text-2xl text-stone-50'/>
 			</div>
 			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>
 			<h3 className='text-stone-200'>Fecha de envío:</h3>
