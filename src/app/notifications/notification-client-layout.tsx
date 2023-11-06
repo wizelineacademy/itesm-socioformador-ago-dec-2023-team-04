@@ -37,7 +37,7 @@ export default function NotificationClientLayout({children, initialNotifications
 	const queryClient = useQueryClient();
 
 	return (
-		<div className='flex flex-col h-screen text-stone-400 p-16'>
+		<div className='flex flex-col h-full text-stone-400'>
 			<div className='flex items-top mb-4 gap-4'>
 				<h1 className='text-4xl text-stone-50'>
 					Notificaciones

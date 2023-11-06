@@ -8,14 +8,12 @@ export default async function createStudent(studentRegistration: StudentRegistra
 	try {
 		const validatedStudent = studentRegistrationSchema.parse(studentRegistration);
 
-		const biometricData = new Float64Array(validatedStudent.biometricData);
-
 		const student = await prisma.student.create({
 			data: {
 				registration: validatedStudent.registration,
 				givenName: validatedStudent.givenName,
 				familyName: validatedStudent.familyName,
-				biometricData: Buffer.from(biometricData.buffer),
+				biometricData: validatedStudent.biometricData,
 			},
 		});
 		return {
