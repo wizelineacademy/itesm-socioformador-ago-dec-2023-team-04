@@ -28,12 +28,12 @@ export default function TextField(props: TextFieldProps) {
 	} = useTextField(props, inputRef);
 
 	return (
-		<div className={cx('h-fit', className)}>
+		<div className={cx('group h-fit', className)}>
 			{
 				label && (
 					<label
 						{...labelProps} className={cx(
-							'text-stone-400 text-xs block mb-1',
+							'group-focus-within:text-stone-50 text-stone-400 text-xs block mb-1',
 							isRequired && 'after:content-["_*"]',
 							isDisabled && 'text-stone-500',
 						)}

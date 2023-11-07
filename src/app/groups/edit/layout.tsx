@@ -1,12 +1,12 @@
 import React from 'react';
-import {getAllNotifications} from '@/lib/notification.ts';
-import NotificationClientLayout from '@/app/notifications/notification-client-layout.tsx';
+import EditGroupsClientLayout from '@/app/groups/edit/edit-groups-client-layout.tsx';
+import {getAllGroups} from '@/lib/group.ts';
 
 export default async function NotificationsLayout({children}: {children: React.ReactNode}) {
-	const notifications = await getAllNotifications();
+	const groups = await getAllGroups();
 	return (
-		<NotificationClientLayout initialNotifications={notifications}>
+		<EditGroupsClientLayout initialGroups={groups}>
 			{children}
-		</NotificationClientLayout>
+		</EditGroupsClientLayout>
 	);
 }

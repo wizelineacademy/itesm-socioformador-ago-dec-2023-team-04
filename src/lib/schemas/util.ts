@@ -1,10 +1,6 @@
 import z from 'zod';
 
-export function emptyStringToNull(arg: unknown) {
-	if (typeof arg !== 'string') {
-		return arg;
-	}
-
+export function emptyStringToNull(arg: string) {
 	if (arg.trim() === '') {
 		return null;
 	}
@@ -38,3 +34,5 @@ export const phoneSchema = (parameters: ({errorMap?: z.ZodErrorMap | undefined; 
 	.string(parameters)
 	.regex(/\+?[()+\d ]+(x\d+)?/g, 'Ingresa un numero valido')
 	.transform(value => value.replaceAll(/[^+\dx]/g, ''));
+
+export const nonEmptyString = z.string().transform(emptyStringToNull).pipe(z.string());
