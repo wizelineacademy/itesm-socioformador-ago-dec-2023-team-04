@@ -9,6 +9,8 @@ import {type Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import NotificationsTable from '@/app/notifications/notifications-table.tsx';
 import SearchBar from '@/components/search-bar.tsx';
+import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import TextField from '@/components/text-field.tsx';
 
 function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void; readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
 	return (
@@ -37,17 +39,15 @@ export default function NotificationClientLayout({children, initialNotifications
 	const queryClient = useQueryClient();
 
 	return (
-		<div className='flex flex-col h-full text-stone-400'>
-			<div className='flex items-top mb-4 gap-4'>
-				<h1 className='text-4xl text-stone-50'>
-					Notificaciones
-				</h1>
-				<Spacer/>
-				<SearchBar value={globalFilter} onChange={setGlobalFilter}/>
-				<div className='w-72'/>
-			</div>
-
-			<div className='flex gap-4 h-full'>
+		<TopbarPageLayout
+			title='Notificaciones' topbarItems={
+				<>
+					<Spacer/>
+					<TextField iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+				</>
+			}
+		>
+			<div className='flex gap-4'>
 				<div className='bg-stone-800 grow rounded'>
 					<NotificationsTable
 						globalFilter={globalFilter}
@@ -59,6 +59,6 @@ export default function NotificationClientLayout({children, initialNotifications
 					{children}
 				</div>
 			</div>
-		</div>
+		</TopbarPageLayout>
 	);
 }

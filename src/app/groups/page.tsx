@@ -4,6 +4,8 @@ import Link from 'next/link';
 import {getAllGroups} from '@/lib/group.ts';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
+import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import Spacer from '@/components/spacer.tsx';
 
 type GroupCardProps = {
 	readonly group: Group;
@@ -59,15 +61,19 @@ export default async function GroupsPage() {
 	// };
 
 	return (
-		<main>
-			<div className='flex gap-4 justify-between'>
-				<h1 className='text-4xl mb-4 text-slate-200'>Grupos</h1>
-				<Link href='/groups/edit'>
-					<Button color='secondary'>
-						<Icon name='edit'/>
-					</Button>
-				</Link>
-			</div>
+		<TopbarPageLayout
+			title='Grupos' topbarItems={
+				<>
+					<Spacer/>
+					<Link href='/groups/edit'>
+						<Button color='secondary'>
+							<Icon name='edit'/>
+						</Button>
+					</Link>
+				</>
+
+			}
+		>
 			<div className='flex gap-4'>
 				{
 					groups.map(group => (
@@ -75,50 +81,7 @@ export default async function GroupsPage() {
 					))
 				}
 			</div>
-			{/* <div className='justify-center'> */}
-			{/* 	<button className='mb-4' onClick={handleAddGroup}> */}
-			{/* 		Add Group */}
-			{/* 	</button> */}
+		</TopbarPageLayout>
 
-			{/* 	/!* Render the form when isAddingGroup is true *!/ */}
-			{/* 	{isAddingGroup && ( */}
-			{/* 		<form onSubmit={handleSubmit}> */}
-			{/* 			<label> */}
-			{/* 				Group Name: */}
-			{/* 				<input */}
-			{/* 					type='text' */}
-			{/* 					value={groupName} */}
-			{/* 					onChange={e => { */}
-			{/* 						setGroupName(e.target.value); */}
-			{/* 					}} */}
-			{/* 				/> */}
-			{/* 			</label> */}
-			{/* 			<label> */}
-			{/* 				Group Color: */}
-			{/* 				<input */}
-			{/* 					type='text' */}
-			{/* 					value={groupColor} */}
-			{/* 					onChange={e => { */}
-			{/* 						setGroupColor(e.target.value); */}
-			{/* 					}} */}
-			{/* 				/> */}
-			{/* 			</label> */}
-			{/* 			<button type='submit'>Submit</button> */}
-			{/* 		</form> */}
-			{/* 	)} */}
-
-			{/* 	<div className='grid grid-cols-1 grid-rows-1 md:grid-cols-4 flex-1 h-36 w-364'> */}
-			{/* 		/!* Map through the groups and render GroupCard components *!/ */}
-			{/* 		{groups.map((group, index) => ( */}
-			{/* 			<GroupCard */}
-			{/* 				key={index} */}
-			{/* 				groupName={group.groupName} */}
-			{/* 				numStudents={group.numStudents} */}
-			{/* 				numProfessors={group.numProfessors} */}
-			{/* 			/> */}
-			{/* 		))} */}
-			{/* 	</div> */}
-			{/* </div> */}
-		</main>
 	);
 }

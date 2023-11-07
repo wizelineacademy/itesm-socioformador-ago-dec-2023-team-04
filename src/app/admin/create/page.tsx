@@ -1,5 +1,5 @@
 import React from 'react';
-import UserCreationForm from '@/app/admin/users/create/user-creation-form.tsx';
+import UserCreationForm from '@/app/admin/create/user-creation-form.tsx';
 
 export default function UsersPage() {
 	return (

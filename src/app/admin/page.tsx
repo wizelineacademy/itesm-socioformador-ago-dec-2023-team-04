@@ -1,14 +1,14 @@
 import React from 'react';
+import Icon from '@/components/icon.tsx';
 
-export default function Admin() {
+export default function UsersPage() {
 	return (
-		<div>
-			<h1 className='text-4xl mb-4'>
-				Configuración general
-			</h1>
-			<div className='bg-stone-800 p-4 rounded'>
-				Página de configuración general
-			</div>
+		<div className='flex flex-col justify-center items-center w-full h-full text-stone-400'>
+			<Icon name='person'/>
+			<h2 className='text-center w-32'>
+				Selecciona un usuario para ver sus detalles.
+			</h2>
 		</div>
+
 	);
 }

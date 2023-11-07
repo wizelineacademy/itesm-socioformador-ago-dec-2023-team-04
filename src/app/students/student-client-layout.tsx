@@ -14,6 +14,7 @@ import DeleteButton from '@/components/delete-button.tsx';
 import deleteStudents from '@/app/students/delete-students-action.ts';
 import TextField from '@/components/text-field.tsx';
 import TopBar from '@/components/top-bar.tsx';
+import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -103,29 +104,30 @@ export default function StudentClientLayout({children, initialStudents}: {
 		}
 	};
 
-	const scrollRef = useRef<HTMLDivElement>(null);
-	const boundingRef = useRef<HTMLDivElement>(null);
-
 	return (
-		<div className='text-stone-400 h-screen flex flex-col'>
-			<TopBar boundingRef={boundingRef} scrollRef={scrollRef} title='Alumnos'>
-				<Spacer/>
-				<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
-				<Link href='/students/create'>
-					<Button color='secondary'><Icon name='add'/></Button>
-				</Link>
-				<TextField aria-label='Buscar' iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
-			</TopBar>
-			<div ref={boundingRef} className='grow overflow-scroll'>
-				<div ref={scrollRef} className='flex gap-4 p-4 max-w-6xl mx-auto'>
-					<div className='bg-stone-800 grow rounded'>
-						<Table className='w-full' data={students ?? []} columns={columns} selectedKeys={selectedStudents} onSelectedKeysChange={setSelectedStudents}/>
-					</div>
-					<div className='w-72 sticky bg-stone-800 h-full rounded p-4 top-4'>
-						{children}
-					</div>
+		<TopbarPageLayout
+			title='Alumnos' topbarItems={
+				<>
+					<Spacer/>
+					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
+					<Link href='/students/create'>
+						<Button color='secondary'><Icon name='add'/></Button>
+					</Link>
+					<TextField aria-label='Buscar' iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+				</>
+			}
+		>
+			<div className='flex gap-4'>
+				<div className='bg-stone-800 grow rounded'>
+					<Table
+						className='w-full' data={students ?? []} columns={columns}
+						   selectedKeys={selectedStudents} globalFilter={globalFilter}
+						onSelectedKeysChange={setSelectedStudents}/>
+				</div>
+				<div className='w-72 sticky bg-stone-800 h-fit rounded p-4 top-4'>
+					{children}
 				</div>
 			</div>
-		</div>
+		</TopbarPageLayout>
 	);
 }

@@ -1,22 +1,12 @@
 import React from 'react';
-import AdminNavigationLink from '@/components/admin-navigation-link.tsx';
+import {getAllUsers} from '@/lib/user.ts';
+import UserAdminClientLayout from '@/app/admin/user-admin-client-layout.tsx';
 
-export default function AdminLayout({children}: {
-	readonly children: React.ReactNode;
-}) {
+export default async function UsersLayout({children}: {children: React.ReactNode}) {
+	const users = await getAllUsers();
 	return (
-		<main className='flex h-full justify-center text-stone-300'>
-			<nav className='basis-32 flex-none flex flex-col gap-2 mt-14'>
-				<AdminNavigationLink>
-					Configuración general
-				</AdminNavigationLink>
-				<AdminNavigationLink slug='users'>
-					Usuarios
-				</AdminNavigationLink>
-			</nav>
-			<div className='grow'>
-				{children}
-			</div>
-		</main>
+		<UserAdminClientLayout initialUsers={users}>
+			{children}
+		</UserAdminClientLayout>
 	);
 }
