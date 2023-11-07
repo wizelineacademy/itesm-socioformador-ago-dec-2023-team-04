@@ -63,7 +63,7 @@ const columns = [
 	columnHelper.accessor('id', {
 		header: '',
 		cell: info => (
-			<Link href={`/admin/users/${info.getValue()}`}>
+			<Link href={`/admin/${info.getValue()}`}>
 				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-600'>
 					<Icon name='edit'/>
 				</Button>

@@ -77,7 +77,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const queryClient = useQueryClient();
 
-	const [selectedStudents, setSelectedStudents] = useState<Set<Key>>(new Set());
+	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
 	const {data: students} = useQuery('students', async () => {
 		const result = await axios.get<Student[]>('/api/students');
@@ -89,7 +89,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 	});
 
 	const handleDeleteClick = async () => {
-		const studentIds = [...selectedStudents.values()].map(key => {
+		const studentIds = [...selectedKeys.values()].map(key => {
 			if (typeof key === 'string') {
 				return Number.parseInt(key, 10);
 			}
@@ -100,7 +100,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 
 		if (result.success) {
 			await queryClient.invalidateQueries('students');
-			setSelectedStudents(new Set());
+			setSelectedKeys(new Set());
 		}
 	};
 
@@ -109,7 +109,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 			title='Alumnos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
+					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDeleteClick}/>
 					<Link href='/students/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
@@ -121,8 +121,8 @@ export default function StudentClientLayout({children, initialStudents}: {
 				<div className='bg-stone-800 grow rounded'>
 					<Table
 						className='w-full' data={students ?? []} columns={columns}
-						   selectedKeys={selectedStudents} globalFilter={globalFilter}
-						onSelectedKeysChange={setSelectedStudents}/>
+						   selectedKeys={selectedKeys} globalFilter={globalFilter}
+						onSelectedKeysChange={setSelectedKeys}/>
 				</div>
 				<div className='w-72 sticky bg-stone-800 h-fit rounded p-4 top-4'>
 					{children}

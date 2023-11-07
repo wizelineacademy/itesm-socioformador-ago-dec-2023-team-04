@@ -17,7 +17,7 @@ export default function Icon({
 				'material-symbols-rounded select-none',
 				size === 'xs' && 'material-symbols-xs text-xs',
 				size === 'sm' && 'material-symbols-sm text-sm',
-				size === 'md' && 'material-symbols-md text-md',
+				size === 'md' && 'material-symbols-md text-md w-6 h-6',
 				size === 'lg' && 'material-symbols-lg text-lg',
 				size === 'xl' && 'material-symbols-xl text-xl',
 				size === '2xl' && 'material-symbols-2xl text-2xl',
