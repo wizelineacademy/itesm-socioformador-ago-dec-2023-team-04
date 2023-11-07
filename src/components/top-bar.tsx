@@ -31,10 +31,10 @@ export default function TopBar(props: TopBarProps) {
 			className,
 		)}
 		>
-			<div className='flex items-center gap-4 max-w-6xl mx-auto px-4'>
+			<div className='flex items-baseline gap-4 max-w-6xl mx-auto px-4'>
 				<h1 className={cx(
 					'text-stone-200 text-4xl transition-all',
-					!floatBar && 'text-4xl',
+					!floatBar && 'text-5xl',
 					floatBar && 'text-3xl',
 				)}
 				>
