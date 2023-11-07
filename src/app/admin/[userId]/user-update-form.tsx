@@ -7,7 +7,7 @@ import {LabeledInput} from '@/components/labeled-input.tsx';
 import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {userUpdateSchema} from '@/lib/schemas/user-update.ts';
-import updateUser from '@/app/admin/users/[userId]/user-update-action.ts';
+import updateUser from '@/app/admin/[userId]/user-update-action.ts';
 import LabeledCheckbox from '@/components/labeled-checkbox.tsx';
 
 export default function UserUpdateForm({user, className}: {readonly user: User; readonly className?: string}) {

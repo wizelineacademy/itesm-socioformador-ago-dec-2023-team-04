@@ -8,7 +8,7 @@ import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import {userRegistrationSchema} from '@/lib/schemas/user-registration.ts';
 import LabeledCheckbox from '@/components/labeled-checkbox.tsx';
-import createUser from '@/app/admin/users/create/create-user-action.ts';
+import createUser from '@/app/admin/create/create-user-action.ts';
 
 export default function UserCreationForm({className}: {readonly className?: string}) {
 	const [issues, setIssues] = useState(new Map<string, string>());
@@ -27,7 +27,7 @@ export default function UserCreationForm({className}: {readonly className?: stri
 				setErrorMessage(undefined);
 				await queryClient.invalidateQueries('users');
 				console.log(result.data);
-				router.push(`/admin/users/${result.data}`);
+				router.push(`/admin/${result.data}`);
 			} else {
 				setErrorMessage(result.message);
 			}

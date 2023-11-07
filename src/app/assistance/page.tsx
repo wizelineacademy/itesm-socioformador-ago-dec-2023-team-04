@@ -94,8 +94,8 @@ export default function AssistancePage() {
 	}
 
 	return (
-		<div className='h-full gap-4 flex flex-col'>
-			<div className='grow w-full overflow-hidden'>
+		<div className='h-screen gap-4 flex flex-col p-4'>
+			<div className='grow overflow-hidden'>
 				<video
 					ref={videoRef} autoPlay className={cx(
 						'h-full w-full object-cover',
