@@ -19,7 +19,7 @@ const buttonVariant = cva({
 			text: 'enabled:hover:bg-stone-700',
 		},
 		size: {
-			xs: 'text-xs p-1',
+			xs: 'text-xs',
 			sm: 'text-sm p-1',
 			md: 'text-base p-2',
 			lg: 'text-lg p-3',

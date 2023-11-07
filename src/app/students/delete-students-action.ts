@@ -1,4 +1,5 @@
 'use server';
+import {revalidatePath} from 'next/cache';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import prisma from '@/lib/prisma.ts';
 
@@ -18,6 +19,10 @@ export default async function deleteStudents(studentIds: number[]): Promise<Serv
 				id: {in: studentIds},
 			},
 		});
+
+		for (const id of studentIds) {
+			revalidatePath(`/students/${id}`);
+		}
 
 		return {
 			success: true,
