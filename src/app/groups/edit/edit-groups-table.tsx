@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {createColumnHelper, getCoreRowModel, type SortingState} from '@tanstack/table-core';
-import {type Student} from '@prisma/client';
+import React, {type Key, useMemo, useState} from 'react';
+import {createColumnHelper, getCoreRowModel, type RowSelectionState, type SortingState} from '@tanstack/table-core';
+import {type Group, type TutorNotification} from '@prisma/client';
 import {flexRender, getFilteredRowModel, getSortedRowModel, useReactTable} from '@tanstack/react-table';
 import clsx from 'clsx';
 import {useQuery} from 'react-query';
@@ -9,6 +9,8 @@ import Link from 'next/link';
 import Checkbox from '@/components/checkbox.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
+
+const columnHelper = createColumnHelper<Group>();
 
 const columns = [
 	columnHelper.display({
@@ -38,70 +40,67 @@ const columns = [
 			</div>
 		),
 	}),
-	columnHelper.accessor('registration', {
-		header: 'Matrícula',
+	columnHelper.accessor('name', {
+		header: 'Nombre',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('givenName', {
-		header: 'Nombre(s)',
+	columnHelper.accessor('entryHour', {
+		header: 'Hora de entrada',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('familyName', {
-		header: 'Apellidos(s)',
+	columnHelper.accessor('exitHour', {
+		header: 'Hora de salida',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('id', {
-		header: 'Información',
-		cell: info => (
-			<Link href={`/students/${info.getValue()}`}>
-				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-600'>
-					<Icon name='chevron_right'/>
-				</Button>
-			</Link>
-		),
+	columnHelper.accessor('colorId', {
+		header: 'Color',
+		cell: info => info.getValue(),
 	}),
 ];
 
-export default function StudentsTable(
-	{
-		initialStudents,
-		className,
-		studentSelection,
-		onStudentSelectionChange,
-		globalFilter,
-	}:
-	{
-		readonly initialStudents: Student[];
-		readonly className?: string;
-		readonly globalFilter?: string;
-		readonly studentSelection: Record<string, boolean>;
-		readonly onStudentSelectionChange: (newSelection: (Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>))) => void;
-	},
-) {
-	const {data} = useQuery('students', async () => {
-		const result = await axios.get<Student[]>('/api/students');
-		console.log(result);
-		return result.data;
-	}, {
-		initialData: initialStudents,
-		staleTime: 5000,
-	});
+export type EditGroupsTableProps = {
+	readonly groups: Group[];
+	readonly className?: string;
+	readonly globalFilter?: string;
+	readonly selectedKeys: Set<Key>;
+	readonly onSelectedKeysChange: (newSelection: Set<Key>) => void;
+};
 
-	const [sorting, setSorting] = useState<SortingState>([]);
+export default function EditGroupsTable(props: EditGroupsTableProps) {
+	const {
+		groups,
+		className,
+		globalFilter,
+		selectedKeys,
+		onSelectedKeysChange,
+	} = props;
+
 	const table = useReactTable({
-		data: data ?? [],
+		data: groups,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		state: {
-			rowSelection: studentSelection,
+			rowSelection,
 			sorting,
 			globalFilter,
 		},
 		enableRowSelection: true,
 		onSortingChange: setSorting,
-		onRowSelectionChange: onStudentSelectionChange,
+		onRowSelectionChange(updater) {
+			const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
+
+			const newSelectedKeys = new Set<Key>();
+
+			for (const [id, selected] of Object.entries(newSelection)) {
+				if (selected) {
+					newSelectedKeys.add(id);
+				}
+			}
+
+			onSelectedKeysChange(newSelectedKeys);
+		},
 		getRowId: ({id}) => id.toString(),
 	});
 
@@ -109,7 +108,7 @@ export default function StudentsTable(
 		<table className={clsx(className)}>
 			<thead className='border-stone-700 border-b'>
 				{table.getHeaderGroups().map(headerGroup => (
-					<tr key={headerGroup.id} className='h-14'>
+					<tr key={headerGroup.id} className='h-14 text-stone-100'>
 						{headerGroup.headers.map(header => (
 							<th
 								key={header.id} className='text-left p-2 hover:cursor-pointer'
