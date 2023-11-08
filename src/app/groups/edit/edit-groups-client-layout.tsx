@@ -1,12 +1,9 @@
 'use client';
 import React, {type Key, useState} from 'react';
 import {type Group} from '@prisma/client';
-import {useQuery, useQueryClient} from 'react-query';
-import axios from 'axios';
 import {createColumnHelper} from '@tanstack/table-core';
 import Link from 'next/link';
-import {useFormik} from 'formik';
-import {toFormikValidate} from 'zod-formik-adapter';
+import {DateFormatter, Time} from '@internationalized/date';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
@@ -15,7 +12,6 @@ import Table from '@/components/table.tsx';
 import Checkbox from '@/components/checkbox.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
-import {type GroupCreation, groupCreationSchema} from '@/app/groups/edit/create/create-group-action.ts';
 
 const columnHelper = createColumnHelper<Group>();
 
@@ -53,11 +49,31 @@ const columns = [
 	}),
 	columnHelper.accessor('entryHour', {
 		header: 'Hora de entrada',
-		cell: info => info.getValue(),
+		cell(info) {
+			const locale = info.table.options.meta?.locale;
+			if (locale) {
+				const formatter = new DateFormatter(locale.locale, {
+					timeStyle: 'short',
+				});
+				return formatter.format(info.getValue());
+			}
+
+			return '';
+		},
 	}),
 	columnHelper.accessor('exitHour', {
 		header: 'Hora de salida',
-		cell: info => info.getValue(),
+		cell(info) {
+			const locale = info.table.options.meta?.locale;
+			if (locale) {
+				const formatter = new DateFormatter(locale.locale, {
+					timeStyle: 'short',
+				});
+				return formatter.format(info.getValue());
+			}
+
+			return '';
+		},
 	}),
 	columnHelper.accessor('id', {
 		header: 'Información',
@@ -71,20 +87,12 @@ const columns = [
 	}),
 ];
 
-export default function EditGroupsClientLayout({children, initialGroups}: {
-	readonly initialGroups: Group[];
+export default function EditGroupsClientLayout({children, groups}: {
+	readonly groups: Group[];
 	readonly children: React.ReactNode;
 }) {
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
-
-	const {data: groups} = useQuery('groups', async () => {
-		const result = await axios.get<Group[]>('/api/groups');
-		return result.data;
-	}, {
-		initialData: initialGroups,
-		staleTime: 5000,
-	});
 
 	const deleteHandler = () => {
 		console.log('deleted groups');
@@ -101,14 +109,14 @@ export default function EditGroupsClientLayout({children, initialGroups}: {
 							<Icon name='add'/>
 						</Button>
 					</Link>
-					<TextField iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+					<TextField aria-label='Buscar' iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
 				</>
 			}
 		>
 			<div className='flex gap-4'>
 				<div className='bg-stone-800 grow rounded'>
 					<Table
-						data={groups ?? []} columns={columns}
+						data={groups} columns={columns}
 						className='w-full'
 						selectedKeys={selectedKeys} globalFilter={globalFilter}
 						onSelectedKeysChange={setSelectedKeys}/>

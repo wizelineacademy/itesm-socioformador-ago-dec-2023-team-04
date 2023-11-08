@@ -4,7 +4,7 @@ import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import {decodeForm} from '@/lib/schemas/util.ts';
 import prisma from '@/lib/prisma.ts';
 import {management} from '@/lib/auth0.ts';
-import {userUpdateSchema} from '@/lib/schemas/user-update.ts';
+import {userUpdateSchema} from '@/lib/schemas/user.ts';
 
 /**
  * Updates a user in the system.

@@ -1,9 +1,9 @@
 'use server';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import {decodeForm} from '@/lib/schemas/util.ts';
-import {userRegistrationSchema} from '@/lib/schemas/user-registration.ts';
 import prisma from '@/lib/prisma.ts';
 import {management} from '@/lib/auth0.ts';
+import {userRegistrationSchema} from '@/lib/actions/user.ts';
 
 /**
  * Creates a user by decoding the form data and registering the user in the authentication system and database.

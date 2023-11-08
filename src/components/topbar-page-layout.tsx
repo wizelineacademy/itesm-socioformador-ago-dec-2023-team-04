@@ -26,7 +26,7 @@ export default function TopbarPageLayout(props: TopbarPageLayoutProps) {
 			<TopBar boundingRef={boundingRef} scrollRef={scrollRef} title={title}>
 				{topbarItems}
 			</TopBar>
-			<div ref={boundingRef} className='grow overflow-scroll'>
+			<div ref={boundingRef} className='grow overflow-y-scroll'>
 				<div ref={scrollRef} className='p-4 max-w-6xl mx-auto'>
 					{children}
 				</div>

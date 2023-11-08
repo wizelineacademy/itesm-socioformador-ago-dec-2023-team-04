@@ -1,8 +1,18 @@
-import React, {type Key, useRef} from 'react';
+import React, {type Key, type ReactNode, useRef} from 'react';
 import {type RadioGroupState, useOverlayTriggerState, useRadioGroupState} from 'react-stately';
-import {mergeProps, useButton, useId, useOverlayTrigger, useRadio, useRadioGroup, VisuallyHidden} from 'react-aria';
+import {
+	type AriaRadioProps,
+	mergeProps,
+	useButton,
+	useId,
+	useOverlayTrigger,
+	useRadio,
+	useRadioGroup,
+	VisuallyHidden,
+} from 'react-aria';
 import {type Color} from '@prisma/client';
 import {useObjectRef} from '@react-aria/utils';
+import {type RadioProps} from '@react-types/radio';
 import {cx} from '@/lib/cva.ts';
 import {type ButtonProps} from '@/components/button.tsx';
 import Popover from '@/components/popover.tsx';
@@ -93,7 +103,7 @@ function ColorRadioGroup(props: ColorRadioGroupProps) {
 	return (
 		<div {...radioGroupProps} className={cx('grid gap-1 grid-cols-5', className)}>
 			{colors.map(color => (
-				<ColorRadio key={color.id} state={state} color={color}/>
+				<ColorRadio key={color.id} aria-label={`#${color.code}`} state={state} color={color}/>
 			))}
 		</div>
 	);
@@ -102,12 +112,13 @@ function ColorRadioGroup(props: ColorRadioGroupProps) {
 type ColorRadioProps = {
 	readonly state: RadioGroupState;
 	readonly color: Color;
-};
+} & Omit<AriaRadioProps, 'value'>;
 
 function ColorRadio(props: ColorRadioProps) {
 	const {state, color} = props;
 	const ref = React.useRef(null);
 	const {inputProps, isSelected} = useRadio({
+		...props,
 		value: color.id.toString(),
 	}, state, ref);
 
