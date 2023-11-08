@@ -5,7 +5,7 @@ import {getAllGroups} from '@/lib/group.ts';
 export default async function NotificationsLayout({children}: {children: React.ReactNode}) {
 	const groups = await getAllGroups();
 	return (
-		<EditGroupsClientLayout initialGroups={groups}>
+		<EditGroupsClientLayout groups={groups}>
 			{children}
 		</EditGroupsClientLayout>
 	);

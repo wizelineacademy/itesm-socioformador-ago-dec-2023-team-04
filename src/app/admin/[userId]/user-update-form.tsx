@@ -6,7 +6,7 @@ import {type User} from '@prisma/client';
 import {LabeledInput} from '@/components/labeled-input.tsx';
 import {Button} from '@/components/button.tsx';
 import {decodeForm} from '@/lib/schemas/util.ts';
-import {userUpdateSchema} from '@/lib/schemas/user-update.ts';
+import {userUpdateSchema} from '@/lib/schemas/user.ts';
 import updateUser from '@/app/admin/[userId]/user-update-action.ts';
 import LabeledCheckbox from '@/components/labeled-checkbox.tsx';
 

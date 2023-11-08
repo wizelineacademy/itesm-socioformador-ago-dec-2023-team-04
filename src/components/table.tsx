@@ -2,6 +2,7 @@ import React, {type Key, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import {type ColumnDef, flexRender, getFilteredRowModel, getSortedRowModel, useReactTable} from '@tanstack/react-table';
 import {getCoreRowModel, type SortingState} from '@tanstack/table-core';
+import {useLocale} from 'react-aria';
 import Icon from '@/components/icon.tsx';
 
 export type TableProps<T> = {
@@ -44,12 +45,17 @@ export default function Table<T extends object>(props: TableProps<T>) {
 		}),
 	), [data, getKey, selectedKeys]);
 
+	const locale = useLocale();
+
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
+		meta: {
+			locale,
+		},
 		state: {
 			rowSelection,
 			sorting,

@@ -74,7 +74,7 @@ export default async function GroupsPage() {
 
 			}
 		>
-			<div className='flex gap-4'>
+			<div className='flex gap-4 flex-wrap'>
 				{
 					groups.map(group => (
 						<GroupCard key={group.id} group={group}/>

@@ -1,4 +1,5 @@
 import z from 'zod';
+import {Time} from '@internationalized/date';
 
 export function emptyStringToNull(arg: string) {
 	if (arg.trim() === '') {
@@ -35,4 +36,11 @@ export const phoneSchema = (parameters: ({errorMap?: z.ZodErrorMap | undefined; 
 	.regex(/\+?[()+\d ]+(x\d+)?/g, 'Ingresa un numero valido')
 	.transform(value => value.replaceAll(/[^+\dx]/g, ''));
 
-export const nonEmptyString = z.string().transform(emptyStringToNull).pipe(z.string());
+export const emptyStringToNullSchema = z.string().transform(emptyStringToNull);
+
+export const timeToDate = z.instanceof(Time).transform(time => {
+	const date = new Date();
+	date.setHours(time.hour);
+	date.setMinutes(time.minute);
+	return date;
+}).pipe(z.date()).or(z.date());
