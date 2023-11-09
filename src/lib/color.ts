@@ -1,5 +1,4 @@
+import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 
-export async function getAllColors() {
-	return prisma.color.findMany();
-}
+export const getAllColors = cache(async () => prisma.color.findMany());
