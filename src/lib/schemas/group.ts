@@ -12,3 +12,8 @@ export const groupCreationSchema = z.object({
 });
 export type GroupCreationInput = z.input<typeof groupCreationSchema>;
 export type GroupCreation = z.infer<typeof groupCreationSchema>;
+
+export const groupUpdateSchema = groupCreationSchema.partial();
+
+export type GroupUpdateInput = z.input<typeof groupUpdateSchema>;
+export type GroupUpdate = z.infer<typeof groupUpdateSchema>;

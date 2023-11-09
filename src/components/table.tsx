@@ -86,18 +86,18 @@ export default function Table<T extends object>(props: TableProps<T>) {
 					<tr key={headerGroup.id} className='h-14 text-stone-100'>
 						{headerGroup.headers.map(header => (
 							<th
-								key={header.id} className='text-left p-2 hover:cursor-pointer'
+								key={header.id} className='text-left font-semibold text-sm p-2 hover:cursor-pointer'
 								onClick={header.column.getToggleSortingHandler()}
 							>
-								{header.id === 'select'
+								{header.id === 'select' || header.id === 'details'
 									? flexRender(header.column.columnDef.header, header.getContext())
 									: <div className='flex gap-2 items-center'>
 										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
 										{header.column.getIsSorted() === 'asc'
-											? <Icon name='arrow_upward' size='md'/> : null}
+											? <Icon name='arrow_upward' size='sm'/> : null}
 										{header.column.getIsSorted() === 'desc'
-											? <Icon name='arrow_downward' size='md'/> : null}
-										{header.column.getIsSorted() === false ? <Icon name='sort' size='md'/> : null}
+											? <Icon name='arrow_downward' size='sm'/> : null}
+										{header.column.getIsSorted() === false ? <Icon name='sort' size='sm'/> : null}
 									</div>}
 							</th>
 						))}
