@@ -4,12 +4,12 @@ import {Item} from 'react-stately';
 import {useQuery} from 'react-query';
 import {type FaceResult} from '@stock17944/human';
 import {List} from 'immutable';
-import useWebcam from '@/lib/schemas/use-webcam.ts';
+import useWebcam from '@/lib/hooks/use-webcam.ts';
 import Select from '@/components/select.tsx';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 import Icon from '@/components/icon.tsx';
 import Dialog from '@/components/dialog.tsx';
-import useFaceBiometrics from '@/lib/schemas/use-face-biometrics.ts';
+import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
 import {type StudentWithSimilarity} from '@/lib/student.ts';
 import {Button} from '@/components/button.tsx';
 import {cx} from '@/lib/cva.ts';
@@ -94,8 +94,8 @@ export default function AssistancePage() {
 	}
 
 	return (
-		<div className='h-full gap-4 flex flex-col'>
-			<div className='grow w-full overflow-hidden'>
+		<div className='h-screen gap-4 flex flex-col p-4'>
+			<div className='grow overflow-hidden'>
 				<video
 					ref={videoRef} autoPlay className={cx(
 						'h-full w-full object-cover',

@@ -4,10 +4,10 @@ import {Input} from '@/components/input.tsx';
 
 export default function SearchBar({value, onChange}: {readonly value: string; readonly onChange: (newValue: string) => void}) {
 	return (
-		<div className='bg-stone-700 rounded flex items-center px-2 gap-1'>
+		<div className='bg-stone-700 h-fit rounded flex items-center px-2 gap-1'>
 			<Icon name='search' className='text-stone-400'/>
 			<Input
-				type='text' className='bg-stone-700 border-none'
+				type='text' className='bg-stone-700 h-fit border-none'
 				placeholder='Buscar'
 				value={value}
 				onChange={event => {

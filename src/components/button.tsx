@@ -1,11 +1,11 @@
 'use client';
 import React, {type ReactNode} from 'react';
-import {type AriaButtonProps, useButton} from 'react-aria';
+import {type AriaButtonProps, mergeProps, useButton, useFocusRing} from 'react-aria';
 import {useObjectRef} from '@react-aria/utils';
 import {cva, cx, type VariantProps} from '@/lib/cva.ts';
 
 const buttonVariant = cva({
-	base: 'flex items-center text-stone-300 w-fit rounded h-fit',
+	base: 'flex items-center text-stone-300 w-fit rounded h-fit outline-none',
 	variants: {
 		color: {
 			primary: '',
@@ -19,7 +19,7 @@ const buttonVariant = cva({
 			text: 'enabled:hover:bg-stone-700',
 		},
 		size: {
-			xs: 'text-xs p-1',
+			xs: 'text-xs',
 			sm: 'text-sm p-1',
 			md: 'text-base p-2',
 			lg: 'text-lg p-3',
@@ -105,9 +105,12 @@ export const Button = React.forwardRef(
 		const {children, className} = props;
 		const buttonRef = useObjectRef(ref);
 		const {buttonProps} = useButton(props, buttonRef);
+
+		const {isFocusVisible, focusProps} = useFocusRing();
+
 		return (
 			// eslint-disable-next-line react/button-has-type
-			<button {...buttonProps} ref={buttonRef} className={cx(buttonVariant(props), className)}>
+			<button {...mergeProps(buttonProps, focusProps)} ref={buttonRef} className={cx(buttonVariant(props), isFocusVisible && 'ring-1 ring-stone-50', className)}>
 				{children}
 			</button>
 		);

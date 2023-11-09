@@ -1,14 +1,12 @@
 import React, {useRef} from 'react';
 import {type AriaTextFieldProps, useTextField} from 'react-aria';
 import {cx} from '@/lib/cva.ts';
-import Icon from '@/components/icon.tsx';
 
-export type TextFieldProps = {
+export type TextAreaProps = {
 	readonly className?: string;
-	readonly iconName?: string;
 } & AriaTextFieldProps;
 
-export default function TextField(props: TextFieldProps) {
+export default function TextArea(props: TextAreaProps) {
 	const {
 		label,
 		className,
@@ -16,16 +14,18 @@ export default function TextField(props: TextFieldProps) {
 		errorMessage,
 		isDisabled,
 		isRequired,
-		iconName,
 	} = props;
-	const inputRef = useRef<HTMLInputElement>(null);
+	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	const {
 		labelProps,
 		inputProps,
 		descriptionProps,
 		errorMessageProps,
-	} = useTextField(props, inputRef);
+	} = useTextField({
+		...props,
+		inputElementType: 'textarea',
+	}, inputRef);
 
 	return (
 		<div className={cx('group h-fit', className)}>
@@ -42,15 +42,11 @@ export default function TextField(props: TextFieldProps) {
 					</label>
 				)
 			}
-			<div className={cx(
-				'flex items-center bg-stone-700 text-stone-500 rounded border border-stone-600 p-1 h-10 w-full focus-within:border-stone-50 focus-within:text-stone-50',
-				isDisabled && 'hover:cursor-not-allowed bg-stone-700 border-stone-700',
-			)}
-			>
-				{iconName && <Icon className='me-1' name={iconName}/>}
-				<input
-					{...inputProps} ref={inputRef} className='bg-transparent outline-none text-stone-300'/>
-			</div>
+			<textarea
+				{...inputProps} ref={inputRef} className={cx(
+					'bg-stone-700 h-32 min-h-[2.2rem] text-stone-300 outline-none rounded border border-stone-600 p-1 w-full focus-within:border-stone-50 focus-within:text-stone-50',
+					isDisabled && 'hover:cursor-not-allowed bg-stone-700 border-stone-700',
+				)}/>
 
 			{
 				description && (

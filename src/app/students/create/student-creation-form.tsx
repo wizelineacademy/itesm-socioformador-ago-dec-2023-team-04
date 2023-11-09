@@ -6,8 +6,10 @@ import {toFormikValidate} from 'zod-formik-adapter';
 import {useQueryClient} from 'react-query';
 import BiometricDataDialog from './biometric-data-dialog.tsx';
 import {Button} from '@/components/button.tsx';
-import {type StudentRegistration, studentRegistrationSchema} from '@/lib/schemas/student.ts';
-import createStudent from '@/app/students/create/create-student-action.ts';
+import createStudent, {
+	type StudentRegistration,
+	studentCreationSchema,
+} from '@/app/students/create/create-student-action.ts';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 import TextField from '@/components/text-field.tsx';
 import Icon from '@/components/icon.tsx';
@@ -23,7 +25,7 @@ export default function StudentCreationForm({className}: {readonly className?: s
 			familyName: '',
 			biometricData: [],
 		},
-		validate: toFormikValidate(studentRegistrationSchema),
+		validate: toFormikValidate(studentCreationSchema),
 		async onSubmit(values, formikBag) {
 			const result = await createStudent(values);
 			if (result.success) {

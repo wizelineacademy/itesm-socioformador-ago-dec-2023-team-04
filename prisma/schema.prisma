@@ -65,11 +65,10 @@ model Group {
   exitHour    DateTime @db.Time()
   tz          String
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
   color   Color @relation(fields: [colorId], references: [id])
   colorId Int
+
+  users User[]
 
   students Student[]
 
