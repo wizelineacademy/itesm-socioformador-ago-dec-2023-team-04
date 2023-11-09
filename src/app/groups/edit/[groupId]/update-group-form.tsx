@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import {type Color} from '@prisma/client';
+import {type Color, type Group} from '@prisma/client';
 import {useFormik} from 'formik';
 import {toFormikValidate} from 'zod-formik-adapter';
-import {Time} from '@internationalized/date';
+import {type Time} from '@internationalized/date';
 import {useRouter} from 'next/navigation';
 import TextField from '@/components/text-field.tsx';
 import TimeField from '@/components/time-field.tsx';
@@ -14,28 +14,21 @@ import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import {type GroupCreationInput, groupCreationSchema} from '@/lib/schemas/group.ts';
 import TextArea from '@/components/text-area.tsx';
-import {createGroupAction} from '@/lib/actions/group.ts';
+import {updateGroupAction} from '@/lib/actions/group.ts';
 
 export type CreateGroupFormProps = {
+	readonly group: Group;
 	readonly colors: Color[];
 };
 
-export default function CreateGroupForm(props: CreateGroupFormProps) {
-	const {colors} = props;
+export default function UpdateGroupForm(props: CreateGroupFormProps) {
+	const {colors, group} = props;
 	const router = useRouter();
 	const {values, setFieldValue, setFieldTouched, handleSubmit, status, setStatus, errors} = useFormik<GroupCreationInput>({
-		initialValues: {
-			name: '',
-			active: false,
-			description: '',
-			entryHour: new Time(),
-			exitHour: new Time(),
-			tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			colorId: colors[0].id,
-		},
+		initialValues: group,
 		validate: toFormikValidate(groupCreationSchema),
 		async onSubmit(values) {
-			const result = await createGroupAction(groupCreationSchema.parse(values));
+			const result = await updateGroupAction(group.id, groupCreationSchema.parse(values));
 			if (result.success) {
 				setStatus(undefined);
 				router.push(`/groups/edit/${result.data}`);
@@ -86,7 +79,6 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
 					<Icon name='save'/>Guardar
 				</Button>
 			</div>
-
 		</form>
 	);
 }
