@@ -44,6 +44,7 @@ export function useEntityForm<Output extends Input, Shape extends z.ZodRawShape,
 	const {schema, redirectBasePath, entity} = options;
 
 	const router = useRouter();
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const {values, setFieldValue, setFieldTouched, handleSubmit, status, setStatus, errors} = useFormik({
 		initialValues: entity,
 		validate: toFormikValidate(schema),

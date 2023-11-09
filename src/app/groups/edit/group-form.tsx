@@ -11,7 +11,7 @@ import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import {groupSchema} from '@/lib/schemas/group.ts';
 import {createOrUpdateGroupAction} from '@/lib/actions/group.ts';
-import {useEntityForm} from '@/lib/use-entity-form.ts';
+import {useEntityForm} from '@/lib/hooks/use-entity-form.ts';
 
 export type GroupFormProps = {
 	readonly colors: Color[];

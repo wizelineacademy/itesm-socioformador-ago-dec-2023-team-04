@@ -5,7 +5,7 @@ import {Button} from '@/components/button.tsx';
 import Dialog from '@/components/dialog.tsx';
 import FileDropZone from '@/components/file-drop-zone.tsx';
 import Icon from '@/components/icon.tsx';
-import useFaceBiometrics from '@/lib/schemas/use-face-biometrics.ts';
+import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
 import BiometricVideoInput from '@/app/students/create/biometric-video-input.tsx';
 import {cx} from '@/lib/cva.ts';
 

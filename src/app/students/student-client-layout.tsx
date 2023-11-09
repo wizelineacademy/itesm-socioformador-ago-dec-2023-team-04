@@ -121,7 +121,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 				<div className='bg-stone-800 grow rounded'>
 					<Table
 						className='w-full' data={students ?? []} columns={columns}
-						   selectedKeys={selectedKeys} globalFilter={globalFilter}
+						selectedKeys={selectedKeys} globalFilter={globalFilter}
 						onSelectedKeysChange={setSelectedKeys}/>
 				</div>
 				<div className='w-72 sticky bg-stone-800 h-fit rounded p-4 top-4'>

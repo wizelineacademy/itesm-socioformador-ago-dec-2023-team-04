@@ -4,7 +4,7 @@ import {Item} from 'react-stately';
 import {useObjectRef} from '@react-aria/utils';
 import {cx} from '@/lib/cva.ts';
 import Select from '@/components/select.tsx';
-import useWebcam from '@/lib/schemas/use-webcam.ts';
+import useWebcam from '@/lib/hooks/use-webcam.ts';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 
