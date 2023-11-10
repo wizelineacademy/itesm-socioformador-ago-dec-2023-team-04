@@ -30,10 +30,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
 	return (
 		<div style={{display: 'inline-flex', flexDirection: 'column'}}>
 			<div {...labelProps}>{props.label}</div>
-			<div
-				{...groupProps} ref={ref}
-				className='flex align-items-middle align-middle justify-between items-center'
-			>
+			<div {...groupProps} ref={ref} className='flex align-items-middle align-middle justify-between items-center'>
 				<DateField {...startFieldProps}/>
 				<span className='p-2'>-</span>
 				<DateField {...endFieldProps}/>

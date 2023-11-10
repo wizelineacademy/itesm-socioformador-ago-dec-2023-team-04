@@ -33,10 +33,10 @@ export function RangeCalendar(props: RangeCalendarProps) {
 
 	return (
 		<div {...calendarProps} ref={ref} className='calendar'>
-			<div className='header flex justify-between items-center'>
-				<Button variant='text' color='tertiary' {...prevButtonProps}><Icon name='navigate_before'/></Button>
-				<h2 className='text-stone-300 first-letter:uppercase'>{title}</h2>
-				<Button variant='text' color='tertiary' {...nextButtonProps}><Icon name='navigate_next'/></Button>
+			<div className='header'>
+				<Button color='secondary' {...prevButtonProps}><Icon name='navigate_before'/></Button>
+				<h2>{title}</h2>
+				<Button color='secondary' {...nextButtonProps}><Icon name='navigate_next'/></Button>
 			</div>
 			<CalendarGrid state={state}/>
 		</div>
