@@ -2,12 +2,11 @@ import React, {type ReactNode} from 'react';
 import {type AriaDateFieldProps, useDateField, useDateSegment, useLocale} from 'react-aria';
 import {type DateFieldState, type DateSegment as DateSegmentProp, useDateFieldState} from 'react-stately';
 import {createCalendar, type DateValue} from '@internationalized/date';
-import {cx} from '@/lib/cva.ts';
 
 export type DateFieldProps = {
 	readonly label?: ReactNode;
-	readonly field: ReactNode;
-	readonly input: ReactNode;
+	readonly field?: ReactNode;
+	readonly input?: ReactNode;
 	readonly description?: ReactNode;
 	readonly errorMessage?: ReactNode;
 	readonly className?: string;
@@ -25,7 +24,7 @@ export default function DateField(props: DateFieldProps) {
 	const {labelProps, fieldProps} = useDateField(props, state, ref);
 
 	return (
-		<div className={cx('w-fit group', className)}>
+		<div className='w-fit group'>
 			<span
 				{...labelProps}
 				className='block group-focus-within:text-stone-50 text-stone-400 text-xs mb-1'
