@@ -6,15 +6,16 @@ import {type ServerActionResult} from '@/lib/server-action-result.ts';
 import prisma from '@/lib/prisma.ts';
 import createNotification from '@/app/notifications/create/create-notification-action.ts';
 
-export default async function sendMessage(notificationCreation: NotificationCreation, student: Student, tutors: Tutor[]): Promise<ServerActionResult<number>> {
+export default async function sendMessage(notificationCreation: NotificationCreation, student: Student, tutor: Tutor): Promise<ServerActionResult<number>> {
 	try {
+		console.log(tutor);
 		const validatedMessage = notificationCreationSchema.parse(notificationCreation);
 
 		const notificacion = await client.messages.create({
 			body: validatedMessage.message,
 			// From: '+16157459905',
 			from: '+15005550006',
-			to: tutors[0].phoneNumber,
+			to: tutor.phoneNumber,
 		});
 
 		console.log(notificacion.dateCreated);
@@ -24,7 +25,7 @@ export default async function sendMessage(notificationCreation: NotificationCrea
 		const notification = await prisma.tutorNotification.create({
 			data: {
 				studentId: student.id,
-				tutorId: tutors[0].id,
+				tutorId: tutor.id,
 				message: validatedMessage.message,
 				sentTime: fecha,
 			},

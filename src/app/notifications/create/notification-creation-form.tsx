@@ -13,6 +13,7 @@ import sendMessage from '@/app/notifications/create/send-message-action.ts';
 import TextField from '@/components/text-field.tsx';
 import Icon from '@/components/icon.tsx';
 import Select from '@/components/select.tsx';
+import TextArea from '@/components/text-area.tsx';
 
 export default function NotificationCreationForm({student, tutor, className}: {readonly student: Student; readonly tutor: Tutor[]; readonly className?: string}) {
 	const router = useRouter();
@@ -26,7 +27,8 @@ export default function NotificationCreationForm({student, tutor, className}: {r
 		},
 		validate: toFormikValidate(notificationCreationSchema),
 		async onSubmit(values, formikBag) {
-			const result = await sendMessage(values, student, tutor);
+			const tutorSeleccionado = tutor.find(tutores => tutores.id === selectedTutor);
+			const result = await sendMessage(values, student, tutorSeleccionado);
 			if (result.success) {
 				formikBag.setStatus(undefined);
 				await queryClient.invalidateQueries('notification');
@@ -45,8 +47,9 @@ export default function NotificationCreationForm({student, tutor, className}: {r
 
 			<Select
 				label='Tutor'
-				items={tutor} selectedKey={formik.values.id} onSelectionChange={key => {
-					formik.setFieldValue('id', selectedKey, false);
+				items={tutor} selectedKey={selectedTutor} onSelectionChange={key => {
+					setSelectedTutor(key as number);
+					formik.setFieldValue('id', selectedTutor, false);
 				}}
 			>
 				{
@@ -57,12 +60,12 @@ export default function NotificationCreationForm({student, tutor, className}: {r
 					)
 				}
 			</Select>
-			<TextField
-				isRequired id='mensaje'
+			<TextArea
 				label='Mensaje'
-				className='mb-4 w-full'
+				className='mb-4'
 				value={formik.values.message}
 				errorMessage={formik.errors.message}
+				//	OnBlur={formik.blurHandler.message}
 				onChange={async value => formik.setFieldValue('message', value, false)}/>
 			<div className='flex justify-between'>
 				<Button
