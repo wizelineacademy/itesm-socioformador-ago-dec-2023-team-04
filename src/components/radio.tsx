@@ -1,14 +1,11 @@
 import React, {type ReactNode} from 'react';
-import {type RadioGroupState, useRadioGroupState, type RadioGroupProps as RadioGroupStateProps} from 'react-stately';
 import {
 	type AriaRadioProps,
 	useRadio,
-	useRadioGroup,
 	useFocusRing,
 	VisuallyHidden,
-	mergeProps,
-	type AriaRadioGroupProps,
-} from 'react-aria';
+	mergeProps, type AriaRadioGroupProps, useRadioGroup} from 'react-aria';
+import {type RadioGroupProps as RadioGroupStateProps, type RadioGroupState, useRadioGroupState} from 'react-stately';
 import {cx} from '@/lib/cva.ts';
 
 const RadioContext = React.createContext<RadioGroupState | null>(null);
@@ -25,7 +22,7 @@ export function RadioGroup(props: RadioGroupProps) {
 	const {children, label, description, errorMessage} = props;
 	const state = useRadioGroupState(props);
 	const {radioGroupProps, labelProps, descriptionProps, errorMessageProps}
-        = useRadioGroup(props, state);
+		= useRadioGroup(props, state);
 
 	return (
 		<div {...radioGroupProps}>
@@ -45,7 +42,7 @@ export function RadioGroup(props: RadioGroupProps) {
 	);
 }
 
-export type RadioProps = AriaRadioProps;
+type RadioProps = AriaRadioProps;
 export function Radio(props: RadioProps) {
 	const {children} = props;
 	const state = React.useContext(RadioContext);
