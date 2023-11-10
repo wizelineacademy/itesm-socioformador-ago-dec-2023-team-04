@@ -1,5 +1,5 @@
 import z from 'zod';
-import {Time} from '@internationalized/date';
+import {CalendarDate, Time} from '@internationalized/date';
 
 export function emptyStringToNull(arg: string) {
 	if (arg.trim() === '') {
@@ -31,7 +31,12 @@ export async function decodeForm<Schema extends z.ZodTypeAny>(
 	return schema.parse(Object.fromEntries(formData)) as z.infer<Schema>;
 }
 
-export const phoneSchema = (parameters: ({errorMap?: z.ZodErrorMap | undefined; invalid_type_error?: string | undefined; required_error?: string | undefined; description?: string | undefined} & {coerce?: true | undefined}) | undefined) => z
+export const phoneSchema = (parameters: ({
+	errorMap?: z.ZodErrorMap | undefined;
+	invalid_type_error?: string | undefined;
+	required_error?: string | undefined;
+	description?: string | undefined;
+} & {coerce?: true | undefined}) | undefined) => z
 	.string(parameters)
 	.regex(/\+?[()+\d ]+(x\d+)?/g, 'Ingresa un numero valido')
 	.transform(value => value.replaceAll(/[^+\dx]/g, ''));
@@ -42,5 +47,13 @@ export const timeToDate = z.instanceof(Time).transform(time => {
 	const date = new Date();
 	date.setHours(time.hour);
 	date.setMinutes(time.minute);
+	return date;
+}).pipe(z.date()).or(z.date());
+
+export const intDateToDate = z.instanceof(CalendarDate).transform(calendar => {
+	const date = new Date();
+	date.setFullYear(calendar.year);
+	date.setMonth(calendar.month);
+	date.setDate(calendar.day);
 	return date;
 }).pipe(z.date()).or(z.date());

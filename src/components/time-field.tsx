@@ -20,14 +20,19 @@ export default function TimeField(props: TimeFieldProps) {
 	const {labelProps, fieldProps} = useTimeField(props, state, ref);
 	return (
 		<div className={cx('w-fit group', className)}>
-			<span {...labelProps} className='block group-focus-within:text-stone-50 text-stone-400 text-xs mb-1'>{props.label}</span>
-			<div {...fieldProps} ref={ref} className='text-stone-300 w-fit flex bg-stone-700 rounded border border-stone-600 p-1 group-focus-within:border-stone-50'>
+			<span
+				{...labelProps}
+				className='block group-focus-within:text-stone-50 text-stone-400 text-xs mb-1'
+			>{props.label}</span>
+			<div
+				{...fieldProps} ref={ref}
+				className='text-stone-300 w-fit flex bg-stone-700 rounded border border-stone-600 p-1 group-focus-within:border-stone-50'
+			>
 				{state.segments.map((segment, i) => (
 					// eslint-disable-next-line react/no-array-index-key
 					<DateSegment key={i} segment={segment} state={state}/>
 				))}
-				{state.isInvalid
-				&& <span aria-hidden='true'>🚫</span>}
+				{state.isInvalid && <span aria-hidden='true'>🚫</span>}
 			</div>
 		</div>
 	);
