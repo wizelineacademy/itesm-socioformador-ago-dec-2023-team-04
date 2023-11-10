@@ -8,7 +8,7 @@ const stringParameters = {
 
 export const notificationCreationSchema = z.object({
 	message: z.preprocess(emptyStringToNull, z.string(stringParameters)),
-	id: z.preprocess(emptyStringToNull, z.number(stringParameters)),
+	id: z.coerce.number().optional(),
 });
 
 export type NotificationCreation = z.infer<typeof notificationCreationSchema>;
