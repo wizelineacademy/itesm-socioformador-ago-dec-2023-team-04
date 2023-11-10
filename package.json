@@ -7,8 +7,9 @@
 		"build": "prisma generate && next build",
 		"start": "next start",
 		"lint": "xo",
-		"test": "xo",
-		"cypress:open": "cypress open"
+		"test": "mocha",
+		"cypress:open": "cypress open",
+		"coverage": "nyc npm run test"
 	},
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^3.2.0",
@@ -33,13 +34,16 @@
 		"auth0": "^4.0.2",
 		"autoprefixer": "10.4.16",
 		"axios": "^1.6.0",
+		"chai": "^4.3.10",
 		"clsx": "^2.0.0",
 		"copy-webpack-plugin": "^11.0.0",
 		"cva": "^1.0.0-beta.1",
 		"formik": "^2.4.5",
 		"immutable": "^5.0.0-beta.4",
 		"material-symbols": "^0.13.2",
+		"mocha": "^10.2.0",
 		"next": "^14.0.1",
+		"nyc": "^15.1.0",
 		"postcss": "8.4.31",
 		"react": "18.2.0",
 		"react-aria": "^3.29.1",
