@@ -28,7 +28,8 @@ export default function NotificationCreationForm({student, tutor, className}: {r
 		validate: toFormikValidate(notificationCreationSchema),
 		async onSubmit(values, formikBag) {
 			const tutorSeleccionado = tutor.find(tutores => tutores.id === selectedTutor);
-			const result = await sendMessage(values, student, tutorSeleccionado);
+			const result = await sendMessage(values, student, tutor);
+
 			if (result.success) {
 				formikBag.setStatus(undefined);
 				await queryClient.invalidateQueries('notification');
