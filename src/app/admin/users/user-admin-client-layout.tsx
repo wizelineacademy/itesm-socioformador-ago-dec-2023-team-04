@@ -33,7 +33,7 @@ const columns = [
 		header: 'Permisos',
 		cell: info => info.getValue() ? 'Admin' : 'Usuario',
 	}),
-	detailsLinkColumn(columnHelper, '/admin'),
+	detailsLinkColumn(columnHelper, '/admin/users'),
 ];
 
 export type UserAdminClientLayoutProps = {
@@ -48,6 +48,10 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 
 	const handleDeleteClick = async () => {
 		const result = await deleteUsers([...selectedStudents].map(key => Number.parseInt(key.toString(), 10)));
+
+		if (result.success) {
+			setSelectedStudents(new Set());
+		}
 	};
 
 	return (
@@ -56,7 +60,7 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 				<>
 					<Spacer/>
 					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
-					<Link href='/admin/create'>
+					<Link href='/admin/users/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
 

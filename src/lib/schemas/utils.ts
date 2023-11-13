@@ -9,14 +9,14 @@ import {parseTime, Time} from '@internationalized/date';
  */
 export function preprocessFormValue(value: unknown): unknown {
 	if (Number.isNaN(value)) {
-		return null;
+		return undefined;
 	}
 
 	if (typeof value !== 'string') {
 		return value;
 	}
 
-	return value.trim() === '' ? null : value;
+	return value.trim() === '' ? undefined : value;
 }
 
 /**
@@ -122,3 +122,6 @@ export const timeToDate = z.string().transform(value => parseTime(value)).or(z.i
 	date.setSeconds(time.second);
 	return date;
 });
+
+export const boolean = z.union([z.literal('on'), z.literal('off')])
+	.transform(value => value === 'on').or(z.coerce.boolean());

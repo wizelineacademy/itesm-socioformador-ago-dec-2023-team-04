@@ -1,9 +1,9 @@
 import z from 'zod';
-import {timeToDate} from '@/lib/schemas/utils.ts';
+import {boolean, timeToDate} from '@/lib/schemas/utils.ts';
 
 const groupSchema = z.object({
 	name: z.string(),
-	active: z.coerce.boolean(),
+	active: boolean,
 	description: z.string(),
 	entryHour: timeToDate,
 	exitHour: timeToDate,

@@ -40,7 +40,7 @@ export default function Form<T>(props: FormProps<T>) {
 				staticValues && Object.entries(staticValues).map(([key, value]) => (
 					value === undefined
 						? null
-						: <input key={key} readOnly hidden name={key} value={typeof value === 'boolean' ? (value ? 'true' : '') : value as string | string[] | number | null ?? ''}/>
+						: <input key={key} readOnly hidden name={key} value={typeof value === 'boolean' ? (value ? 'on' : 'off') : value as string | string[] | number | null ?? ''}/>
 				))
 			}
 

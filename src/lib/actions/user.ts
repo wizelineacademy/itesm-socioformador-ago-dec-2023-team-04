@@ -68,7 +68,9 @@ export async function upsertUserAction(previousState: FormState<User>, formData:
 
 				const result = await tx.user.create({
 					data: {
-						...validatedUser,
+						givenName: validatedUser.givenName,
+						familyName: validatedUser.familyName,
+						admin: validatedUser.admin,
 						email: response.data.email,
 						authId: response.data.user_id,
 					},
@@ -81,7 +83,9 @@ export async function upsertUserAction(previousState: FormState<User>, formData:
 				return result;
 			}
 		} else {
+			console.log(formData.get('admin'));
 			const validatedUser = await decodeForm(formData, userSchema.partial());
+			console.log(validatedUser);
 			const existingUser = await prisma.user.findUniqueOrThrow({
 				where: {
 					id: previousState.id,
@@ -96,7 +100,11 @@ export async function upsertUserAction(previousState: FormState<User>, formData:
 					where: {
 						id: previousState.id,
 					},
-					data: validatedUser,
+					data: {
+						givenName: validatedUser.givenName,
+						familyName: validatedUser.familyName,
+						admin: validatedUser.admin,
+					},
 				});
 
 				return updateAuth0UserDataAction(previousState, existingUser.authId, validatedUser.email, validatedUser.password);
@@ -106,7 +114,10 @@ export async function upsertUserAction(previousState: FormState<User>, formData:
 				return result;
 			}
 		}
+
+		revalidatePath('/admin/users');
 	} catch (error) {
+		console.log(error);
 		return handleErrorAction(previousState, error);
 	}
 
@@ -155,7 +166,7 @@ export async function deleteUsers(userIds: number[]): Promise<ServerActionResult
 			/* eslint-enable no-await-in-loop */
 		}
 
-		revalidatePath('/students');
+		revalidatePath('/admin/users');
 
 		return {
 			success: true,

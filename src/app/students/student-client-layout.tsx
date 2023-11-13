@@ -1,49 +1,22 @@
 'use client';
-import React, {type Key, useRef, useState} from 'react';
+import React, {type Key, useState} from 'react';
 import Link from 'next/link';
 import {type Student} from '@prisma/client';
-import {useQuery, useQueryClient} from 'react-query';
-import axios from 'axios';
 import {createColumnHelper} from '@tanstack/table-core';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import Checkbox from '@/components/checkbox.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import {deleteStudents} from '@/lib/actions/student.ts';
+import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
 const columns = [
-	columnHelper.display({
-		id: 'select',
-		header({table}) {
-			let checked: 'indeterminate' | boolean = table.getIsAllRowsSelected();
-			if (!checked) {
-				checked = table.getIsSomeRowsSelected() ? 'indeterminate' : false;
-			}
-
-			return (
-				<div className='flex items-center justify-center'>
-					<Checkbox
-						checked={checked} onCheckedChange={() => {
-							table.toggleAllRowsSelected();
-						}}/>
-				</div>
-			);
-		},
-		cell: ({row}) => (
-			<div className='flex items-center justify-center'>
-				<Checkbox
-					checked={row.getIsSelected()} className='group-hover:border-stone-600 hover:bg-stone-600'
-					onCheckedChange={() => {
-						row.toggleSelected();
-					}}/>
-			</div>
-		),
-	}),
+	selectColumn(columnHelper),
 	columnHelper.accessor('registration', {
 		header: 'Matrícula',
 		cell: info => info.getValue(),
@@ -56,16 +29,7 @@ const columns = [
 		header: 'Apellidos(s)',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('id', {
-		header: 'Información',
-		cell: info => (
-			<Link href={`/students/${info.getValue()}`}>
-				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-600'>
-					<Icon name='chevron_right'/>
-				</Button>
-			</Link>
-		),
-	}),
+	detailsLinkColumn(columnHelper, '/students'),
 ];
 
 export type StudentClientLayoutProps = {
@@ -81,16 +45,12 @@ export default function StudentClientLayout({children, students}: {
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
-	const handleDeleteClick = async () => {
-		const studentIds = [...selectedKeys.values()].map(key => {
-			if (typeof key === 'string') {
-				return Number.parseInt(key, 10);
-			}
+	const handleDelete = async () => {
+		const result = await deleteStudents([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
 
-			return Number(key);
-		});
-		// TODO reimplement student deletion
-		// const result = await deleteStudents(studentIds);
+		if (result.success) {
+			setSelectedKeys(new Set());
+		}
 	};
 
 	return (
@@ -98,7 +58,7 @@ export default function StudentClientLayout({children, students}: {
 			title='Alumnos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDeleteClick}/>
+					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDelete}/>
 					<Link href='/students/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>

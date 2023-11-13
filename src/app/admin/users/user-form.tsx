@@ -9,6 +9,7 @@ import {formValidators} from '@/lib/schemas/utils.ts';
 import {userSchema} from '@/lib/schemas/user.ts';
 import TextField from '@/components/text-field.tsx';
 import Checkbox from '@/components/checkbox.tsx';
+import Icon from '@/components/icon.tsx';
 
 export type UserUpdateFormProps = {
 	readonly user?: User;
@@ -25,6 +26,7 @@ export default function UserForm(props: UserUpdateFormProps) {
 
 	return (
 		<Form
+			id={user?.id}
 			action={upsertUserAction}
 			staticValues={{
 				admin: admin ? undefined : false,
@@ -81,9 +83,13 @@ export default function UserForm(props: UserUpdateFormProps) {
 			<Checkbox name='admin' className='mb-4' isSelected={admin} onChange={setAdmin}>
 				Es administrador
 			</Checkbox>
-			<Button color='secondary' type='submit' size='sm'>
-				Actualizar
-			</Button>
+			<div className='flex justify-end'>
+				<Button color='secondary' type='submit' size='sm'>
+					<Icon name='save' className='me-1'/>
+					Guardar
+				</Button>
+			</div>
+
 		</Form>
 	);
 }

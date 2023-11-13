@@ -1,6 +1,6 @@
 import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
-import {notFound} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
 import {getUser} from '@/lib/user.ts';
 import UserForm from '@/app/admin/users/user-form.tsx';
 
@@ -12,7 +12,7 @@ export default withPageAuthRequired(async ({params}) => {
 	const user = await getUser(Number.parseInt(params.userId as string, 10));
 
 	if (user === null) {
-		notFound();
+		redirect('/admin/users');
 	}
 
 	return (
