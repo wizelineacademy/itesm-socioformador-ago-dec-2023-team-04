@@ -86,7 +86,6 @@ export default function GroupForm(props: GroupFormProps) {
 					<Icon name='save'/>Guardar
 				</Button>
 			</div>
-
 		</Form>
 	);
 }

@@ -58,7 +58,9 @@ export default function StudentClientLayout({children, students}: {
 			title='Alumnos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDelete}/>
+					<DeleteButton
+						label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0}
+						onDelete={handleDelete}/>
 					<Link href='/students/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>

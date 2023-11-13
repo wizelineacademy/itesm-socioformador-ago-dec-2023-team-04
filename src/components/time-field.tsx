@@ -32,7 +32,10 @@ export default function TimeField(props: TimeFieldProps) {
 	const {focusProps, isFocused, isFocusVisible} = useFocusRing();
 	return (
 		<div className={cx('w-fit group', className)}>
-			<span {...labelProps} className={cx('block group-focus-within:text-stone-50 text-stone-400 text-xs mb-1', isRequired && 'after:content-["_*"]')}>{props.label}</span>
+			<span
+				{...labelProps}
+				className={cx('block group-focus-within:text-stone-50 text-stone-400 text-xs mb-1', isRequired && 'after:content-["_*"]')}
+			>{props.label}</span>
 			<VisuallyHidden>
 				<input
 					{...inputProps}
@@ -47,13 +50,16 @@ export default function TimeField(props: TimeFieldProps) {
 					}}
 				/>
 			</VisuallyHidden>
-			<div {...mergeProps(focusProps, fieldProps)} ref={ref} className='text-stone-300 w-fit flex bg-stone-700 rounded border border-stone-600 p-1 group-focus-within:border-stone-50'>
+			<div
+				{...mergeProps(focusProps, fieldProps)} ref={ref}
+				className='text-stone-300 w-fit flex bg-stone-700 rounded border border-stone-600 p-1 group-focus-within:border-stone-50'
+			>
 				{state.segments.map((segment, i) => (
 					// eslint-disable-next-line react/no-array-index-key
 					<DateSegment key={i} segment={segment} state={state}/>
 				))}
 				{state.isInvalid
-				&& <span aria-hidden='true'>🚫</span>}
+                    && <span aria-hidden='true'>🚫</span>}
 			</div>
 			{
 				isInvalid && (

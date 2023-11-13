@@ -17,7 +17,8 @@ export function selectColumn<T>(columnHelper: ColumnHelper<T>) {
 			return (
 				<div className='flex items-center justify-center'>
 					<Checkbox
-						isSelected={checked !== 'indeterminate' && checked} isIndeterminate={checked === 'indeterminate'} onChange={() => {
+						isSelected={checked !== 'indeterminate' && checked}
+						isIndeterminate={checked === 'indeterminate'} onChange={() => {
 							table.toggleAllRowsSelected();
 						}}/>
 				</div>
@@ -35,15 +36,31 @@ export function selectColumn<T>(columnHelper: ColumnHelper<T>) {
 	});
 }
 
-export function detailsLinkColumn<T>(columnHelper: ColumnHelper<T>, basePath: string) {
-	return columnHelper.display({
+export function detailsLinkColumn<T>(
+	columnHelper: ColumnHelper<T>, basePath: string) {
+	return columnHelper.display
+	({
 		id: 'details',
-		cell: info => (
-			<Link href={`${basePath}/${info.row.id.toString()}`}>
-				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-500'>
-					<Icon name='chevron_right'/>
-				</Button>
-			</Link>
-		),
+		cell: info =>
+			(
+				<Link href={
+					`$
+    {basePath
+    }
+    /$
+    {info.row.id.toString
+        ()
+    }
+    `
+				}
+				>
+					<Button
+						variant='text' color='tertiary' size='sm'
+						className='hover:bg-stone-500'
+					>
+						<Icon name='chevron_right'/>
+					</Button>
+				</Link>
+			),
 	});
 }
