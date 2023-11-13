@@ -2,7 +2,7 @@ import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
 import {getUser} from '@/lib/user.ts';
-import UserUpdateForm from '@/app/admin/[userId]/user-update-form.tsx';
+import UserForm from '@/app/admin/users/user-form.tsx';
 
 export default withPageAuthRequired(async ({params}) => {
 	if (params === undefined) {
@@ -23,7 +23,7 @@ export default withPageAuthRequired(async ({params}) => {
 			<h2>
 				{`${user.givenName} ${user.familyName}`}
 			</h2>
-			<UserUpdateForm user={user} className='w-full'/>
+			<UserForm user={user}/>
 		</div>
 	);
 }, {

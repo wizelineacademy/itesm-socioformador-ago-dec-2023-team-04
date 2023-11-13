@@ -6,7 +6,7 @@ import Dialog from '@/components/dialog.tsx';
 import FileDropZone from '@/components/file-drop-zone.tsx';
 import Icon from '@/components/icon.tsx';
 import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
-import BiometricVideoInput from '@/app/students/create/biometric-video-input.tsx';
+import BiometricVideoInput from '@/app/students/biometric-video-input.tsx';
 import {cx} from '@/lib/cva.ts';
 
 export type BiometricDataDialogProps = {

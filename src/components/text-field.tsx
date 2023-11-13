@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {type AriaTextFieldProps, useTextField} from 'react-aria';
+import {type AriaTextFieldOptions, type AriaTextFieldProps, useTextField} from 'react-aria';
 import {cx} from '@/lib/cva.ts';
 import Icon from '@/components/icon.tsx';
 
@@ -13,7 +13,6 @@ export default function TextField(props: TextFieldProps) {
 		label,
 		className,
 		description,
-		errorMessage,
 		isDisabled,
 		isRequired,
 		iconName,
@@ -25,7 +24,12 @@ export default function TextField(props: TextFieldProps) {
 		inputProps,
 		descriptionProps,
 		errorMessageProps,
-	} = useTextField(props, inputRef);
+		validationErrors,
+		isInvalid,
+	} = useTextField({
+		validationBehavior: 'native',
+		...props,
+	}, inputRef);
 
 	return (
 		<div className={cx('group h-fit', className)}>
@@ -60,9 +64,9 @@ export default function TextField(props: TextFieldProps) {
 				)
 			}
 			{
-				errorMessage && (
+				isInvalid && (
 					<div {...errorMessageProps} className='mt-1 text-red-400 text-xs'>
-						{props.errorMessage}
+						{validationErrors.join(' ')}
 					</div>
 				)
 			}

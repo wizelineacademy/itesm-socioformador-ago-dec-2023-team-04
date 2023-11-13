@@ -11,9 +11,7 @@ import Icon from '@/components/icon.tsx';
 import Checkbox from '@/components/checkbox.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
-import deleteStudents from '@/app/students/delete-students-action.ts';
 import TextField from '@/components/text-field.tsx';
-import TopBar from '@/components/top-bar.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
 
 const columnHelper = createColumnHelper<Student>();
@@ -70,23 +68,18 @@ const columns = [
 	}),
 ];
 
-export default function StudentClientLayout({children, initialStudents}: {
-	readonly initialStudents: Student[];
+export type StudentClientLayoutProps = {
+	readonly students: Student[];
+	readonly children: React.ReactNode;
+};
+
+export default function StudentClientLayout({children, students}: {
+	readonly students: Student[];
 	readonly children: React.ReactNode;
 }) {
 	const [globalFilter, setGlobalFilter] = useState<string>('');
-	const queryClient = useQueryClient();
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
-
-	const {data: students} = useQuery('students', async () => {
-		const result = await axios.get<Student[]>('/api/students');
-		console.log(result);
-		return result.data;
-	}, {
-		initialData: initialStudents,
-		staleTime: 5000,
-	});
 
 	const handleDeleteClick = async () => {
 		const studentIds = [...selectedKeys.values()].map(key => {
@@ -96,12 +89,8 @@ export default function StudentClientLayout({children, initialStudents}: {
 
 			return Number(key);
 		});
-		const result = await deleteStudents(studentIds);
-
-		if (result.success) {
-			await queryClient.invalidateQueries('students');
-			setSelectedKeys(new Set());
-		}
+		// TODO reimplement student deletion
+		// const result = await deleteStudents(studentIds);
 	};
 
 	return (

@@ -5,6 +5,7 @@ import {getStudentById} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
 import {Button} from '@/components/button.tsx';
+import StudentForm from '@/app/students/student-form.tsx';
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {
@@ -24,8 +25,8 @@ export default withPageAuthRequired(async ({params}: {
 				<h1 className='text-2xl'>
 					{`${student.givenName} ${student.familyName}`}
 				</h1>
-				<Icon name='edit'/>
 			</div>
+			<StudentForm student={student}/>
 			{
 				student.tutors.length > 0 && (
 					<div>

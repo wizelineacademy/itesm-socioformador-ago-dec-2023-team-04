@@ -1,4 +1,3 @@
-import {useRouter} from 'next/navigation';
 import {type FormikErrors, useFormik} from 'formik';
 import {toFormikValidate} from 'zod-formik-adapter';
 import type z from 'zod';
@@ -33,49 +32,44 @@ export function changeHandlers<T extends object>(values: T, onFieldChange: (fiel
 	};
 }
 
-export type EntityFormOptions<Output extends Input, Shape extends z.ZodRawShape, Input extends object> = {
-	readonly schema: z.ZodObject<Shape, any, any, Output, Input>;
-	readonly redirectBasePath: string;
-	readonly entity: Input | Input & Entity;
-	readonly action: (values: Output, id?: number) => Promise<ServerActionResult<number>>;
+export type EntityFormOptions<Schema extends z.ZodTypeAny> = {
+	readonly schema: Schema;
+	readonly entity: z.input<Schema>;
+	readonly onSubmit: (validatedValues: z.output<Schema>) => Promise<ServerActionResult<number>>;
 };
 
-export function useEntityForm<Output extends Input, Shape extends z.ZodRawShape, Input extends object>(options: EntityFormOptions<Output, Shape, Input>) {
-	const {schema, redirectBasePath, entity} = options;
+export function useForm<Schema extends z.ZodTypeAny>(options: EntityFormOptions<Schema>) {
+	const {schema, entity, onSubmit} = options;
 
-	const router = useRouter();
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const {values, setFieldValue, setFieldTouched, handleSubmit, status, setStatus, errors} = useFormik({
 		initialValues: entity,
 		validate: toFormikValidate(schema),
 		async onSubmit(values) {
-			console.log('submitted');
-			console.log(values);
-			if ('id' in entity) {
-				const result = await options.action(schema.parse(values), entity.id);
+			try {
+				const validatedValues = schema.parse(values) as z.output<Schema>;
+				const result = await onSubmit(validatedValues);
 				if (result.success) {
 					setStatus(undefined);
 				} else {
 					setStatus(result.message);
 				}
-			} else {
-				const result = await options.action(schema.partial().parse(values) as Output);
-				if (result.success) {
-					setStatus(undefined);
-					router.push(`${redirectBasePath}/${result.data}`);
+			} catch (error) {
+				if (error instanceof Error) {
+					setStatus(error.message);
 				} else {
-					setStatus(result.message);
+					setStatus('Ha ocurrido un error interno.');
 				}
 			}
 		},
 	});
 
-	const changeHandler = changeHandlers(values, setFieldValue);
-	const blurHandler = blurHandlers(values, setFieldTouched);
-
-	return {values, changeHandler, blurHandler, submitHandler: handleSubmit, status: (status as string), errors};
+	return {
+		values,
+		changeHandler: changeHandlers(values, setFieldValue),
+		blurHandler: blurHandlers(values, setFieldTouched),
+		submitHandler: handleSubmit,
+		status: (status as string),
+		errors,
+	};
 }
-
-export type Entity = {
-	readonly id: number;
-};

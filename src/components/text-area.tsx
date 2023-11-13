@@ -22,7 +22,10 @@ export default function TextArea(props: TextAreaProps) {
 		inputProps,
 		descriptionProps,
 		errorMessageProps,
+		isInvalid,
+		validationErrors,
 	} = useTextField({
+		validationBehavior: 'native',
 		...props,
 		inputElementType: 'textarea',
 	}, inputRef);
@@ -56,9 +59,9 @@ export default function TextArea(props: TextAreaProps) {
 				)
 			}
 			{
-				errorMessage && (
+				isInvalid && (
 					<div {...errorMessageProps} className='mt-1 text-red-400 text-xs'>
-						{props.errorMessage}
+						{validationErrors.join(' ')}
 					</div>
 				)
 			}
