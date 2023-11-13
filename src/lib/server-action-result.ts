@@ -1,13 +1,13 @@
-type ServerActionSuccess = {
+export type ServerActionSuccess = {
 	success: true;
 };
 
-type ServerActionSuccessWithData<Data> = {
+export type ServerActionSuccessWithData<Data> = {
 	success: true;
 	data: Data;
 };
 
-type ServerActionFailure = {
+export type ServerActionFailure = {
 	success: false;
 	name?: string;
 	message: string;

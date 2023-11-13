@@ -1,6 +1,7 @@
 import React, {type Key, type ReactNode, useRef} from 'react';
-import {type RadioGroupState, useOverlayTriggerState, useRadioGroupState} from 'react-stately';
+import {type RadioGroupProps, type RadioGroupState, useOverlayTriggerState, useRadioGroupState} from 'react-stately';
 import {
+	type AriaRadioGroupProps,
 	type AriaRadioProps,
 	mergeProps,
 	useButton,
@@ -19,93 +20,55 @@ import Popover from '@/components/popover.tsx';
 
 const RadioContext = React.createContext(null);
 
-export type ColorSelectorProps = {
-	readonly colors: Color[];
-	readonly label?: string;
-	readonly className?: string;
-	readonly selectedColor: Key;
-	readonly onSelectedColorChange: (selectedColor: Key) => void;
-};
-
-export default function ColorSelector(props: ColorSelectorProps) {
-	const {colors, className, selectedColor, onSelectedColorChange, label} = props;
-
-	const state = useOverlayTriggerState({});
-	const triggerRef = useRef<HTMLButtonElement>(null);
-	const {triggerProps, overlayProps} = useOverlayTrigger({
-		type: 'dialog',
-	}, state, triggerRef);
-
-	const color = colors.find(color => color.id.toString() === selectedColor);
-
-	const labelId = useId();
-
-	return (
-		<div className={className}>
-			{
-				label && <label id={labelId} className={cx('block text-stone-400 text-xs mb-1', state.isOpen && 'text-stone-50')}>
-					{label}
-				</label>
-			}
-
-			<ColorButton {...mergeProps(triggerProps, props)} ref={triggerRef} color={color?.code} aria-labelledby={labelId}/>
-			{
-				state.isOpen
-					? <Popover {...props} triggerRef={triggerRef} state={state} className='p-1' placement='bottom start'>
-						<ColorRadioGroup {...overlayProps} colors={colors} value={selectedColor.toString()} onValueChange={onSelectedColorChange}/>
-					</Popover>
-					: null
-			}
-		</div>
-	);
-}
-
-type ColorButtonProps = {
-	readonly color?: string;
-} & Omit<ButtonProps, 'children' | 'color'>;
-
-const ColorButton = React.forwardRef(
-	(props: ColorButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
-		const {className, color} = props;
-		const buttonRef = useObjectRef(ref);
-		const {buttonProps} = useButton(props, buttonRef);
-		return (
-			// eslint-disable-next-line react/button-has-type
-			<button
-				{...buttonProps} ref={buttonRef} className={cx('block outline-none border focus:border-stone-50 rounded h-10 w-full border-stone-600', !color && 'bg-stone-700', className)}
-				style={{
-					backgroundColor: color === undefined ? undefined : `#${color}`,
-				}}
-			/>
-		);
-	},
-);
-
 type ColorRadioGroupProps = {
 	readonly colors: Color[];
 	readonly className?: string;
-	readonly value: string;
-	readonly onValueChange: (value: string) => void;
-};
+} & RadioGroupProps & AriaRadioGroupProps;
 
-function ColorRadioGroup(props: ColorRadioGroupProps) {
-	const {colors, value, onValueChange, className} = props;
+export default function ColorRadioGroup(props: ColorRadioGroupProps) {
+	const {colors, className, label, isRequired, isDisabled} = props;
 	const state = useRadioGroupState({
-		value,
-		onChange: onValueChange,
+		validationBehavior: 'native',
+		...props,
 	});
 	const {
 		radioGroupProps,
+		isInvalid,
+		validationErrors,
+		labelProps,
 	} = useRadioGroup({
-		'aria-label': 'Selecciona un color',
+		validationBehavior: 'native',
+		...props,
 	}, state);
 
 	return (
-		<div {...radioGroupProps} className={cx('grid gap-1 grid-cols-5', className)}>
-			{colors.map(color => (
-				<ColorRadio key={color.id} aria-label={`#${color.code}`} state={state} color={color}/>
-			))}
+		<div {...radioGroupProps} className={cx('flex gap-1 flex-wrap', className)}>
+			{
+				label && (
+					<label
+						{...labelProps} className={cx(
+							'group-focus-within:text-stone-50 text-stone-400 text-xs block mb-1',
+							isRequired && 'after:content-["_*"]',
+							isDisabled && 'text-stone-500',
+						)}
+					>
+						{label}
+					</label>
+				)
+			}
+			<div className='flex gap-1 flex-wrap'>
+				{colors.map(color => (
+					<ColorRadio key={color.id} aria-label={`#${color.code}`} state={state} color={color}/>
+				))}
+			</div>
+
+			{
+				isInvalid && <div className='mt-1 text-red-400 text-xs'>
+					{validationErrors.join(' ')}
+				</div>
+			}
 		</div>
+
 	);
 }
 

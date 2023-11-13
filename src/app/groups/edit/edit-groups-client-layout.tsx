@@ -12,6 +12,7 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
+import {deleteGroups} from '@/lib/actions/group.ts';
 
 const columnHelper = createColumnHelper<Group>();
 
@@ -59,8 +60,11 @@ export default function EditGroupsClientLayout({children, groups}: {
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
-	const deleteHandler = () => {
-		console.log('deleted groups');
+	const deleteHandler = async () => {
+		const result = await deleteGroups([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+		if (result.success) {
+			setSelectedKeys(new Set());
+		}
 	};
 
 	return (

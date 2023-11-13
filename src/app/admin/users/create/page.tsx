@@ -1,5 +1,5 @@
 import React from 'react';
-import UserCreationForm from '@/app/admin/create/user-creation-form.tsx';
+import UserForm from '@/app/admin/users/user-form.tsx';
 
 export default function UsersPage() {
 	return (
@@ -7,7 +7,7 @@ export default function UsersPage() {
 			<h2 className='text-2xl mb-4'>
 				Creación de usuario
 			</h2>
-			<UserCreationForm className='w-full'/>
+			<UserForm/>
 		</div>
 
 	);

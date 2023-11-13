@@ -17,7 +17,7 @@ export function selectColumn<T>(columnHelper: ColumnHelper<T>) {
 			return (
 				<div className='flex items-center justify-center'>
 					<Checkbox
-						checked={checked} onCheckedChange={() => {
+						isSelected={checked !== 'indeterminate' && checked} isIndeterminate={checked === 'indeterminate'} onChange={() => {
 							table.toggleAllRowsSelected();
 						}}/>
 				</div>
@@ -26,8 +26,8 @@ export function selectColumn<T>(columnHelper: ColumnHelper<T>) {
 		cell: ({row}) => (
 			<div className='flex items-center justify-center'>
 				<Checkbox
-					checked={row.getIsSelected()} className='group-hover:border-stone-600 hover:bg-stone-600'
-					onCheckedChange={() => {
+					isSelected={row.getIsSelected()} className='group-hover:border-stone-600 hover:bg-stone-600'
+					onChange={() => {
 						row.toggleSelected();
 					}}/>
 			</div>

@@ -1,7 +1,7 @@
 'use client';
-import React, {type ReactNode} from 'react';
+import React, {useState} from 'react';
 import {type Color, type Group} from '@prisma/client';
-import {Time} from '@internationalized/date';
+import {fromDate, Time} from '@internationalized/date';
 import TextField from '@/components/text-field.tsx';
 import TextArea from '@/components/text-area.tsx';
 import TimeField from '@/components/time-field.tsx';
@@ -9,9 +9,10 @@ import ColorRadioGroup from '@/components/color-selector.tsx';
 import Switch from '@/components/switch.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import {groupSchema} from '@/lib/schemas/group.ts';
-import {createOrUpdateGroupAction} from '@/lib/actions/group.ts';
-import {useEntityForm} from '@/lib/hooks/use-entity-form.ts';
+import groupSchema from '@/lib/schemas/group.ts';
+import Form from '@/components/form.tsx';
+import {upsertGroupAction} from '@/lib/actions/group.ts';
+import {formValidators} from '@/lib/schemas/utils.ts';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
@@ -24,67 +25,59 @@ export default function GroupForm(props: GroupFormProps) {
 		group,
 	} = props;
 
-	const {
-		values,
-		changeHandler,
-		blurHandler,
-		submitHandler,
-		status,
-		errors,
-	} = useEntityForm({
-		redirectBasePath: '/groups/edit',
-		schema: groupSchema,
-		entity: group ?? {
-			name: '',
-			active: true,
-			description: '',
-			entryHour: new Time(),
-			exitHour: new Time(),
-			tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			colorId: colors[0].id,
-		},
-		action: createOrUpdateGroupAction,
-	});
+	const validate = formValidators(groupSchema);
+
+	const [active, setActive] = useState(group?.active ?? true);
 
 	return (
-		<form onSubmit={submitHandler}>
-			{
-				status && <div className='rounded bg-red-400 text-stone-50'>
-					{status}
-				</div>
-			}
+		<Form
+			id={group?.id}
+			action={upsertGroupAction} staticValues={{
+				tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+				active: active ? undefined : false,
+			}}
+		>
 			<TextField
-				label='Nombre' className='mb-4' value={values.name}
-				errorMessage={errors.name}
-				onBlur={blurHandler.name}
-				onChange={changeHandler.name}/>
+				isRequired
+				label='Nombre'
+				name='name'
+				className='mb-4'
+				defaultValue={group?.name}
+				validate={validate.name}/>
 			<TextArea
-				label='Descripción' className='mb-4' value={values.description}
-				errorMessage={errors.description}
-				onBlur={blurHandler.description}
-				onChange={changeHandler.description}/>
+				isRequired
+				name='description'
+				label='Descripción' className='mb-4'
+				defaultValue={group?.description}
+				validate={validate.description}
+			/>
 			<div className='flex justify-between mb-4'>
 				<TimeField
-					label='Hora de entrada' value={values.entryHour as Time}
-					errorMessage={errors.entryHour as ReactNode}
-					onBlur={blurHandler.entryHour}
-					onChange={changeHandler.entryHour}/>
+					isRequired
+					name='entryHour'
+					label='Hora de entrada'
+					validate={validate.entryHour}
+					defaultValue={group?.entryHour ? new Time(group.entryHour.getHours(), group.entryHour.getSeconds()) : undefined}
+				/>
 				<TimeField
-					label='Hora de salida' value={values.exitHour as Time}
-					errorMessage={errors.exitHour as ReactNode}
-					onBlur={blurHandler.exitHour}
-					onChange={changeHandler.exitHour}/>
+					isRequired
+					name='exitHour'
+					label='Hora de salida'
+					defaultValue={group?.exitHour ? new Time(group.exitHour.getHours(), group.exitHour.getSeconds()) : undefined}
+					validate={validate.exitHour}
+				/>
 			</div>
 			<ColorRadioGroup
-				label='Color del grupo' className='mb-4' colors={colors}
-				selectedColor={values.colorId.toString()}
-				onSelectedColorChange={value => {
-					changeHandler.colorId(Number.parseInt(value as string, 10));
-				}}/>
+				isRequired
+				name='colorId'
+				validate={validate.colorId}
+				defaultValue={group?.colorId?.toString()}
+				label='Color del grupo' className='mb-4' colors={colors}/>
 			<Switch
-				className='mb-4' isSelected={values.active} onChange={active => {
-					changeHandler.active(active);
-				}}
+				name='active'
+				className='mb-4'
+				isSelected={active}
+				onChange={setActive}
 			>
 				Grupo activo
 			</Switch>
@@ -94,6 +87,6 @@ export default function GroupForm(props: GroupFormProps) {
 				</Button>
 			</div>
 
-		</form>
+		</Form>
 	);
 }

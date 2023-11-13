@@ -1,12 +1,14 @@
 import z from 'zod';
-import {emptyStringToNullSchema, timeToDate} from '@/lib/schemas/util.ts';
+import {boolean, timeToDate} from '@/lib/schemas/utils.ts';
 
-export const groupSchema = z.object({
-	name: emptyStringToNullSchema.pipe(z.string()),
-	active: z.boolean(),
-	description: emptyStringToNullSchema.pipe(z.string()),
+const groupSchema = z.object({
+	name: z.string(),
+	active: boolean,
+	description: z.string(),
 	entryHour: timeToDate,
 	exitHour: timeToDate,
-	tz: emptyStringToNullSchema.pipe(z.string()),
-	colorId: z.number(),
+	tz: z.string(),
+	colorId: z.coerce.number(),
 });
+
+export default groupSchema;
