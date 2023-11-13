@@ -1,7 +1,6 @@
 'use client';
-import React, {useState} from 'react';
+import React from 'react';
 import {type DateValue} from '@internationalized/date';
-import {Item} from 'react-stately';
 import {
 	BarChart,
 	Bar,
@@ -63,13 +62,16 @@ export default function Home() {
 					<RadioGroup label='Seleccione uno'>
 						<Radio value='entry'>Registro de entradas</Radio>
 						<Radio value='exit'>Registro de salidas</Radio>
+						<Radio value='attendence'>Registro de asistencias</Radio>
+						<Radio value='entryHours'>Horas de entrada</Radio>
+						<Radio value='exitHours'>Horas de salida</Radio>
 					</RadioGroup>
 					<DateRangePicker
 						label='Seleccione un intérvalo de fechas'/>
 
 					<h2> Gráfico </h2>
 					<BarChart
-						width={500}
+						width={1000}
 						height={300}
 						data={data}
 						margin={{
@@ -83,8 +85,8 @@ export default function Home() {
 						<YAxis/>
 						<Tooltip/>
 						<Legend/>
-						<Bar dataKey='att' stackId='a' fill='#8884d8'/>
-						<Bar dataKey='abs' stackId='a' fill='#82ca9d'/></BarChart>
+						<Bar name='Asistencias' dataKey='att' stackId='a' fill='#324c67'/>
+						<Bar name='Faltas' dataKey='abs' stackId='a' fill='#e93d44'/></BarChart>
 				</div>
 			</div>
 		</main>

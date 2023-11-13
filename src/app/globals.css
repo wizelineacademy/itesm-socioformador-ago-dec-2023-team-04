@@ -7,42 +7,57 @@
 .material-symbols-xs {
     font-variation-settings: 'FILL' 1, 'opsz' 12;
 }
+
 .material-symbols-sm {
     font-variation-settings: 'FILL' 1, 'opsz' 14;
 }
+
 .material-symbols-md {
     font-variation-settings: 'FILL' 1, 'opsz' 16;
 }
+
 .material-symbols-lg {
     font-variation-settings: 'FILL' 1, 'opsz' 18;
 }
+
 .material-symbols-xl {
     font-variation-settings: 'FILL' 1, 'opsz' 20;
 }
+
 .material-symbols-2xl {
     font-variation-settings: 'FILL' 1, 'opsz' 24;
 }
+
 .material-symbols-3xl {
     font-variation-settings: 'FILL' 1, 'opsz' 30;
 }
+
 .material-symbols-4xl {
     font-variation-settings: 'FILL' 1, 'opsz' 36;
 }
+
 .material-symbols-5xl {
     font-variation-settings: 'FILL' 1, 'opsz' 48;
 }
+
 .material-symbols-6xl {
     font-variation-settings: 'FILL' 1, 'opsz' 60;
 }
+
 .material-symbols-7xl {
     font-variation-settings: 'FILL' 1, 'opsz' 72;
 }
+
 .material-symbols-8xl {
     font-variation-settings: 'FILL' 1, 'opsz' 96;
 }
+
 .material-symbols-9xl {
     font-variation-settings: 'FILL' 1, 'opsz' 128;
 }
 
-
-
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}

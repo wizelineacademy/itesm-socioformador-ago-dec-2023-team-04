@@ -12,9 +12,9 @@ import Checkbox from '@/components/checkbox.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import deleteStudents from '@/app/students/delete-students-action.ts';
-import TextField from '@/components/text-field.tsx';
 import TopBar from '@/components/top-bar.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import SearchField from '@/components/search-field.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -109,11 +109,13 @@ export default function StudentClientLayout({children, initialStudents}: {
 			title='Alumnos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDeleteClick}/>
+					<DeleteButton
+						label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0}
+						onDelete={handleDeleteClick}/>
 					<Link href='/students/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
-					<TextField aria-label='Buscar' iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+					<SearchField value={globalFilter} className='w-72' onChange={setGlobalFilter}/>
 				</>
 			}
 		>
@@ -121,7 +123,7 @@ export default function StudentClientLayout({children, initialStudents}: {
 				<div className='bg-stone-800 grow rounded'>
 					<Table
 						className='w-full' data={students ?? []} columns={columns}
-						   selectedKeys={selectedKeys} globalFilter={globalFilter}
+						selectedKeys={selectedKeys} globalFilter={globalFilter}
 						onSelectedKeysChange={setSelectedKeys}/>
 				</div>
 				<div className='w-72 sticky bg-stone-800 h-fit rounded p-4 top-4'>
