@@ -9,41 +9,18 @@ import axios from 'axios';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import deleteUsers from '@/app/admin/delete-users-action.ts';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
 import TextField from '@/components/text-field.tsx';
 import Checkbox from '@/components/checkbox.tsx';
 import Table from '@/components/table.tsx';
+import {deleteUsers} from '@/lib/actions/user.ts';
+import {selectColumn} from '@/components/table-columns.tsx';
+import DeleteButton from '@/components/delete-button.tsx';
 
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
-	columnHelper.display({
-		id: 'select',
-		header({table}) {
-			let checked: 'indeterminate' | boolean = table.getIsAllRowsSelected();
-			if (!checked) {
-				checked = table.getIsSomeRowsSelected() ? 'indeterminate' : false;
-			}
-
-			return (
-				<div className='flex items-center justify-center'>
-					<Checkbox
-						checked={checked} onCheckedChange={() => {
-							table.toggleAllRowsSelected();
-						}}/>
-				</div>
-			);
-		},
-		cell: ({row}) => (
-			<div className='flex items-center justify-center'>
-				<Checkbox
-					checked={row.getIsSelected()} className='group-hover:border-stone-600 hover:bg-stone-600' onCheckedChange={() => {
-						row.toggleSelected();
-					}}/>
-			</div>
-		),
-	}),
+	selectColumn(columnHelper),
 	columnHelper.accessor('email', {
 		header: 'Correo electrónico',
 		cell: info => info.getValue(),
@@ -72,7 +49,10 @@ const columns = [
 	}),
 ];
 
-export default function UserAdminClientLayout({children, initialUsers}: {readonly initialUsers: User[]; readonly children: React.ReactNode}) {
+export default function UserAdminClientLayout({children, initialUsers}: {
+	readonly initialUsers: User[];
+	readonly children: React.ReactNode;
+}) {
 	const [userSelection, setUserSelection] = React.useState<Record<string, boolean>>({});
 	const queryClient = useQueryClient();
 
@@ -101,23 +81,10 @@ export default function UserAdminClientLayout({children, initialUsers}: {readonl
 			title='Usuarios' topbarItems={
 				<>
 					<Spacer/>
-					<Popover.Root>
-						<Popover.Trigger asChild>
-							<Button color='destructive' isDisabled={Object.keys(userSelection).length === 0}> <Icon name='delete'/></Button>
-						</Popover.Trigger>
-						<Popover.Portal>
-							<Popover.Content align='end'>
-								<Popover.Arrow className='fill-stone-700'/>
-								<div className='bg-stone-700 p-4 w-48 rounded'>
-									<p className='text-stone-200 mb-2 text-sm'>
-										¿Borrar los registros seleccionados?
-									</p>
-									<Button color='destructive' size='sm' onPress={handleDeleteClick}> Borrar </Button>
-								</div>
-							</Popover.Content>
-						</Popover.Portal>
-					</Popover.Root>
-					<Link href='/admin/create'>
+					<DeleteButton
+						label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0}
+						onDelete={handleDeleteClick}/>
+					<Link href='/admin/users/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
 
@@ -129,8 +96,8 @@ export default function UserAdminClientLayout({children, initialUsers}: {readonl
 				<div className='bg-stone-800 grow rounded'>
 					<Table
 						data={users ?? []} columns={columns}
-						   selectedKeys={selectedStudents} globalFilter={globalFilter}
-						   onSelectedKeysChange={setSelectedStudents}
+						selectedKeys={selectedStudents} globalFilter={globalFilter}
+						onSelectedKeysChange={setSelectedStudents}
 					/>
 				</div>
 				<div className='w-72 bg-stone-800 h-full rounded p-4'>
