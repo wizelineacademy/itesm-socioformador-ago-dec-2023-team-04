@@ -8,11 +8,13 @@ import Spacer from '@/components/spacer.tsx';
 import {type Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import NotificationsTable from '@/app/notifications/notifications-table.tsx';
-import SearchBar from '@/components/search-bar.tsx';
+import SearchField from '@/components/search-field.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
-import TextField from '@/components/text-field.tsx';
 
-function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void; readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
+function DeleteButton({confirmationMessage, onClick, ...props}: {
+	readonly onClick: () => void;
+	readonly confirmationMessage: string;
+} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
 	return (
 		<Popover.Root>
 			<Popover.Trigger asChild/>
@@ -43,7 +45,7 @@ export default function NotificationClientLayout({children, initialNotifications
 			title='Notificaciones' topbarItems={
 				<>
 					<Spacer/>
-					<TextField iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+					<SearchField value={globalFilter} className='w-72' onChange={setGlobalFilter}/>
 				</>
 			}
 		>
