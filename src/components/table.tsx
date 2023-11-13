@@ -1,8 +1,8 @@
 import React, {type Key, useMemo, useState} from 'react';
-import clsx from 'clsx';
 import {type ColumnDef, flexRender, getFilteredRowModel, getSortedRowModel, useReactTable} from '@tanstack/react-table';
 import {getCoreRowModel, type SortingState} from '@tanstack/table-core';
 import {useLocale} from 'react-aria';
+import {cx} from '@/lib/cva.ts';
 import Icon from '@/components/icon.tsx';
 
 export type TableProps<T> = {
@@ -113,7 +113,7 @@ export default function Table<T extends object>(props: TableProps<T>) {
 						{row.getVisibleCells().map(cell => (
 							<td
 								key={cell.id}
-								className={clsx('group-hover:cursor-pointer', 'p-2 group-hover:bg-stone-700')}
+								className={cx('group-hover:cursor-pointer', 'p-2 group-hover:bg-stone-700')}
 								onClick={cell.column.id === 'información' ? undefined : row.getToggleSelectedHandler()}
 							>
 								{flexRender(cell.column.columnDef.cell, cell.getContext())}
