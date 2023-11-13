@@ -1,5 +1,5 @@
 import z from 'zod';
-import {emptyStringToNull} from '@/lib/schemas/util.ts';
+// Import {emptyStringToNull} from '@/lib/schemas/util.ts';
 
 const stringParameters = {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
@@ -7,7 +7,7 @@ const stringParameters = {
 };
 
 export const notificationCreationSchema = z.object({
-	message: z.preprocess(emptyStringToNull, z.string(stringParameters)),
+	// Message: z.preprocess(emptyStringToNull, z.string(stringParameters)),
 	id: z.coerce.number().optional(),
 });
 
