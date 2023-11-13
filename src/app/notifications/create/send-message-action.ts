@@ -9,6 +9,7 @@ import createNotification from '@/app/notifications/create/create-notification-a
 export default async function sendMessage(notificationCreation: NotificationCreation, student: Student, tutor: Tutor): Promise<ServerActionResult<number>> {
 	try {
 		console.log(tutor);
+
 		const validatedMessage = notificationCreationSchema.parse(notificationCreation);
 
 		const notificacion = await client.messages.create({
