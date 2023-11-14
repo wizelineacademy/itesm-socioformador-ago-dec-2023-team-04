@@ -1,7 +1,7 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {type Color} from '@prisma/client';
-import {Time} from '@internationalized/date';
+import {getLocalTimeZone, Time} from '@internationalized/date';
 import {useListData} from 'react-stately';
 import TextField from '@/components/text-field.tsx';
 import TextArea from '@/components/text-area.tsx';
@@ -17,6 +17,7 @@ import {formValidators} from '@/lib/schemas/utils.ts';
 import {type GroupByIdWithStudents} from '@/lib/group.ts';
 import {type StudentSearchResult} from '@/lib/user.ts';
 import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
+import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
@@ -33,6 +34,39 @@ export default function GroupForm(props: GroupFormProps) {
 
 	const [active, setActive] = useState(group?.active ?? true);
 
+	const [daysActive, setDaysActive] = useState(() => {
+		const days: string[] = [];
+		if (group?.enabledMonday) {
+			days.push('monday');
+		}
+
+		if (group?.enabledTuesday) {
+			days.push('tuesday');
+		}
+
+		if (group?.enabledWednesday) {
+			days.push('wednesday');
+		}
+
+		if (group?.enabledThursday) {
+			days.push('thursday');
+		}
+
+		if (group?.enabledFriday) {
+			days.push('friday');
+		}
+
+		if (group?.enabledSaturday) {
+			days.push('saturday');
+		}
+
+		if (group?.enabledSunday) {
+			days.push('sunday');
+		}
+
+		return days;
+	});
+
 	const groupStudents = useListData<StudentSearchResult>({
 		initialItems: group?.students ?? [],
 	});
@@ -41,9 +75,16 @@ export default function GroupForm(props: GroupFormProps) {
 		<Form
 			id={group?.id}
 			action={upsertGroupAction} staticValues={{
-				tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+				tz: getLocalTimeZone(),
 				active: active ? undefined : false,
 				students: JSON.stringify(groupStudents.items.map(student => student.id)),
+				enabledMonday: daysActive.includes('monday') ? undefined : false,
+				enabledTuesday: daysActive.includes('tuesday') ? undefined : false,
+				enabledWednesday: daysActive.includes('wednesday') ? undefined : false,
+				enabledThursday: daysActive.includes('thursday') ? undefined : false,
+				enabledFriday: daysActive.includes('friday') ? undefined : false,
+				enabledSaturday: daysActive.includes('saturday') ? undefined : false,
+				enabledSunday: daysActive.includes('sunday') ? undefined : false,
 			}}
 		>
 			<TextField
@@ -76,6 +117,31 @@ export default function GroupForm(props: GroupFormProps) {
 					validate={validate.exitHour}
 				/>
 			</div>
+			<ButtonGroup label='Días de asistencia' className='mb-4' value={daysActive} onChange={setDaysActive}>
+				<GroupedButton name='enabledMonday' value='monday'>
+					Lunes
+				</GroupedButton>
+				<GroupedButton name='enabledTuesday' value='tuesday'>
+					Martes
+				</GroupedButton>
+				<GroupedButton name='enabledWednesday' value='wednesday'>
+					Miercoles
+				</GroupedButton>
+				<GroupedButton name='enabledThursday' value='thursday'>
+					Jueves
+				</GroupedButton>
+				<GroupedButton
+					name='enabledFriday' value='friday'
+				>
+					Viernes
+				</GroupedButton>
+				<GroupedButton name='enabledSaturday' value='saturday'>
+					Sabado
+				</GroupedButton>
+				<GroupedButton name='enabledSunday' value='sunday'>
+					Domingo
+				</GroupedButton>
+			</ButtonGroup>
 			<p className='mb-2'>
 				Hay {groupStudents.items.length} estudiante(s) en el grupo.
 			</p>
@@ -86,6 +152,7 @@ export default function GroupForm(props: GroupFormProps) {
 				validate={validate.colorId}
 				defaultValue={group?.colorId?.toString()}
 				label='Color del grupo' className='mb-4' colors={colors}/>
+
 			<Switch
 				name='active'
 				className='mb-4'

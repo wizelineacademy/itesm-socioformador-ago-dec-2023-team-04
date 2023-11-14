@@ -66,6 +66,14 @@ model Group {
   exitHour    DateTime @db.Time()
   tz          String
 
+  enabledMonday    Boolean
+  enabledTuesday   Boolean
+  enabledWednesday Boolean
+  enabledThursday  Boolean
+  enabledFriday    Boolean
+  enabledSaturday  Boolean
+  enabledSunday    Boolean
+
   color   Color @relation(fields: [colorId], references: [id])
   colorId Int
 

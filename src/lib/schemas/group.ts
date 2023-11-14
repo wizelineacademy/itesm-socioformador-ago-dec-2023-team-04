@@ -10,6 +10,14 @@ const groupUpsertSchema = z.object({
 	tz: z.string(),
 	colorId: z.coerce.number(),
 	students: json(z.array(z.number())),
+
+	enabledMonday: boolean,
+	enabledTuesday: boolean,
+	enabledWednesday: boolean,
+	enabledThursday: boolean,
+	enabledFriday: boolean,
+	enabledSaturday: boolean,
+	enabledSunday: boolean,
 });
 
 export type GroupUpsert = z.infer<typeof groupUpsertSchema>;

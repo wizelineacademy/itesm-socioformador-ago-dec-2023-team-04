@@ -26,6 +26,7 @@ export async function upsertGroupAction(previousState: FormState<GroupUpsert>, f
 			});
 			newId = result.id;
 		} else {
+			console.log(Object.fromEntries(formData));
 			const validatedGroup = await decodeForm(formData, groupUpsertSchema.partial());
 			const result = await prisma.group.update({
 				where: {

@@ -42,7 +42,7 @@ export function detailsLinkColumn<T>(columnHelper: ColumnHelper<T>, basePath: st
 		id: 'details',
 		cell: info => (
 			<Link href={`${basePath}/${info.row.id.toString()}`}>
-				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-500'>
+				<Button variant='text' color='tertiary' size='sm' className='hover:bg-stone-400'>
 					<Icon name='chevron_right'/>
 				</Button>
 			</Link>

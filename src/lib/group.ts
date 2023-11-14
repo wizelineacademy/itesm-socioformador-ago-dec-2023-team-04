@@ -1,6 +1,14 @@
 import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 
+export const getAllGroupsWithColors = cache(async () => prisma.group.findMany({
+	include: {
+		color: true,
+	},
+}));
+
+export type GroupWithColor = Awaited<ReturnType<typeof getAllGroupsWithColors>>[number];
+
 export const getAllGroups = cache(async () => prisma.group.findMany());
 
 export const getAllGroupsWithStudentCount = cache(async () => prisma.group.findMany({
