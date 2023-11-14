@@ -16,7 +16,7 @@ export default function CalendarGrid({state, ...props}: CalendarGridProps) {
 	const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
 
 	return (
-		<table {...gridProps}>
+		<table {...gridProps} className='border-collapse bordern-none text-stone-400'>
 			<thead {...headerProps}>
 				<tr>
 					{/* eslint-disable-next-line react/no-array-index-key */}
