@@ -38,6 +38,7 @@
 		"cva": "^1.0.0-beta.1",
 		"formik": "^2.4.5",
 		"immutable": "^5.0.0-beta.4",
+		"luxon": "^3.4.4",
 		"material-symbols": "^0.13.2",
 		"next": "^14.0.2",
 		"postcss": "^8.4.31",
@@ -53,6 +54,7 @@
 		"zod-formik-adapter": "^1.2.0"
 	},
 	"devDependencies": {
+		"@types/luxon": "^3.3.4",
 		"@typescript-eslint/eslint-plugin": "^6.11.0",
 		"@typescript-eslint/parser": "^6.11.0",
 		"@typescript/lib-dom": "npm:@types/web@^0.0.119",

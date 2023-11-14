@@ -4,6 +4,11 @@ import prisma from '@/lib/prisma.ts';
 export const getAllGroupsWithColors = cache(async () => prisma.group.findMany({
 	include: {
 		color: true,
+		_count: {
+			select: {
+				students: true,
+			},
+		},
 	},
 }));
 

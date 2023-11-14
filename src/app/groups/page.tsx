@@ -1,78 +1,46 @@
 import React from 'react';
 import Link from 'next/link';
-import {getLocalTimeZone, now, Time, toCalendarDateTime, today, toZoned} from '@internationalized/date';
+import {getDayOfWeek, getLocalTimeZone, isSameDay, Time, toCalendarDateTime, today} from '@internationalized/date';
+import {List} from 'immutable';
 import {getAllGroupsWithColors, type GroupWithColor} from '@/lib/group.ts';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
 import Spacer from '@/components/spacer.tsx';
+import Separator from '@/components/separator.tsx';
+import {GroupCard} from '@/components/groupCard.tsx';
 
-type GroupCardProps = {
-	readonly group: GroupWithColor;
-};
-
-function GroupCard(props: GroupCardProps) {
-	const {group} = props;
-
-	const tz = getLocalTimeZone();
-
-	const date = today(tz);
-	const currentDateTime = now(tz);
-
-	const entryTime = new Time(group.entryHour.getHours(), group.entryHour.getMinutes());
-	const exitTime = new Time(group.exitHour.getHours(), group.exitHour.getMinutes());
-
-	if (date) {
-		const entryDateTime = toZoned(toCalendarDateTime(date, entryTime), group.tz);
-	}
-
-	const exitDateTime = toZoned(toCalendarDateTime(date, exitTime), group.tz);
-
-	return (
-		<div className='border border-stone-700 rounded bg-stone-800'>
-			<div
-				className='rounded-t pt-16 p-2' style={{
-					backgroundColor: `#${group.color.code}`,
-				}}
-			>
-				<h2 className='flex items-baseline text-stone-800 text-2xl font-bold'>
-					{group.name}
-				</h2>
-			</div>
-			<div className='p-2 flex'>
-				<Icon name='arrow_forward'/>
-			</div>
-		</div>
-	);
-}
+const dayAccesor = ['enabledSunday', 'enabledMonday', 'enabledTuesday', 'enabledWednesday', 'enabledThursday', 'enabledFriday', 'enabledSaturday'] as const;
 
 export default async function GroupsPage() {
 	const groups = await getAllGroupsWithColors();
-	// Const client = useClient();
 
-	// const [groupName, setGroupName] = useState('');
-	// const [groupColor, setGroupColor] = useState('');
-	// const [isAddingGroup, setIsAddingGroup] = useState(false);
-	//
-	// const handleAddGroup = () => {
-	// 	setIsAddingGroup(true);
-	// };
-	//
-	// const handleSubmit = (e: React.FormEvent) => {
-	// 	e.preventDefault();
-	// 	// Create a new group object with name and color
-	// 	const newGroup = {
-	// 		groupName,
-	// 		numStudents: 0, // Student Values
-	// 		numProfessors: 0, // Professor Values
-	// 		groupColor,
-	// 	};
-	// 	// Update the groups state with the new group
-	// 	// Reset the form fields and close the form
-	// 	setGroupName('');
-	// 	setGroupColor('');
-	// 	setIsAddingGroup(false);
-	// };
+	const currentDate = today(getLocalTimeZone());
+	const dayOfTheWeek = getDayOfWeek(currentDate, 'en-US');
+
+	const groupHasClassToday = (group: GroupWithColor) => {
+		let daysUntilClass: number | undefined;
+
+		for (let day = 0; day < 7; day++) {
+			let relativeDay = dayOfTheWeek + day;
+			relativeDay = relativeDay > 6 ? relativeDay - 7 : relativeDay;
+			const dayIsEnabled = group[dayAccesor[relativeDay]];
+			if (dayIsEnabled) {
+				daysUntilClass = day;
+				break;
+			}
+		}
+
+		const entryTime = new Time(group.entryHour.getHours(), group.entryHour.getMinutes());
+
+		const entryDateTime = daysUntilClass === undefined ? undefined : toCalendarDateTime(currentDate, entryTime).add({
+			days: daysUntilClass,
+		});
+
+		return entryDateTime !== undefined && isSameDay(entryDateTime, currentDate);
+	};
+
+	const [groupsWithClassToday, groupsWithoutClassToday] = List(groups).partition(element => groupHasClassToday(element));
 
 	return (
 		<TopbarPageLayout
@@ -88,9 +56,30 @@ export default async function GroupsPage() {
 
 			}
 		>
+			{
+				groupsWithClassToday.size > 0 && (
+					<>
+						<h2 className='text-2xl text-stone-300 mb-2'>
+							Tus clases de hoy
+						</h2>
+						<div className='flex gap-4 flex-wrap'>
+							{
+								groupsWithClassToday.map(group => (
+									<GroupCard key={group.id} group={group}/>
+								))
+							}
+						</div>
+						<Separator/>
+						<h2 className='text-2xl text-stone-300 mb-2'>
+							Otros grupos
+						</h2>
+
+					</>
+				)
+			}
 			<div className='flex gap-4 flex-wrap'>
 				{
-					groups.map(group => (
+					groupsWithoutClassToday.map(group => (
 						<GroupCard key={group.id} group={group}/>
 					))
 				}
