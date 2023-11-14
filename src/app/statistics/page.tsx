@@ -1,20 +1,9 @@
 'use client';
 import React from 'react';
 import {type DateValue} from '@internationalized/date';
-import {
-	BarChart,
-	Bar,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	Tooltip,
-	Legend,
-} from 'recharts';
-import {Input} from '@/components/input.tsx';
 import {RadioGroup, Radio} from '@/components/radio.tsx';
 import {DateRangePicker} from '@/components/date-range-picker.tsx';
 import {dateSchema} from '@/lib/statistics.ts';
-import Select from '@/components/select.tsx';
 import Chart from '@/components/chart.tsx';
 
 export default function Home() {
@@ -69,7 +58,6 @@ export default function Home() {
 					</RadioGroup>
 					<DateRangePicker
 						label='Seleccione un intérvalo de fechas'/>
-
 					<h2> Gráfico </h2>
 					<Chart/>
 				</div>
