@@ -1,6 +1,6 @@
 import React from 'react';
+import CreateGroupForm from '@/app/groups/edit/create/create-group-form.tsx';
 import {getAllColors} from '@/lib/color.ts';
-import GroupForm from '@/app/groups/edit/group-form.tsx';
 
 export default async function CreateGroupPage() {
 	const colors = await getAllColors();
@@ -9,7 +9,7 @@ export default async function CreateGroupPage() {
 			<h1 className='text-stone-200 text-lg'>
 				Nuevo grupo
 			</h1>
-			<GroupForm colors={colors}/>
+			<CreateGroupForm colors={colors}/>
 		</>
 	);
 }
