@@ -186,4 +186,3 @@ export async function deleteUsers(userIds: number[]): Promise<ServerActionResult
 		};
 	}
 }
-

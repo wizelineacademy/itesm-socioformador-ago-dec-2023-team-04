@@ -43,6 +43,7 @@ export function RadioGroup(props: RadioGroupProps) {
 }
 
 type RadioProps = AriaRadioProps;
+
 export function Radio(props: RadioProps) {
 	const {children} = props;
 	const state = React.useContext(RadioContext);

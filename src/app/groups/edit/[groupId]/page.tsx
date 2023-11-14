@@ -1,9 +1,8 @@
 import React from 'react';
 import {redirect} from 'next/navigation';
 import prisma from '@/lib/prisma.ts';
+import UpdateGroupForm from '@/app/groups/edit/[groupId]/update-group-form.tsx';
 import {getAllColors} from '@/lib/color.ts';
-import GroupForm from '@/app/groups/edit/group-form.tsx';
-import {getGroupByIdWithStudentIds} from '@/lib/group.ts';
 
 export type EditGroupDetailPageProps = {
 	readonly params: {
@@ -15,7 +14,11 @@ export default async function EditGroupDetailPage(props: EditGroupDetailPageProp
 	const {params} = props;
 	const id = Number.parseInt(params.groupId, 10);
 
-	const group = await getGroupByIdWithStudentIds(id);
+	const group = await prisma.group.findUnique({
+		where: {
+			id,
+		},
+	});
 
 	const colors = await getAllColors();
 
@@ -28,7 +31,7 @@ export default async function EditGroupDetailPage(props: EditGroupDetailPageProp
 			<h1 className='text-stone-200 text-lg'>
 				Editando grupo
 			</h1>
-			<GroupForm group={group} colors={colors}/>
+			<UpdateGroupForm group={group} colors={colors}/>
 		</div>
 	);
 }

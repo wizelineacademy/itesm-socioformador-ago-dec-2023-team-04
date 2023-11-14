@@ -68,7 +68,6 @@ export default function ColorRadioGroup(props: ColorRadioGroupProps) {
 				</div>
 			}
 		</div>
-
 	);
 }
 
