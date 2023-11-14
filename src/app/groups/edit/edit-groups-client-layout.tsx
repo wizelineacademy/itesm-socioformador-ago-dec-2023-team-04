@@ -58,7 +58,9 @@ export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProp
 			title='Grupos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar grupos seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={deleteHandler}/>
+					<DeleteButton
+						label='¿Borrar grupos seleccionados?' isDisabled={selectedKeys.size === 0}
+						onDelete={deleteHandler}/>
 					<Link href='/groups/edit/create'>
 						<Button color='secondary'>
 							<Icon name='add'/>
