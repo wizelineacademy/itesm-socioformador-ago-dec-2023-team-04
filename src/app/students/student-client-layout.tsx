@@ -12,6 +12,7 @@ import TextField from '@/components/text-field.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
 import {deleteStudents} from '@/lib/actions/student.ts';
 import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
+import SearchField from '@/components/search-field.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -58,11 +59,13 @@ export default function StudentClientLayout({children, students}: {
 			title='Alumnos' topbarItems={
 				<>
 					<Spacer/>
-					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDelete}/>
+					<DeleteButton
+						label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0}
+						onDelete={handleDelete}/>
 					<Link href='/students/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
-					<TextField aria-label='Buscar' iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
+					<SearchField value={globalFilter} className='w-72 justify-between' onChange={setGlobalFilter}/>
 				</>
 			}
 		>

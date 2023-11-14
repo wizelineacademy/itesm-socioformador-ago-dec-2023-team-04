@@ -45,7 +45,7 @@ export default function NotificationClientLayout({children, initialNotifications
 			title='Notificaciones' topbarItems={
 				<>
 					<Spacer/>
-					<SearchField value={globalFilter} className='w-72' onChange={setGlobalFilter}/>
+					<SearchField value={globalFilter} className='w-72 justify-between' onChange={setGlobalFilter}/>
 				</>
 			}
 		>
