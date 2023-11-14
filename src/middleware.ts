@@ -1,6 +1,5 @@
 import {getSession} from '@auth0/nextjs-auth0/edge';
 import {type NextRequest, NextResponse} from 'next/server';
-import {getUserByAuthId} from '@/lib/user.ts';
 
 export default async function middleware(request: NextRequest) {
 	const response = new NextResponse();

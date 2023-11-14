@@ -5,26 +5,40 @@ import {redirect} from 'next/navigation';
 import prisma from '@/lib/prisma.ts';
 import {handleErrorAction} from '@/lib/actions/util.ts';
 import {type FormState} from '@/components/form.tsx';
-import groupSchema from '@/lib/schemas/group.ts';
+import groupUpsertSchema, {type GroupUpsert} from '@/lib/schemas/group.ts';
 import {decodeForm} from '@/lib/schemas/utils.ts';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
 
-export async function upsertGroupAction(previousState: FormState<Group>, formData: FormData): Promise<FormState<Group>> {
+export async function upsertGroupAction(previousState: FormState<GroupUpsert>, formData: FormData): Promise<FormState<GroupUpsert>> {
 	let newId: number | undefined;
 	try {
 		if (previousState.id === undefined) {
-			const validatedGroup = await decodeForm(formData, groupSchema);
+			const validatedGroup = await decodeForm(formData, groupUpsertSchema);
 			const result = await prisma.group.create({
-				data: validatedGroup,
+				data: {
+					...validatedGroup,
+					students: {
+						connect: validatedGroup.students.map(student => ({
+							id: student,
+						})),
+					},
+				},
 			});
 			newId = result.id;
 		} else {
-			const validatedGroup = await decodeForm(formData, groupSchema.partial());
+			const validatedGroup = await decodeForm(formData, groupUpsertSchema.partial());
 			const result = await prisma.group.update({
 				where: {
 					id: previousState.id,
 				},
-				data: validatedGroup,
+				data: {
+					...validatedGroup,
+					students: {
+						connect: validatedGroup.students?.map(student => ({
+							id: student,
+						})) ?? [],
+					},
+				},
 			});
 		}
 
@@ -39,7 +53,7 @@ export async function upsertGroupAction(previousState: FormState<Group>, formDat
 
 	return {
 		...previousState,
-		id: newId,
+		id: newId ?? previousState.id,
 		formErrors: [],
 		fieldErrors: {},
 	};

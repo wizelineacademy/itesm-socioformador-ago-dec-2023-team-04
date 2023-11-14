@@ -1,7 +1,8 @@
 'use client';
 import React, {useState} from 'react';
-import {type Color, type Group} from '@prisma/client';
-import {fromDate, Time} from '@internationalized/date';
+import {type Color} from '@prisma/client';
+import {Time} from '@internationalized/date';
+import {useListData} from 'react-stately';
 import TextField from '@/components/text-field.tsx';
 import TextArea from '@/components/text-area.tsx';
 import TimeField from '@/components/time-field.tsx';
@@ -9,14 +10,17 @@ import ColorRadioGroup from '@/components/color-selector.tsx';
 import Switch from '@/components/switch.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import groupSchema from '@/lib/schemas/group.ts';
+import groupUpsertSchema from '@/lib/schemas/group.ts';
 import Form from '@/components/form.tsx';
 import {upsertGroupAction} from '@/lib/actions/group.ts';
 import {formValidators} from '@/lib/schemas/utils.ts';
+import {type GroupByIdWithStudents} from '@/lib/group.ts';
+import {type StudentSearchResult} from '@/lib/user.ts';
+import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
-	readonly group?: Group;
+	readonly group?: GroupByIdWithStudents;
 };
 
 export default function GroupForm(props: GroupFormProps) {
@@ -25,9 +29,13 @@ export default function GroupForm(props: GroupFormProps) {
 		group,
 	} = props;
 
-	const validate = formValidators(groupSchema);
+	const validate = formValidators(groupUpsertSchema);
 
 	const [active, setActive] = useState(group?.active ?? true);
+
+	const groupStudents = useListData<StudentSearchResult>({
+		initialItems: group?.students ?? [],
+	});
 
 	return (
 		<Form
@@ -35,6 +43,7 @@ export default function GroupForm(props: GroupFormProps) {
 			action={upsertGroupAction} staticValues={{
 				tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 				active: active ? undefined : false,
+				students: JSON.stringify(groupStudents.items.map(student => student.id)),
 			}}
 		>
 			<TextField
@@ -67,6 +76,10 @@ export default function GroupForm(props: GroupFormProps) {
 					validate={validate.exitHour}
 				/>
 			</div>
+			<p className='mb-2'>
+				Hay {groupStudents.items.length} estudiante(s) en el grupo.
+			</p>
+			<SelectStudentsDialog students={groupStudents}/>
 			<ColorRadioGroup
 				isRequired
 				name='colorId'
@@ -81,6 +94,7 @@ export default function GroupForm(props: GroupFormProps) {
 			>
 				Grupo activo
 			</Switch>
+
 			<div className='flex justify-end'>
 				<Button color='secondary' size='sm' type='submit'>
 					<Icon name='save'/>Guardar

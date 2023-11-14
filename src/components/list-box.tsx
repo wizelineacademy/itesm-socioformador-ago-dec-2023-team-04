@@ -37,14 +37,14 @@ type BaseListBoxProps<T> = {
 } & AriaListBoxOptions<T>;
 
 const BaseListBox = forwardRef(<T extends object>(props: BaseListBoxProps<T>, ref: ForwardedRef<HTMLUListElement>) => {
-	const {state, label} = props;
+	const {state, label, className} = props;
 
 	const listBoxRef = useObjectRef(ref);
 
 	const {listBoxProps, labelProps} = useListBox(props, state, listBoxRef);
 
 	return (
-		<>
+		<div className={className}>
 			{
 				label && <div {...labelProps} className='text-stone-300 text-lg mb-2'>
 					{label}
@@ -59,7 +59,7 @@ const BaseListBox = forwardRef(<T extends object>(props: BaseListBoxProps<T>, re
 					))
 				}
 			</ul>
-		</>
+		</div>
 	);
 });
 

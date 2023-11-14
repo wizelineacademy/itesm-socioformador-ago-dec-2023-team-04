@@ -1,15 +1,22 @@
 import React from 'react';
-import {withPageAuthRequired} from '@auth0/nextjs-auth0';
-import {notFound, redirect} from 'next/navigation';
-import {getUser} from '@/lib/user.ts';
+import {redirect} from 'next/navigation';
+import {getUserById} from '@/lib/user.ts';
 import UserForm from '@/app/admin/users/user-form.tsx';
 
-export default withPageAuthRequired(async ({params}) => {
-	if (params === undefined) {
-		notFound();
-	}
+export type EditUserPageProps = {
+	readonly params: {
+		readonly userId: string;
+	};
+};
 
-	const user = await getUser(Number.parseInt(params.userId as string, 10));
+export default async function EditUserPage(props: EditUserPageProps) {
+	const {
+		params: {
+			userId,
+		},
+	} = props;
+
+	const user = await getUserById(Number.parseInt(userId, 10));
 
 	if (user === null) {
 		redirect('/admin/users');
@@ -26,6 +33,4 @@ export default withPageAuthRequired(async ({params}) => {
 			<UserForm user={user}/>
 		</div>
 	);
-}, {
-	returnTo: '/',
-});
+}

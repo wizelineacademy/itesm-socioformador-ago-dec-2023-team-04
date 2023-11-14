@@ -3,6 +3,7 @@ import {redirect} from 'next/navigation';
 import prisma from '@/lib/prisma.ts';
 import {getAllColors} from '@/lib/color.ts';
 import GroupForm from '@/app/groups/edit/group-form.tsx';
+import {getGroupByIdWithStudentIds} from '@/lib/group.ts';
 
 export type EditGroupDetailPageProps = {
 	readonly params: {
@@ -14,11 +15,7 @@ export default async function EditGroupDetailPage(props: EditGroupDetailPageProp
 	const {params} = props;
 	const id = Number.parseInt(params.groupId, 10);
 
-	const group = await prisma.group.findUnique({
-		where: {
-			id,
-		},
-	});
+	const group = await getGroupByIdWithStudentIds(id);
 
 	const colors = await getAllColors();
 
