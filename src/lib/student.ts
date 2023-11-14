@@ -44,3 +44,28 @@ export const getStudentById = cache(async (id: number) => prisma.student.findUni
 		},
 	}),
 ); */
+export const searchForStudentsByName = async (query: string) => prisma.student.findMany({
+	take: 10,
+	select: {
+		id: true,
+		givenName: true,
+		familyName: true,
+	},
+	where: {
+		// eslint-disable-next-line @typescript-eslint/naming-convention
+		OR: [
+			{
+				givenName: {
+					contains: query,
+					mode: 'insensitive',
+				},
+			},
+			{
+				familyName: {
+					contains: query,
+					mode: 'insensitive',
+				},
+			},
+		],
+	},
+});

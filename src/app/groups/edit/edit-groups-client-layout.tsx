@@ -1,9 +1,7 @@
 'use client';
-import React, {type Key, useState} from 'react';
-import {type Group} from '@prisma/client';
+import React, {type Key, type ReactNode, useState} from 'react';
 import {createColumnHelper} from '@tanstack/table-core';
 import Link from 'next/link';
-import {DateFormatter} from '@internationalized/date';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
@@ -13,8 +11,9 @@ import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
 import {deleteGroups} from '@/lib/actions/group.ts';
+import {type GroupWithStudentCount} from '@/lib/group.ts';
 
-const columnHelper = createColumnHelper<Group>();
+const columnHelper = createColumnHelper<GroupWithStudentCount>();
 
 const columns = [
 	selectColumn(columnHelper),
@@ -22,41 +21,28 @@ const columns = [
 		header: 'Nombre',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('entryHour', {
-		header: 'Hora de entrada',
+	columnHelper.accessor('_count.students', {
+		header: '# de alumnos',
 		cell(info) {
-			const locale = info.table.options.meta?.locale;
-			if (locale) {
-				const formatter = new DateFormatter(locale.locale, {
-					timeStyle: 'short',
-				});
-				return formatter.format(info.getValue());
-			}
-
-			return '';
+			return info.getValue();
 		},
 	}),
-	columnHelper.accessor('exitHour', {
-		header: 'Hora de salida',
+	columnHelper.accessor('active', {
+		header: 'Estado',
 		cell(info) {
-			const locale = info.table.options.meta?.locale;
-			if (locale) {
-				const formatter = new DateFormatter(locale.locale, {
-					timeStyle: 'short',
-				});
-				return formatter.format(info.getValue());
-			}
-
-			return '';
+			return info.getValue() ? 'Activo' : 'Inactivo';
 		},
 	}),
 	detailsLinkColumn(columnHelper, '/groups/edit/'),
 ];
 
-export default function EditGroupsClientLayout({children, groups}: {
-	readonly groups: Group[];
-	readonly children: React.ReactNode;
-}) {
+export type EditGroupsClientLayoutProps = {
+	readonly children: ReactNode;
+	readonly groups: GroupWithStudentCount[];
+};
+
+export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProps) {
+	const {children, groups} = props;
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 

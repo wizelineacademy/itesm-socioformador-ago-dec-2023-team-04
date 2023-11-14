@@ -1,7 +1,7 @@
 import z from 'zod';
-import {boolean, timeToDate} from '@/lib/schemas/utils.ts';
+import {boolean, json, timeToDate} from '@/lib/schemas/utils.ts';
 
-const groupSchema = z.object({
+const groupUpsertSchema = z.object({
 	name: z.string(),
 	active: boolean,
 	description: z.string(),
@@ -9,6 +9,9 @@ const groupSchema = z.object({
 	exitHour: timeToDate,
 	tz: z.string(),
 	colorId: z.coerce.number(),
+	students: json(z.array(z.number())),
 });
 
-export default groupSchema;
+export type GroupUpsert = z.infer<typeof groupUpsertSchema>;
+
+export default groupUpsertSchema;

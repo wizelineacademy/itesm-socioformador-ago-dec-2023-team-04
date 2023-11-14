@@ -1,7 +1,8 @@
 import {cache} from 'react';
 import {type User} from '@prisma/client';
+import {getSession} from '@auth0/nextjs-auth0';
 import prisma from '@/lib/prisma.ts';
-import {getAuthUser} from '@/lib/auth-user.ts';
+import {type searchForStudentsByName} from '@/lib/student.ts';
 
 /**
  * Retrieves a user by their authentication ID. It is assumed that if this is executed with a given authId,
@@ -25,7 +26,11 @@ export const getUserByAuthId = cache(async (authId: string) => prisma.user.findF
  * @returns {Promise<User>} A Promise that resolves to the user object.
  */
 export async function getUserFromSession(): Promise<User> {
-	const session = await getAuthUser();
+	const session = await getSession();
+	if (session === null || session === undefined) {
+		throw new Error('Not logged in');
+	}
+
 	return getUserByAuthId(session.user.sub as string);
 }
 
@@ -43,9 +48,11 @@ export const getAllUsers = cache(async () => prisma.user.findMany());
  * @param {number} id - The id of the user.
  * @returns {Promise<User>} - A promise that resolves to the user object, or null if user does not exist.
  */
-export const getUser = cache(async (id: number) => prisma.user.findUnique({
+export const getUserById = cache(async (id: number) => prisma.user.findUnique({
 	where: {
 		id,
 	},
 }));
+
+export type StudentSearchResult = Awaited<ReturnType<typeof searchForStudentsByName>>[number];
 
