@@ -6,15 +6,10 @@ import DateField from '@/components/date-field.tsx';
 import {Button} from '@/components/button.tsx';
 import Popover from '@/components/popover.tsx';
 import Dialog from '@/components/dialog.tsx';
-import {RangeCalendar} from '@/components/range-calendar.tsx';
+import RangeCalendar from '@/components/range-calendar.tsx';
 import Icon from '@/components/icon.tsx';
-import {cx} from '@/lib/cva.ts';
 
-export type DateRangePickerProps = {
-	readonly className?: string;
-} & AriaDateRangePickerProps<DateValue>;
-
-export function DateRangePicker(props: DateRangePickerProps) {
+export default function DateRangePicker(props: AriaDateRangePickerProps<DateValue>) {
 	const state = useDateRangePickerState(props);
 	const ref = React.useRef(null);
 	const {

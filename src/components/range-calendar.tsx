@@ -9,14 +9,8 @@ import {createCalendar, type DateValue} from '@internationalized/date';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import CalendarGrid from '@/components/calendar-grid.tsx';
-import {cx} from '@/lib/cva.ts';
 
-type RangeCalendarProps = {
-	readonly className?: string;
-} & AriaRangeCalendarProps<DateValue>;
-
-export function RangeCalendar(props: RangeCalendarProps) {
-	const {className} = props;
+export default function RangeCalendar(props: AriaRangeCalendarProps<DateValue>) {
 	const {locale} = useLocale();
 	const state = useRangeCalendarState({
 		...props,

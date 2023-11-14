@@ -2,7 +2,7 @@
 import React from 'react';
 import {type DateValue} from '@internationalized/date';
 import {RadioGroup, Radio} from '@/components/radio.tsx';
-import {DateRangePicker} from '@/components/date-range-picker.tsx';
+import DateRangePicker from '@/components/date-range-picker.tsx';
 import {dateSchema} from '@/lib/statistics.ts';
 import Chart from '@/components/chart.tsx';
 
