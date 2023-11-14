@@ -30,7 +30,7 @@ export default function DateRangePicker(props: AriaDateRangePickerProps<DateValu
 				className='flex align-items-middle align-middle justify-between items-center'
 			>
 				<DateField {...startFieldProps}/>
-				<span className='p-2'>-</span>
+				<span className='p-2 text-stone-400'>-</span>
 				<DateField {...endFieldProps}/>
 				{state.isInvalid && <span aria-hidden='true'>🚫</span>}
 				<span className='p'/>
