@@ -1,22 +1,21 @@
 'use client';
-import React, {type Key, type ReactNode, useState} from 'react';
+import React, {type ReactNode, useState} from 'react';
 import Link from 'next/link';
 import {type User} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
+import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import Table from '@/components/table.tsx';
-import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import {deleteUsers} from '@/lib/actions/user.ts';
 
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
-	selectColumn(columnHelper),
 	columnHelper.accessor('email', {
 		header: 'Correo electrónico',
 		cell: info => info.getValue(),
@@ -33,7 +32,6 @@ const columns = [
 		header: 'Permisos',
 		cell: info => info.getValue() ? 'Admin' : 'Usuario',
 	}),
-	detailsLinkColumn(columnHelper, '/admin/users'),
 ];
 
 export type UserAdminClientLayoutProps = {
@@ -55,8 +53,8 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 	};
 
 	return (
-		<TopbarPageLayout
-			title='Usuarios' topbarItems={
+		<TopBarPageTemplate
+			title='Usuarios' topBarItems={
 				<>
 					<Spacer/>
 					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
@@ -74,6 +72,7 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 						className='w-full'
 						data={users ?? []} columns={columns}
 						selectedKeys={selectedStudents} globalFilter={globalFilter}
+						getDetailsLink={user => `/admin/users/${user.id}`}
 						onSelectedKeysChange={setSelectedStudents}
 					/>
 				</div>
@@ -81,6 +80,6 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 					{children}
 				</div>
 			</div>
-		</TopbarPageLayout>
+		</TopBarPageTemplate>
 	);
 }

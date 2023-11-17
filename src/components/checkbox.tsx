@@ -18,7 +18,7 @@ export default function Checkbox(props: CheckboxProps) {
 	const {isSelected} = state;
 
 	return (
-		<label className={cx('flex gap-2 text-stone-300', className)}>
+		<label className={cx('flex gap-2 text-stone-300 rounded', className)}>
 			<VisuallyHidden>
 				<input {...mergeProps(inputProps, focusProps)} ref={ref}/>
 			</VisuallyHidden>

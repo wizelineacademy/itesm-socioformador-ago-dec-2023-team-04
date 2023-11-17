@@ -1,17 +1,17 @@
-import React, {ElementRef, type MutableRefObject, type ReactNode, type RefObject, useState} from 'react';
+'use client';
+import React, {type ReactNode, useState} from 'react';
 import {useScrollPosition} from '@n8tb1t/use-scroll-position';
 import {cx} from '@/lib/cva.ts';
 
 export type TopBarProps = {
 	readonly className?: string;
 	readonly children: ReactNode;
-	readonly scrollRef?: RefObject<HTMLElement>;
-	readonly boundingRef?: RefObject<HTMLElement>;
-	readonly title: string;
+	readonly title: ReactNode;
+	readonly subtitle?: ReactNode;
 };
 
 export default function TopBar(props: TopBarProps) {
-	const {className, children, boundingRef, scrollRef, title} = props;
+	const {className, children, title, subtitle} = props;
 	const [floatBar, setFloatBar] = useState(false);
 
 	useScrollPosition(({prevPos, currPos}) => {
@@ -20,12 +20,11 @@ export default function TopBar(props: TopBarProps) {
 		} else if (!floatBar) {
 			setFloatBar(true);
 		}
-		// @ts-expect-error refs are wrongly typed
-	}, [floatBar], scrollRef, false, undefined, boundingRef);
+	}, [floatBar]);
 
 	return (
 		<div className={cx(
-			'bg-stone-900 z-10 sticky top-0 py-4 border-b border-stone-800 transition-all',
+			'bg-stone-900 z-10 sticky w-full top-0 py-4 border-b border-stone-800 transition-all',
 			!floatBar && 'pt-10',
 			floatBar && '',
 			className,
@@ -33,13 +32,26 @@ export default function TopBar(props: TopBarProps) {
 		>
 			<div className='flex items-baseline gap-4 max-w-6xl mx-auto px-4'>
 				<h1 className={cx(
-					'text-stone-200 text-4xl transition-all',
+					'text-stone-200 transition-all',
 					!floatBar && 'text-5xl',
 					floatBar && 'text-3xl',
 				)}
 				>
 					{title}
 				</h1>
+				{
+					subtitle && (
+						<h2 className={cx(
+							'text-stone-400 transition-all',
+							!floatBar && 'text-3xl',
+							floatBar && 'text-2xl',
+						)}
+						>
+							{subtitle}
+						</h2>
+					)
+				}
+				<span className='grow'/>
 				{children}
 			</div>
 		</div>

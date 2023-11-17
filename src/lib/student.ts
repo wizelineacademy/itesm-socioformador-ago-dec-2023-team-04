@@ -69,3 +69,4 @@ export const searchForStudentsByName = async (query: string) => prisma.student.f
 		],
 	},
 });
+

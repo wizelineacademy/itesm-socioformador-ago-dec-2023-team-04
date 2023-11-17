@@ -68,7 +68,7 @@ export default function GroupForm(props: GroupFormProps) {
 	});
 
 	const groupStudents = useListData<StudentSearchResult>({
-		initialItems: group?.students ?? [],
+		initialItems: group?.students?.map(student => student.student) ?? [],
 	});
 
 	return (

@@ -1,6 +1,5 @@
 'use server';
 import {revalidatePath} from 'next/cache';
-import {type Group} from '@prisma/client';
 import {redirect} from 'next/navigation';
 import prisma from '@/lib/prisma.ts';
 import {handleErrorAction} from '@/lib/actions/util.ts';
@@ -18,9 +17,13 @@ export async function upsertGroupAction(previousState: FormState<GroupUpsert>, f
 				data: {
 					...validatedGroup,
 					students: {
-						connect: validatedGroup.students.map(student => ({
-							id: student,
-						})),
+						createMany: {
+							data: validatedGroup.students?.map(student => (
+								{
+									studentId: student,
+								}
+							)) ?? [],
+						},
 					},
 				},
 			});
@@ -28,18 +31,39 @@ export async function upsertGroupAction(previousState: FormState<GroupUpsert>, f
 		} else {
 			console.log(Object.fromEntries(formData));
 			const validatedGroup = await decodeForm(formData, groupUpsertSchema.partial());
-			const result = await prisma.group.update({
-				where: {
-					id: previousState.id,
-				},
-				data: {
-					...validatedGroup,
-					students: {
-						connect: validatedGroup.students?.map(student => ({
-							id: student,
-						})) ?? [],
+			await prisma.$transaction(async tx => {
+				if ('students' in validatedGroup) {
+					await tx.studentInGroup.deleteMany({
+						where: {
+							groupId: previousState.id,
+						},
+					});
+				}
+
+				await tx.group.update({
+					where: {
+						id: previousState.id,
 					},
-				},
+					data: {
+						...validatedGroup,
+						students: {
+							connectOrCreate: validatedGroup.students?.map(student => (
+								{
+									where: {
+										// eslint-disable-next-line @typescript-eslint/naming-convention
+										studentId_groupId: {
+											studentId: student,
+											groupId: previousState.id!,
+										},
+									},
+									create: {
+										studentId: student,
+									},
+								}
+							)) ?? [],
+						},
+					},
+				});
 			});
 		}
 
