@@ -88,8 +88,8 @@ export default function Table<T extends object>(props: TableProps<T>) {
 		getRowId: row => getKey(row).toString(),
 	});
 
-	let checked: 'indeterminate' | boolean = table.getIsAllRowsSelected();
-	if (!checked) {
+	let checked: 'indeterminate' | boolean = isSelectionEnabled && table.getIsAllRowsSelected();
+	if (isSelectionEnabled && !checked) {
 		checked = table.getIsSomeRowsSelected() ? 'indeterminate' : false;
 	}
 
@@ -116,7 +116,7 @@ export default function Table<T extends object>(props: TableProps<T>) {
 							{headerGroup.headers.map(header => (
 								<th
 									key={header.id} className={cx(
-										'py-3 text-left font-semibold text-sm hover:cursor-pointer',
+										'text-left font-semibold text-sm hover:cursor-pointer px-4 py-3',
 										header.id === 'select' && 'w-fit',
 									)}
 									onClick={header.column.getToggleSortingHandler()}
@@ -163,7 +163,7 @@ export default function Table<T extends object>(props: TableProps<T>) {
 								row.getVisibleCells().map(cell => (
 									<td
 										key={cell.id}
-										className='cursor-pointer py-3 group-hover:bg-stone-700'
+										className='cursor-pointer px-4 py-3 group-hover:bg-stone-700'
 										onClick={cell.column.id !== 'información' && isSelectionEnabled ? row.getToggleSelectedHandler() : undefined}
 									>
 										{flexRender(cell.column.columnDef.cell, cell.getContext())}
