@@ -2,9 +2,8 @@
 
 import React, {useMemo} from 'react';
 import {createColumnHelper} from '@tanstack/table-core';
-import {getLocalTimeZone, parseDate, today} from '@internationalized/date';
+import {CalendarDate, getLocalTimeZone, parseDate, today} from '@internationalized/date';
 import {useListData} from 'react-stately';
-import {type Attendance} from '@prisma/client';
 import {type Serializable} from '@/lib/serializable.ts';
 import {type GroupWithStudentsAttendance} from '@/lib/group.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
@@ -14,18 +13,14 @@ import Table from '@/components/table.tsx';
 import LinkButton from '@/components/link-button.tsx';
 import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
+import {Button} from '@/components/button.tsx';
+import prisma from '@/lib/prisma.ts';
+import submitAttendancesAction, {type StudentWithCurrentAttendance} from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
 
 export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
 	readonly className?: string;
-};
-
-type StudentWithCurrentAttendance = {
-	id: number;
-	givenName: string;
-	familyName: string;
-	attendance: Attendance | null;
 };
 
 const columnHelper = createColumnHelper<StudentWithCurrentAttendance>();
@@ -64,9 +59,14 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 	});
 
 	const columns = useMemo(() => [
-		columnHelper.accessor(item => `${item.givenName} ${item.familyName}`, {
-			id: 'student',
-			header: 'Alumno',
+		columnHelper.accessor('givenName', {
+			header: 'Nombre(s)',
+			cell: props => (
+				props.cell.renderValue()
+			),
+		}),
+		columnHelper.accessor('familyName', {
+			header: 'Apellido(s)',
 			cell: props => (
 				props.cell.renderValue()
 			),
@@ -75,7 +75,6 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			if (item.attendance) {
 				return {
 					...item.attendance,
-					attendanceDate: new Date(item.attendance.attendanceDate),
 					attendanceEntryHour: new Date(item.attendance.attendanceEntryHour),
 					attendanceExitHour: new Date(item.attendance.attendanceExitHour),
 				};
@@ -87,13 +86,14 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			// Don't mind the warning, the columns are memoized and as such this cell component is stable.
 			cell: props => (
 				<AttendanceChip
+					className='w-36'
 					studentId={props.row.original.id}
 					groupId={group.id}
 					groupTz={group.tz}
+					date={parsedDate}
 					entryHour={(new Date(group.entryHour))}
 					attendance={props.cell.getValue()}
 					onAttendanceChange={attendance => {
-						console.log(attendance);
 						attendances.update(props.row.original.id, {
 							...props.row.original,
 							attendance,
@@ -107,6 +107,9 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		<TopBarPageTemplate
 			title={group.name} subtitle={<FormattedDate date={date} tz={group.tz}/>} topBarItems={
 				<>
+					<LinkButton href={`/groups/edit/${group.id}`} color='tertiary' variant='outlined'>
+						<Icon name='edit'/>
+					</LinkButton>
 					<LinkButton href={`/groups/${group.id}/${firstDate?.toString()}`} color='secondary' variant='outlined'>
 						<Icon name='home'/>
 					</LinkButton>
@@ -116,15 +119,24 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					<LinkButton href={`/groups/${group.id}/${nextDate?.toString()}`} color='secondary' isDisabled={nextDate && today(localTz) < nextDate}>
 						<Icon name='arrow_right'/>
 					</LinkButton>
-					<LinkButton href={`/groups/edit/${group.id}`} color='secondary'>
-						<Icon name='edit'/>
-					</LinkButton>
+					<Button
+						color='secondary' onPress={() => {
+							void submitAttendancesAction(attendances.items, date, group.id);
+						}}
+					>
+						<Icon name='save' className='me-1'/>
+						Guardar
+					</Button>
+
 				</>
 			}
 		>
-			<Table
-				data={attendances.items} columns={columns}
-			/>
+			<div className='bg-stone-800 rounded'>
+				<Table
+					data={attendances.items} columns={columns}
+				/>
+			</div>
+
 		</TopBarPageTemplate>
 	);
 }

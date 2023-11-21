@@ -1,6 +1,15 @@
 import React, {useState} from 'react';
 import {type Attendance, AttendanceType, type Group, type Student} from '@prisma/client';
-import {fromDate, getLocalTimeZone, now, type Time, toCalendarDateTime, today, toZoned} from '@internationalized/date';
+import {
+	type CalendarDate,
+	fromDate,
+	getLocalTimeZone,
+	now,
+	type Time,
+	toCalendarDateTime,
+	today,
+	toZoned,
+} from '@internationalized/date';
 import {Item, type Key} from 'react-stately';
 import {type Serializable} from '@/lib/serializable.ts';
 import Select from '@/components/select.tsx';
@@ -10,8 +19,10 @@ export type AttendanceChipProps = {
 	readonly groupId: number;
 	readonly entryHour: Date;
 	readonly groupTz: string;
-	readonly attendance: Attendance | null;
-	readonly onAttendanceChange: (attendance: Attendance | null) => void;
+	readonly attendance: Omit<Attendance, 'attendanceDate'> | null;
+	readonly onAttendanceChange: (attendance: Omit<Attendance, 'attendanceDate'> | null) => void;
+	readonly date: CalendarDate;
+	readonly className?: string;
 };
 
 export function AttendanceChip(props: AttendanceChipProps) {
@@ -22,11 +33,12 @@ export function AttendanceChip(props: AttendanceChipProps) {
 		groupTz,
 		attendance,
 		onAttendanceChange,
+		date,
+		className,
 	} = props;
 
 	const localTz = getLocalTimeZone();
 
-	const currentDate = today(localTz);
 	const entryDateTime = toZoned(toCalendarDateTime(today(groupTz), fromDate(entryHour, groupTz)), groupTz);
 	const currentDateTime = now(localTz);
 
@@ -37,7 +49,6 @@ export function AttendanceChip(props: AttendanceChipProps) {
 		}
 
 		onAttendanceChange({
-			attendanceDate: currentDate.toDate(groupTz),
 			attendanceEntryHour: now(groupTz).toDate(),
 			attendanceExitHour: now(groupTz).toDate(),
 			type: select as AttendanceType,
@@ -49,7 +60,7 @@ export function AttendanceChip(props: AttendanceChipProps) {
 	const selection = attendance === null ? 'absence' : attendance.type;
 
 	return (
-		<Select aria-label='Estado de asistencia' selectedKey={selection} onSelectionChange={selectHandler}>
+		<Select aria-label='Estado de asistencia' selectedKey={selection} className={className} onSelectionChange={selectHandler}>
 			<Item key='absence' textValue='Pendiente'>
 				{
 					currentDateTime < entryDateTime
