@@ -4,8 +4,8 @@ import {redirect} from 'next/navigation';
 import {getStudentById} from '@/lib/student.ts';
 import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
-import {Button} from '@/components/button.tsx';
 import StudentForm from '@/app/students/student-form.tsx';
+import LinkButton from '@/components/link-button.tsx';
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {
@@ -41,7 +41,7 @@ export default withPageAuthRequired(async ({params}: {
 			}
 			<h2 className='text-stone-300'>Grupos</h2>
 			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>
-			<Button size='xl' color='secondary'><Icon name='calendar_month'/>Asistencias</Button>
+			<LinkButton href='/assistance' size='xl' color='secondary'><Icon name='calendar_month'/> Asistencias</LinkButton>
 			<h1>
 				{`${student.givenName} ${student.familyName}`}
 			</h1>

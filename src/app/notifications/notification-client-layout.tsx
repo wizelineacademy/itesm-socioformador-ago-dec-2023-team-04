@@ -9,7 +9,7 @@ import {type Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import NotificationsTable from '@/app/notifications/notifications-table.tsx';
 import SearchBar from '@/components/search-bar.tsx';
-import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 
 function DeleteButton({confirmationMessage, onClick, ...props}: {readonly onClick: () => void; readonly confirmationMessage: string} & Omit<React.ComponentProps<typeof Button>, 'variant'>) {
@@ -39,8 +39,8 @@ export default function NotificationClientLayout({children, initialNotifications
 	const queryClient = useQueryClient();
 
 	return (
-		<TopbarPageLayout
-			title='Notificaciones' topbarItems={
+		<TopBarPageTemplate
+			title='Notificaciones' topBarItems={
 				<>
 					<Spacer/>
 					<TextField iconName='search' value={globalFilter} onChange={setGlobalFilter}/>
@@ -59,6 +59,6 @@ export default function NotificationClientLayout({children, initialNotifications
 					{children}
 				</div>
 			</div>
-		</TopbarPageLayout>
+		</TopBarPageTemplate>
 	);
 }

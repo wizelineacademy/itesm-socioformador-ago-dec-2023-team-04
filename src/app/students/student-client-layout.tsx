@@ -1,22 +1,21 @@
 'use client';
-import React, {type Key, useState} from 'react';
+import React, {useState} from 'react';
 import Link from 'next/link';
 import {type Student} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
+import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
-import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {deleteStudents} from '@/lib/actions/student.ts';
-import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
 const columns = [
-	selectColumn(columnHelper),
 	columnHelper.accessor('registration', {
 		header: 'Matrícula',
 		cell: info => info.getValue(),
@@ -29,7 +28,6 @@ const columns = [
 		header: 'Apellidos(s)',
 		cell: info => info.getValue(),
 	}),
-	detailsLinkColumn(columnHelper, '/students'),
 ];
 
 export type StudentClientLayoutProps = {
@@ -54,8 +52,8 @@ export default function StudentClientLayout({children, students}: {
 	};
 
 	return (
-		<TopbarPageLayout
-			title='Alumnos' topbarItems={
+		<TopBarPageTemplate
+			title='Alumnos' topBarItems={
 				<>
 					<Spacer/>
 					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={handleDelete}/>
@@ -71,12 +69,12 @@ export default function StudentClientLayout({children, students}: {
 					<Table
 						className='w-full' data={students ?? []} columns={columns}
 						selectedKeys={selectedKeys} globalFilter={globalFilter}
-						onSelectedKeysChange={setSelectedKeys}/>
+						getDetailsLink={student => `/students/${student.id}`} onSelectedKeysChange={setSelectedKeys}/>
 				</div>
 				<div className='w-72 sticky bg-stone-800 h-fit rounded p-4 top-4'>
 					{children}
 				</div>
 			</div>
-		</TopbarPageLayout>
+		</TopBarPageTemplate>
 	);
 }

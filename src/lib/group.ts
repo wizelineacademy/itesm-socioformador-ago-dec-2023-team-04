@@ -1,6 +1,19 @@
 import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 
+export const getAllGroupsWithColors = cache(async () => prisma.group.findMany({
+	include: {
+		color: true,
+		_count: {
+			select: {
+				students: true,
+			},
+		},
+	},
+}));
+
+export type GroupWithColor = Awaited<ReturnType<typeof getAllGroupsWithColors>>[number];
+
 export const getAllGroups = cache(async () => prisma.group.findMany());
 
 export const getAllGroupsWithStudentCount = cache(async () => prisma.group.findMany({
@@ -38,14 +51,39 @@ export const getGroupByIdWithStudentIds = cache(async (id: number) => prisma.gro
 			},
 		},
 		students: {
-			select: {
-				id: true,
-				givenName: true,
-				familyName: true,
+			include: {
+				student: true,
 			},
 		},
 	},
 }));
 
 export type GroupByIdWithStudents = Awaited<ReturnType<typeof getGroupByIdWithStudentIds>>;
+
+export const getGroupWithStudentsAttendance = cache(async (id: number, date: Date) => prisma.group.findUnique({
+	where: {
+		id,
+	},
+	include: {
+		students: {
+			include: {
+				student: {
+					select: {
+						givenName: true,
+						familyName: true,
+						registration: true,
+						attendances: {
+							where: {
+								attendanceDate: date,
+								groupId: id,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}));
+
+export type GroupWithStudentsAttendance = Exclude<Awaited<ReturnType<typeof getGroupWithStudentsAttendance>>, null>;
 

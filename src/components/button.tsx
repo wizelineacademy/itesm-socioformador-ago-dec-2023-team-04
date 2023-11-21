@@ -1,4 +1,3 @@
-'use client';
 import React, {type ReactNode} from 'react';
 import {type AriaButtonProps, mergeProps, useButton, useFocusRing} from 'react-aria';
 import {useObjectRef} from '@react-aria/utils';

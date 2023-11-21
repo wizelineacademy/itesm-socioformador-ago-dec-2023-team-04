@@ -1,0 +1,36 @@
+import React from 'react';
+import {notFound, redirect} from 'next/navigation';
+import {getLocalTimeZone, parseDate, today} from '@internationalized/date';
+import {getGroupWithStudentsAttendance} from '@/lib/group.ts';
+import {makeSerializable} from '@/lib/serializable.ts';
+import {groupHasClass} from '@/app/groups/class-dates.ts';
+import AttendanceClientPage from '@/app/groups/[groupId]/[date]/attendance-client-page.tsx';
+
+export type EditGroupDetailPageProps = {
+	readonly params: {
+		readonly groupId: string;
+		readonly date: string;
+	};
+};
+
+export default async function GroupDatePage(props: EditGroupDetailPageProps) {
+	const {params} = props;
+	const id = Number.parseInt(params.groupId, 10);
+	const date = parseDate(params.date);
+
+	const group = await getGroupWithStudentsAttendance(id, date.toDate(getLocalTimeZone()));
+
+	if (group === null) {
+		redirect('/groups');
+	}
+
+	if (!groupHasClass(group, date)) {
+		notFound();
+	}
+
+	const serializableGroup = makeSerializable(group);
+
+	return (
+		<AttendanceClientPage group={serializableGroup} date={params.date}/>
+	);
+}

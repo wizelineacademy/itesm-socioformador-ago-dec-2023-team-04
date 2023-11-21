@@ -44,10 +44,21 @@ model Student {
 
   tutors Tutor[]
 
-  groups Group[]
-
   attendances        Attendance[]
   tutorNotifications TutorNotification[]
+  groups             StudentInGroup[]
+}
+
+model StudentInGroup {
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  joinedAt DateTime @default(now()) @db.Date()
+
+  @@id([studentId, groupId])
 }
 
 model Color {
@@ -66,27 +77,43 @@ model Group {
   exitHour    DateTime @db.Time()
   tz          String
 
+  enabledMonday    Boolean
+  enabledTuesday   Boolean
+  enabledWednesday Boolean
+  enabledThursday  Boolean
+  enabledFriday    Boolean
+  enabledSaturday  Boolean
+  enabledSunday    Boolean
+
   color   Color @relation(fields: [colorId], references: [id])
   colorId Int
 
   users User[]
 
-  students Student[]
-
   attendances Attendance[]
+  students    StudentInGroup[]
+}
+
+enum AttendanceType {
+  ON_TIME
+  LATE
+  JUSTIFICATED_ABSENCE
 }
 
 model Attendance {
-  id                  Int      @id @default(autoincrement())
   attendanceDate      DateTime @db.Date()
   attendanceEntryHour DateTime @db.Time()
   attendanceExitHour  DateTime @db.Time()
+
+  type AttendanceType
 
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int
 
   student   Student @relation(fields: [studentId], references: [id])
   studentId Int
+
+  @@id([groupId, studentId, attendanceDate])
 }
 
 model TutorNotification {

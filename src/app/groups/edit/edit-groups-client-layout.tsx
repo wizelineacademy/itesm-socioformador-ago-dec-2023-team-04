@@ -1,22 +1,21 @@
 'use client';
-import React, {type Key, type ReactNode, useState} from 'react';
+import React, {type ReactNode, useState} from 'react';
 import {createColumnHelper} from '@tanstack/table-core';
 import Link from 'next/link';
+import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
-import TopbarPageLayout from '@/components/topbar-page-layout.tsx';
+import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import Icon from '@/components/icon.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
-import {detailsLinkColumn, selectColumn} from '@/components/table-columns.tsx';
 import {deleteGroups} from '@/lib/actions/group.ts';
 import {type GroupWithStudentCount} from '@/lib/group.ts';
 
 const columnHelper = createColumnHelper<GroupWithStudentCount>();
 
 const columns = [
-	selectColumn(columnHelper),
 	columnHelper.accessor('name', {
 		header: 'Nombre',
 		cell: info => info.getValue(),
@@ -33,7 +32,6 @@ const columns = [
 			return info.getValue() ? 'Activo' : 'Inactivo';
 		},
 	}),
-	detailsLinkColumn(columnHelper, '/groups/edit/'),
 ];
 
 export type EditGroupsClientLayoutProps = {
@@ -54,8 +52,8 @@ export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProp
 	};
 
 	return (
-		<TopbarPageLayout
-			title='Grupos' topbarItems={
+		<TopBarPageTemplate
+			title='Grupos' topBarItems={
 				<>
 					<Spacer/>
 					<DeleteButton label='¿Borrar grupos seleccionados?' isDisabled={selectedKeys.size === 0} onDelete={deleteHandler}/>
@@ -74,12 +72,12 @@ export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProp
 						data={groups} columns={columns}
 						className='w-full'
 						selectedKeys={selectedKeys} globalFilter={globalFilter}
-						onSelectedKeysChange={setSelectedKeys}/>
+						getDetailsLink={group => `/groups/edit/${group.id}`} onSelectedKeysChange={setSelectedKeys}/>
 				</div>
 				<div className='w-72 bg-stone-800 h-full rounded p-4'>
 					{children}
 				</div>
 			</div>
-		</TopbarPageLayout>
+		</TopBarPageTemplate>
 	);
 }
