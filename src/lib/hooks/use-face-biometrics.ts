@@ -55,7 +55,7 @@ export type FaceBiometricsOptions = {
  * @return {{ detection?: FaceResult, isProcessing: boolean }} - The detected face result and the processing status.
  */
 export default function useFaceBiometrics(options: FaceBiometricsOptions): {
-	detection?: FaceResult;
+	result?: FaceResult;
 	isProcessing: boolean;
 } {
 	const {isEnabled = true, isVideo = true, input} = options;
@@ -129,7 +129,7 @@ export default function useFaceBiometrics(options: FaceBiometricsOptions): {
 	}, [isEnabled, input, human, isVideo]);
 
 	return {
-		detection,
+		result: detection,
 		isProcessing,
 	};
 }

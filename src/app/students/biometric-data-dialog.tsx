@@ -66,17 +66,17 @@ export default function BiometricDataDialog(props: BiometricDataDialogProps) {
 		}
 	}, [imageUrl, showCamera]);
 
-	const {detection, isProcessing} = useFaceBiometrics({
+	const {result, isProcessing} = useFaceBiometrics({
 		input: biometricsInput,
 		isVideo: showCamera,
 	});
 
 	let detectionQuality: 'good' | 'medium' | 'bad' | 'unknown' = 'unknown';
 
-	if (detection !== undefined) {
-		if (detection.boxScore > 0.9) {
+	if (result !== undefined) {
+		if (result.boxScore > 0.9) {
 			detectionQuality = 'good';
-		} else if (detection.boxScore > 0.8) {
+		} else if (result.boxScore > 0.8) {
 			detectionQuality = 'medium';
 		} else {
 			detectionQuality = 'bad';
@@ -88,7 +88,7 @@ export default function BiometricDataDialog(props: BiometricDataDialogProps) {
 			{
 				showCamera
 					? <BiometricVideoInput
-						ref={videoRef} detection={detection} onImageSubmission={imageUrl => {
+						ref={videoRef} detection={result} onImageSubmission={imageUrl => {
 							setImageUrl(imageUrl);
 							setShowCamera(false);
 						}}
@@ -146,13 +146,13 @@ export default function BiometricDataDialog(props: BiometricDataDialogProps) {
 							<span className='grow'/>
 							<Button color='secondary' variant='outlined' onPress={close}>Cancelar</Button>
 							<Button
-								isDisabled={detection === undefined} color='secondary' onPress={() => {
-									if (detection === undefined) {
+								isDisabled={result === undefined} color='secondary' onPress={() => {
+									if (result === undefined) {
 										return;
 									}
 
 									// Face descriptors are enabled via config
-									onBiometricDataSubmission(detection.embedding!);
+									onBiometricDataSubmission(result.embedding!);
 									close();
 								}}
 							><Icon name='save' className='me-1'/>Guardar</Button>

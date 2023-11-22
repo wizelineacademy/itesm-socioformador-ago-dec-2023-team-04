@@ -101,7 +101,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					}}/>
 			),
 		}),
-	], [attendances, group.entryHour, group.id, group.tz]);
+	], [attendances, group.entryHour, group.id, group.tz, parsedDate]);
 
 	return (
 		<TopBarPageTemplate
@@ -133,6 +133,11 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		>
 			<div className='bg-stone-800 rounded'>
 				<Table
+					colClassNames={[
+						'',
+						'',
+						'w-0',
+					]}
 					data={attendances.items} columns={columns}
 				/>
 			</div>

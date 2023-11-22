@@ -19,6 +19,7 @@ export type TableProps<T> = {
 	readonly onSelectedKeysChange?: (newSelection: Set<Key>) => void;
 	readonly getKey?: (value: T) => Key;
 	readonly getDetailsLink?: (value: T) => string;
+	readonly colClassNames?: string[];
 };
 
 export default function Table<T extends object>(props: TableProps<T>) {
@@ -29,6 +30,7 @@ export default function Table<T extends object>(props: TableProps<T>) {
 		globalFilter,
 		getDetailsLink,
 		selectedKeys,
+		colClassNames,
 		getKey = value => {
 			if ('id' in value) {
 				return value.id as Key;
@@ -96,6 +98,19 @@ export default function Table<T extends object>(props: TableProps<T>) {
 	return (
 		<div className={className}>
 			<table className='w-full h-full table-auto'>
+				{
+					colClassNames && (
+						<colgroup>
+							{
+								colClassNames.map((className, idx) => (
+									// Doesn't matter if this gets re-rendered
+									// eslint-disable-next-line react/no-array-index-key
+									<col key={idx} span={1} className={className}/>
+								))
+							}
+						</colgroup>
+					)
+				}
 				<thead className='border-stone-700 border-b'>
 					{table.getHeaderGroups().map(headerGroup => (
 						<tr key={headerGroup.id} className='text-stone-100'>
