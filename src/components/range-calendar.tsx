@@ -15,16 +15,16 @@ export default function RangeCalendar(props: RangeCalendarProps<DateValue>) {
 	});
 
 	const ref = React.useRef(null);
-	const {calendarProps, prevButtonProps, nextButtonProps, title}
-		= useRangeCalendar(props, state, ref);
+	const {calendarProps, prevButtonProps, nextButtonProps, title} =
+		useRangeCalendar(props, state, ref);
 	return (
-		<div {...calendarProps} ref={ref}>
-			<div className='header flex items-center justify-between'>
-				<Button variant='text' size='sm' color='tertiary' {...prevButtonProps}><Icon name='navigate_before'/></Button>
-				<h2 className='text-stone-300 first-letter:capitalize'>{title}</h2>
-				<Button variant='text' size='sm' color='tertiary' {...nextButtonProps}><Icon name='navigate_next'/></Button>
+		<div {...calendarProps} ref={ref} className="calendar">
+			<div className='header'>
+				<Button {...prevButtonProps}><Icon name='navigate_before'/></Button>
+				<h2>{title}</h2>
+				<Button {...nextButtonProps}><Icon name='navigate_next'/></Button>
 			</div>
 			<CalendarGrid state={state}/>
 		</div>
-	);
+	)
 }
