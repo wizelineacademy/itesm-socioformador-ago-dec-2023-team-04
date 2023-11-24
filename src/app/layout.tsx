@@ -8,6 +8,8 @@ import ClientProviders from '@/components/client-providers.tsx';
 import {getUserFromSession} from '@/lib/user.ts';
 import SidebarNav from '@/app/sidebar-nav.tsx';
 
+
+
 const sourceSans = Source_Sans_3({
 	subsets: ['latin'],
 	variable: '--font-source-sans',
@@ -24,6 +26,9 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const user = await getUserFromSession();
+	if (user === null){
+		throw new Error('User not found')
+	}
 	return (
 		<html
 			lang='es' className={sourceSans.variable}

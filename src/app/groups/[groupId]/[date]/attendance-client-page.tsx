@@ -14,6 +14,7 @@ import LinkButton from '@/components/link-button.tsx';
 import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
+import {type User} from '@prisma/client';
 import prisma from '@/lib/prisma.ts';
 import submitAttendancesAction, {type StudentWithCurrentAttendance} from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
 
@@ -21,6 +22,7 @@ export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
 	readonly className?: string;
+	readonly user: User;
 };
 
 const columnHelper = createColumnHelper<StudentWithCurrentAttendance>();
@@ -30,6 +32,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		group,
 		date,
 		className,
+		user,
 	} = props;
 
 	const parsedDate = parseDate(date);
@@ -107,9 +110,11 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		<TopBarPageTemplate
 			title={group.name} subtitle={<FormattedDate date={date} tz={group.tz}/>} topBarItems={
 				<>
-					<LinkButton href={`/groups/edit/${group.id}`} color='tertiary' variant='outlined'>
-						<Icon name='edit'/>
-					</LinkButton>
+					{user.admin
+						?<LinkButton href={`/groups/edit/${group.id}`} color='tertiary' variant='outlined'>
+							<Icon name='edit'/>
+						</LinkButton>:null
+					}
 					<LinkButton href={`/groups/${group.id}/${firstDate?.toString()}`} color='secondary' variant='outlined'>
 						<Icon name='home'/>
 					</LinkButton>

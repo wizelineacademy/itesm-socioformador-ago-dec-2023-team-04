@@ -14,7 +14,7 @@ import {type searchForStudentsByName} from '@/lib/student.ts';
  *
  * @async
  */
-export const getUserByAuthId = cache(async (authId: string) => prisma.user.findFirstOrThrow({
+export const getUserByAuthId = cache(async (authId: string) => prisma.user.findFirst({
 	where: {
 		authId,
 	},
@@ -25,11 +25,13 @@ export const getUserByAuthId = cache(async (authId: string) => prisma.user.findF
  *
  * @returns {Promise<User>} A Promise that resolves to the user object.
  */
-export async function getUserFromSession(): Promise<User> {
+export async function getUserFromSession(): Promise<User | null> {
+
 	const session = await getSession();
 	if (session === null || session === undefined) {
-		throw new Error('Not logged in');
+		return null;
 	}
+
 
 	return getUserByAuthId(session.user.sub as string);
 }
