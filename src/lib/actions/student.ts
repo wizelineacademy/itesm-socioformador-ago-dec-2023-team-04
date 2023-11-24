@@ -54,12 +54,21 @@ export async function upsertStudentAction(previousState: FormState<Student>, for
  */
 export async function deleteStudents(studentIds: number[]): Promise<ServerActionResult> {
 	try {
-		await prisma.student.deleteMany({
-			where: {
-				id: {
-					in: studentIds,
+		await prisma.$transaction(async tx => {
+			await tx.studentInGroup.deleteMany({
+				where: {
+					studentId: {
+						in: studentIds,
+					},
 				},
-			},
+			});
+			await tx.student.deleteMany({
+				where: {
+					id: {
+						in: studentIds,
+					},
+				},
+			});
 		});
 
 		revalidatePath('/students');

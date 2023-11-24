@@ -46,13 +46,13 @@ export type FaceBiometricsOptions = {
 };
 
 /**
- * Perform face biometrics detection or initialize video processing loop if enabled.
+ * Perform face biometrics assistance or initialize video processing loop if enabled.
  *
  * @param {FaceBiometricsOptions} options - The options for face biometrics.
  * @param {boolean} options.isEnabled - Flag indicating whether face biometrics is enabled. Default is true.
  * @param {boolean} options.isVideo - Flag indicating whether video processing is enabled. Default is true.
- * @param {Input} options.input - The input for face biometrics detection.
- * @return {{ detection?: FaceResult, isProcessing: boolean }} - The detected face result and the processing status.
+ * @param {Input} options.input - The input for face biometrics assistance.
+ * @return {{ assistance?: FaceResult, isProcessing: boolean }} - The detected face result and the processing status.
  */
 export default function useFaceBiometrics(options: FaceBiometricsOptions): {
 	result?: FaceResult;
@@ -65,7 +65,7 @@ export default function useFaceBiometrics(options: FaceBiometricsOptions): {
 	const [human, setHuman] = useState<Human>();
 	const [detection, setDetection] = useState<FaceResult>();
 
-	// Load detection library asynchronously, and only on the client.
+	// Load assistance library asynchronously, and only on the client.
 	useEffect(() => {
 		if (!isEnabled) {
 			return;
@@ -79,7 +79,7 @@ export default function useFaceBiometrics(options: FaceBiometricsOptions): {
 		})();
 	}, [isEnabled]);
 
-	// Perform detection or initialize video processing loop if enabled
+	// Perform assistance or initialize video processing loop if enabled
 	useEffect(() => {
 		console.log('checking');
 		if (!isEnabled || input === undefined || human === undefined) {
