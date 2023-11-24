@@ -6,7 +6,7 @@ const groupUpsertSchema = z.object({
 	active: boolean,
 	description: z.string(),
 	entryHour: timeToDate,
-	exitHour: timeToDate,
+	duration: z.coerce.number().int().positive(),
 	tz: z.string(),
 	colorId: z.coerce.number(),
 	students: json(z.array(z.number())),

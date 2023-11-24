@@ -26,17 +26,18 @@ export default function Select<T extends object>(props: SelectProps<T>) {
 
 	return (
 		<div className={className}>
-			<div {...labelProps} className='text-stone-300 text-sm mb-1'> {label} </div>
+			{label && <div {...labelProps} className='text-stone-300 text-sm mb-1'> {label} </div>}
 			<HiddenSelect
 				state={state} triggerRef={buttonRef} isDisabled={isDisabled}
 				label={label} name={name}/>
 			<Button
+				className='w-full'
 				{...triggerProps}
 				ref={buttonRef}
 				color='tertiary'
 				variant='outlined'
 			>
-				<span {...valueProps}>
+				<span {...valueProps} className='w-full'>
 					{
 						state.selectedItem
 							? state.selectedItem.rendered

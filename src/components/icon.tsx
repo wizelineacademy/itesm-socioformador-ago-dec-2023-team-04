@@ -15,7 +15,7 @@ export default function Icon({
 		<span
 			{...props} className={clsx(
 				'material-symbols-rounded select-none leading-none',
-				size === 'xs' && 'material-symbols-xs text-lg',
+				size === 'xs' && 'material-symbols-xs text-base',
 				size === 'sm' && 'material-symbols-sm text-xl',
 				size === 'md' && 'material-symbols-md text-2xl w-6 h-6',
 				size === 'lg' && 'material-symbols-lg text-3xl',

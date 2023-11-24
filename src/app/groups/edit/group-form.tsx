@@ -18,6 +18,7 @@ import {type GroupByIdWithStudents} from '@/lib/group.ts';
 import {type StudentSearchResult} from '@/lib/user.ts';
 import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
+import {NumberField} from '@/components/number-field.tsx';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
@@ -67,6 +68,8 @@ export default function GroupForm(props: GroupFormProps) {
 		return days;
 	});
 
+	const [duration, setDuration] = useState(group?.duration ?? 0);
+
 	const groupStudents = useListData<StudentSearchResult>({
 		initialItems: group?.students?.map(student => student.student) ?? [],
 	});
@@ -85,6 +88,7 @@ export default function GroupForm(props: GroupFormProps) {
 				enabledFriday: daysActive.includes('friday') ? undefined : false,
 				enabledSaturday: daysActive.includes('saturday') ? undefined : false,
 				enabledSunday: daysActive.includes('sunday') ? undefined : false,
+				duration,
 			}}
 		>
 			<TextField
@@ -101,21 +105,48 @@ export default function GroupForm(props: GroupFormProps) {
 				defaultValue={group?.description}
 				validate={validate.description}
 			/>
-			<div className='flex justify-between mb-4'>
-				<TimeField
+			<TimeField
+				isRequired
+				name='entryHour'
+				label='Hora de entrada'
+				validate={validate.entryHour}
+				defaultValue={group?.entryHour ? new Time(group.entryHour.getHours(), group.entryHour.getSeconds()) : undefined}
+				className='mb-4'
+			/>
+			<h4 className='text-stone-400 text-sm'>
+				Duración
+			</h4>
+			<div className='flex gap-4 mb-4'>
+				<NumberField
 					isRequired
-					name='entryHour'
-					label='Hora de entrada'
-					validate={validate.entryHour}
-					defaultValue={group?.entryHour ? new Time(group.entryHour.getHours(), group.entryHour.getSeconds()) : undefined}
+					label='Horas'
+					name='durationHours'
+					minValue={0}
+					value={Math.floor(duration / 60)}
+					onChange={value => {
+						if (Number.isNaN(value)) {
+							return;
+						}
+
+						setDuration(previous => Number.isNaN(previous) ? value * 60 : (previous % 60) + (value * 60));
+					}}
 				/>
-				<TimeField
+				<NumberField
 					isRequired
-					name='exitHour'
-					label='Hora de salida'
-					defaultValue={group?.exitHour ? new Time(group.exitHour.getHours(), group.exitHour.getSeconds()) : undefined}
-					validate={validate.exitHour}
+					label='Minutos'
+					name='durationMinutes'
+					maxValue={59}
+					minValue={0}
+					value={duration % 60}
+					onChange={value => {
+						if (Number.isNaN(value)) {
+							return;
+						}
+
+						setDuration(previous => Number.isNaN(previous) ? value : (Math.floor(previous / 60) * 60) + value);
+					}}
 				/>
+
 			</div>
 			<ButtonGroup label='Días de asistencia' className='mb-4' value={daysActive} onChange={setDaysActive}>
 				<GroupedButton name='enabledMonday' value='monday'>

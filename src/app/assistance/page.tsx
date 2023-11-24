@@ -1,117 +1,269 @@
 'use client';
-import React, {useEffect, useRef, useState} from 'react';
-import {Item} from 'react-stately';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useQuery} from 'react-query';
 import {type FaceResult} from '@stock17944/human';
-import {List} from 'immutable';
+import {useCountdown} from 'usehooks-ts';
+import {clamp, motion, useMotionTemplate, useMotionValue, useSpring, useTransform} from 'framer-motion';
+import {Item} from 'react-stately';
 import useWebcam from '@/lib/hooks/use-webcam.ts';
-import Select from '@/components/select.tsx';
+import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
+import {type StudentWithSimilarity} from '@/lib/student.ts';
+import {cx} from '@/lib/cva.ts';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 import Icon from '@/components/icon.tsx';
 import Dialog from '@/components/dialog.tsx';
-import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
-import {type StudentWithSimilarity} from '@/lib/student.ts';
+import Select from '@/components/select.tsx';
 import {Button} from '@/components/button.tsx';
-import {cx} from '@/lib/cva.ts';
+import {calculateFaceSimilarity} from '@/lib/calculate-face-similarity.ts';
 
-function calculateFaceSimilarity(f1: FaceResult, f2: FaceResult) {
-	const d1 = f1.embedding;
-	const d2 = f2.embedding;
+const rootVariants = {
+	idle: {},
+	detecting: {},
+	detected: {},
+};
 
-	if (d1 === undefined || d2 === undefined) {
-		return undefined;
-	}
+const borderVariants = {
+	idle: {
+		borderColor: 'var(--idle-color)',
+	},
+	detecting: {
+		borderColor: 'var(--detecting-color)',
+	},
+	detected: {
+		borderColor: 'var(--detected-color)',
+	},
+};
 
-	const differences = List(d1)
-		.zip(List(d2))
-		.map(([v1, v2]) => (v1 - v2) ** 2);
+const messageVariants = {
+	idle: {
+		height: '0px',
+		visibility: 'hidden' as const,
+		opacity: 0,
+	},
+	detecting: {
+		height: '0px',
+		visibility: 'hidden' as const,
+		opacity: 0,
+	},
+	detected: {
+		height: 'fit-content' as const,
+		visibility: 'visible' as const,
+		opacity: 100,
+		transition: {
+			delay: 0.2,
+		},
+	},
+};
 
-	let sum = 0;
-
-	for (const difference of differences) {
-		sum += difference;
-	}
-
-	return 1 - (Math.sqrt(sum * 60) / 100);
-}
+const hourVariants = {
+	idle: {
+		fontSize: 'var(--idle-font-size)',
+	},
+	detecting: {
+		fontSize: 'var(--idle-font-size)',
+	},
+	detected: {
+		fontSize: 'var(--detected-font-size)',
+		transition: {
+			delay: 0.2,
+		},
+	},
+};
 
 export default function AssistancePage() {
 	const videoRef = useRef<HTMLVideoElement>(null);
 
+	const [submitting, setSubmitting] = useState(false);
+
 	const {cameras, cameraStream, selectedCamera, setSelectedCamera} = useWebcam({});
 
-	const {detection: liveDetection} = useFaceBiometrics({
+	const {result: liveResult} = useFaceBiometrics({
 		isVideo: true,
 		input: videoRef.current ?? undefined,
 	});
 
-	const [lastDetection, setLastDetection] = useState<FaceResult>();
+	const lastResult = useRef<FaceResult>();
+
+	const [detectionProgress, detectionProgressController]
+		= useCountdown({
+			isIncrement: true,
+			countStart: 0,
+			countStop: 100,
+			intervalMs: 5,
+		});
+
+	const animationProgress = useMotionValue(0);
 
 	useEffect(() => {
-		if (liveDetection === undefined || lastDetection === undefined) {
-			setLastDetection(liveDetection);
+		animationProgress.set(detectionProgress);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [detectionProgress]);
+
+	const result = useMemo(() => {
+		if (detectionProgress === 100 || submitting) {
+			return lastResult.current;
+		}
+
+		if (liveResult === undefined) {
+			detectionProgressController.stopCountdown();
+			detectionProgressController.resetCountdown();
+			lastResult.current = undefined;
 			return;
 		}
 
-		const similarity = calculateFaceSimilarity(lastDetection, liveDetection);
-
-		if (similarity !== undefined && similarity < 0.5) {
-			setLastDetection(liveDetection);
+		if (lastResult.current === undefined) {
+			detectionProgressController.startCountdown();
+			lastResult.current = liveResult;
+			return liveResult;
 		}
+
+		const similarity = calculateFaceSimilarity(lastResult.current, liveResult);
+
+		if (similarity !== undefined && similarity > 0.4) {
+			return lastResult.current;
+		}
+
+		detectionProgressController.resetCountdown();
+		detectionProgressController.startCountdown();
+		lastResult.current = liveResult;
+		return liveResult;
+		// The countdown controller is not stable
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [liveDetection]);
+	}, [liveResult, detectionProgress]);
 
 	useEffect(() => {
 		if (videoRef.current === null) {
+			// Shouldn't happen, effects are run after DOM nodes are mounted
 			return;
 		}
 
 		videoRef.current.srcObject = cameraStream ?? null;
 	}, [cameraStream]);
 
-	const {data} = useQuery(['detection', lastDetection], async () => {
-		const response = await fetch('/api/detection', {
-			method: 'POST',
+	const {data: recognizedStudent, isFetching} = useQuery(['detection', result], async () => {
+		if (result === undefined) {
+			return;
+		}
 
-			body: JSON.stringify(lastDetection!.embedding!),
+		const response = await fetch('/api/students/match', {
+			method: 'POST',
+			body: JSON.stringify(result.embedding),
 		});
+
+		if (!response.ok) {
+			return;
+		}
 
 		return await response.json() as StudentWithSimilarity;
 	}, {
-		enabled: lastDetection?.embedding !== undefined,
+		enabled: result !== undefined,
 	});
 
-	let detectionQuality: 'good' | 'medium' | 'bad' | 'unknown' = 'unknown';
+	useEffect(() => {
+		void (async () => {
+			if (detectionProgress !== 100 || !recognizedStudent) {
+				return;
+			}
 
-	if (liveDetection !== undefined) {
-		if (liveDetection.boxScore > 0.9) {
-			detectionQuality = 'good';
-		} else if (liveDetection.boxScore > 0.8) {
-			detectionQuality = 'medium';
-		} else if (liveDetection.boxScore > 0.7) {
-			detectionQuality = 'bad';
-		}
+			setSubmitting(true);
+
+			const response = await fetch(`api/students/${recognizedStudent.id}/assistance`, {
+				method: 'POST',
+			});
+
+			const timeout = setTimeout(() => {
+				detectionProgressController.resetCountdown();
+				setTimeout(() => {
+					setSubmitting(false);
+					detectionProgressController.startCountdown();
+				}, 3000);
+			}, 2000);
+			return () => {
+				if (detectionProgress > 0) {
+					clearTimeout(timeout);
+					setSubmitting(false);
+					detectionProgressController.resetCountdown();
+					detectionProgressController.startCountdown();
+				}
+			};
+		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recognizedStudent, detectionProgress]);
+
+	const progressWithSpring = useSpring(animationProgress, {bounce: 0, mass: 1});
+
+	const topWidth = useTransform(() => clamp(0, 100, (progressWithSpring.get() / 50) * 100));
+	const rightHeight = useTransform(() => clamp(0, 100, ((progressWithSpring.get() - 50) / 50) * 100));
+	const bottomWidth = useTransform(() => clamp(0, 100, ((progressWithSpring.get()) / 50) * 100));
+	const leftHeight = useTransform(() => clamp(0, 100, ((progressWithSpring.get() - 50) / 50) * 100));
+
+	const topWidthPercent = useMotionTemplate`${topWidth}%`;
+	const rightHeightPercent = useMotionTemplate`${rightHeight}%`;
+	const bottomWidthPercent = useMotionTemplate`${bottomWidth}%`;
+	const leftHeightPercent = useMotionTemplate`${leftHeight}%`;
+
+	let variant: keyof typeof rootVariants = result ? 'detecting' : 'idle';
+	if (detectionProgress === 100) {
+		variant = 'detected';
 	}
 
 	return (
-		<div className='h-screen gap-4 flex flex-col p-4'>
-			<div className='grow overflow-hidden'>
-				<video
-					ref={videoRef} autoPlay className={cx(
-						'h-full w-full object-cover',
-						detectionQuality === 'good' && 'border-4 border-green-500',
-						detectionQuality === 'medium' && 'border-4 border-yellow-500',
-						detectionQuality === 'bad' && 'border-4 border-red-500')}/>
-			</div>
-			<div className='w-full items-center flex  gap-4'>
-				<div className='text-stone-300 text-6xl'>
-					11:11 AM
-				</div>
-				<div className='grow'/>
-				<div className='text-stone-300 text-4xl'>
-					{data && `${data.givenName} ${data.familyName}`}
-				</div>
+		<motion.div layout animate={variant} variants={rootVariants} className='h-screen gap-2 flex flex-col p-4'>
+			<motion.div
+				layout
+				className='grow overflow-hidden relative rounded [--submitted-color:theme(colors.stone.100)] [--detecting-color:theme(colors.yellow.400)] [--idle-color:theme(colors.red.400)] [--detected-color:theme(colors.green.400)]'
+			>
+				<motion.div
+					layout
+					className='absolute top-0 left-0 h-0 border-t-8 '
+					variants={borderVariants}
+					style={{
+						width: topWidthPercent,
+					}}
+				/>
+				<motion.div
+					layout
+					className='absolute top-0 right-0 border-green-400 w-0 border-r-8'
+					variants={borderVariants}
+					style={{
+						height: rightHeightPercent,
+					}}/>
+				<motion.div
+					layout
+					className='absolute bottom-0 right-0 border-green-400 h-0 border-b-8'
+					variants={borderVariants}
+					style={{
+						width: bottomWidthPercent,
+					}}/>
+				<motion.div
+					layout
+					className='absolute bottom-0 left-0 border-green-400 w-0 border-l-8'
+					variants={borderVariants}
+					style={{
+						height: leftHeightPercent,
+					}}/>
+				<motion.video
+					ref={videoRef}
+					autoPlay
+					className={cx(
+						'h-full w-full object-cover rounded',
+					)}
+				/>
+			</motion.div>
 
+			<motion.div
+				layout
+				className='text-8xl text-stone-300'
+				variants={messageVariants}
+			>
+				{recognizedStudent && `Hola, ${recognizedStudent?.givenName} ${recognizedStudent?.familyName}`}
+			</motion.div>
+
+			<motion.div className='w-full items-center flex  gap-4'>
+				<motion.div className='text-stone-300 [--idle-font-size:theme(fontSize.6xl)] [--detected-font-size:theme(fontSize.5xl)]' variants={hourVariants}>
+					11:11 AM
+				</motion.div>
+				<div className='grow'/>
 				<ButtonModalTrigger label={<Icon name='settings'/>} size='xl'>
 					{
 						close => (
@@ -141,8 +293,8 @@ export default function AssistancePage() {
 						)
 					}
 				</ButtonModalTrigger>
-			</div>
+			</motion.div>
 
-		</div>
+		</motion.div>
 	);
 }

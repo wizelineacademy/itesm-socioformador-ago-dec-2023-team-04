@@ -74,7 +74,7 @@ model Group {
   active      Boolean
   description String
   entryHour   DateTime @db.Time()
-  exitHour    DateTime @db.Time()
+  duration    Int
   tz          String
 
   enabledMonday    Boolean
