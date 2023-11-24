@@ -6,6 +6,7 @@ import {GroupCard} from '@/components/group-card.tsx';
 import {groupHasClass} from '@/app/groups/class-dates.ts';
 import GroupsTopbarItems from '@/app/groups/groups-topbar-items.tsx';
 import Separator from '@/components/separator.tsx';
+import {getUserFromSession} from '@/lib/user.ts';
 
 export default async function GroupsPage() {
 	const groups = await getAllGroupsWithColors();
@@ -16,9 +17,14 @@ export default async function GroupsPage() {
 	] = List(groups)
 		.partition(element => groupHasClass(element));
 
+	const user = await getUserFromSession();
+	if (user === null) {
+		throw new Error('User not found');
+	}
+
 	return (
 		<TopBarPageTemplate
-			title='Grupos' topBarItems={<GroupsTopbarItems/>}
+			title='Grupos' topBarItems={<GroupsTopbarItems user={user}/>}
 		>
 			{
 				groupsWithClassToday.size > 0 && (

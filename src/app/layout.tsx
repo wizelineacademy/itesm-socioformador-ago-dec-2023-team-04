@@ -24,6 +24,10 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const user = await getUserFromSession();
+	if (user === null) {
+		throw new Error('User not found');
+	}
+
 	return (
 		<html
 			lang='es' className={sourceSans.variable}

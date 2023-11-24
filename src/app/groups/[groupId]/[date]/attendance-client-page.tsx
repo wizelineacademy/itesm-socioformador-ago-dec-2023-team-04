@@ -4,6 +4,7 @@ import React, {useMemo} from 'react';
 import {createColumnHelper} from '@tanstack/table-core';
 import {CalendarDate, getLocalTimeZone, parseDate, today} from '@internationalized/date';
 import {useListData} from 'react-stately';
+import {type User} from '@prisma/client';
 import {type Serializable} from '@/lib/serializable.ts';
 import {type GroupWithStudentsAttendance} from '@/lib/group.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
@@ -21,6 +22,7 @@ export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
 	readonly className?: string;
+	readonly user: User;
 };
 
 const columnHelper = createColumnHelper<StudentWithCurrentAttendance>();
@@ -30,6 +32,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		group,
 		date,
 		className,
+		user,
 	} = props;
 
 	const parsedDate = parseDate(date);
@@ -107,9 +110,10 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		<TopBarPageTemplate
 			title={group.name} subtitle={<FormattedDate date={date} tz={group.tz}/>} topBarItems={
 				<>
-					<LinkButton href={`/groups/edit/${group.id}`} color='tertiary' variant='outlined'>
-						<Icon name='edit'/>
-					</LinkButton>
+					{user.admin
+						? <LinkButton href={`/groups/edit/${group.id}`} color='tertiary' variant='outlined'>
+							<Icon name='edit'/>
+						</LinkButton> : null}
 					<LinkButton href={`/groups/${group.id}/${firstDate?.toString()}`} color='secondary' variant='outlined'>
 						<Icon name='home'/>
 					</LinkButton>
