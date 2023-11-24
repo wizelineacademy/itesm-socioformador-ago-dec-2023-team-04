@@ -126,5 +126,5 @@ model TutorNotification {
   tutorId Int
 
   message  String
-  sentTime DateTime
+  sentTime DateTime @db.Timestamptz()
 }

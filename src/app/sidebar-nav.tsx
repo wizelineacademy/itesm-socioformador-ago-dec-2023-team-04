@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import {type User} from '@prisma/client';
@@ -29,6 +28,14 @@ export default function SidebarNav(props: SidebarNavProps) {
 					<Icon name='school' className='me-2'/>
 					Alumnos
 				</SidebarButton> : null}
+			<SidebarButton href='/tutors'>
+				<Icon name='supervisor_account' className='me-2'/>
+				Tutores
+			</SidebarButton>
+			<SidebarButton href='/students'>
+				<Icon name='school' className='me-2'/>
+				Alumnos
+			</SidebarButton>
 			<SidebarButton href='/statistics'>
 				<Icon name='bar_chart' className='me-2'/>
 				Estadísticas
