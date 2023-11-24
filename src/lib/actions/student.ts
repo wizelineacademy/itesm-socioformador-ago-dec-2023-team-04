@@ -8,18 +8,19 @@ import {type FormState} from '@/components/form.tsx';
 import {decodeForm} from '@/lib/schemas/utils.ts';
 import {studentSchema} from '@/lib/schemas/student.ts';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
-import {getUserFromSession} from "@/lib/user.ts";
+import {getUserFromSession} from '@/lib/user.ts';
 
 export async function upsertStudentAction(previousState: FormState<Student>, formData: FormData): Promise<FormState<Student>> {
 	let newId: number | undefined;
-	const user = await getUserFromSession()
+	const user = await getUserFromSession();
 
-	if (user === null || !user.admin){
+	if (user === null || !user.admin) {
 		return	{
 			...previousState,
-			formErrors: ['No estás autorizado para realizar esta acción']
-		}
+			formErrors: ['No estás autorizado para realizar esta acción'],
+		};
 	}
+
 	try {
 		if (previousState.id === undefined) {
 			const validatedStudent = await decodeForm(formData, studentSchema);
@@ -62,12 +63,12 @@ export async function upsertStudentAction(previousState: FormState<Student>, for
  * @return {Promise<ServerActionResult>} A promise that resolves to a ServerActionResult object indicating the result of the delete operation. The promise resolves to an object with a `success` property indicating whether the delete operation was successful. If the delete operation failed, the object may also contain a `name` property with the error name and a `message` property with the error message.
  */
 export async function deleteStudents(studentIds: number[]): Promise<ServerActionResult> {
-	const user = await getUserFromSession()
-	if (user=== null || !user.admin){
+	const user = await getUserFromSession();
+	if (user === null || !user.admin) {
 		return {
 			success: false,
-			message: 'No estás autorizado para realizar esta acción'
-		}
+			message: 'No estás autorizado para realizar esta acción',
+		};
 	}
 
 	try {

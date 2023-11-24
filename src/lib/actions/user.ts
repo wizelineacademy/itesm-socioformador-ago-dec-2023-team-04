@@ -9,17 +9,16 @@ import {userSchema} from '@/lib/schemas/user.ts';
 import {decodeForm} from '@/lib/schemas/utils.ts';
 import {handleErrorAction} from '@/lib/actions/util.ts';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
-import {getUserFromSession} from "@/lib/user.ts";
+import {getUserFromSession} from '@/lib/user.ts';
 
 async function updateAuth0UserDataAction(previousState: FormState<User>, authId: string, email?: string, password?: string): Promise<FormState<User> | undefined> {
+	const user = await getUserFromSession();
 
-	const user = await getUserFromSession()
-
-	if (user === null || !user.admin){
+	if (user === null || !user.admin) {
 		return	{
 			...previousState,
-			formErrors: ['No estás autorizado para realizar esta acción']
-		}
+			formErrors: ['No estás autorizado para realizar esta acción'],
+		};
 	}
 
 	if (password) {
@@ -56,14 +55,15 @@ async function updateAuth0UserDataAction(previousState: FormState<User>, authId:
 
 export async function upsertUserAction(previousState: FormState<User>, formData: FormData): Promise<FormState<User>> {
 	let newId: number | undefined;
-	const user = await getUserFromSession()
+	const user = await getUserFromSession();
 
-	if (user === null || !user.admin){
+	if (user === null || !user.admin) {
 		return	{
 			...previousState,
-			formErrors: ['No estás autorizado para realizar esta acción']
-		}
+			formErrors: ['No estás autorizado para realizar esta acción'],
+		};
 	}
+
 	try {
 		if (previousState.id === undefined) {
 			const validatedUser = await decodeForm(formData, userSchema);

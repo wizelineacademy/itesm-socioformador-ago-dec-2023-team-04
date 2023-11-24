@@ -5,7 +5,7 @@ import {getGroupWithStudentsAttendance} from '@/lib/group.ts';
 import {makeSerializable} from '@/lib/serializable.ts';
 import {groupHasClass} from '@/app/groups/class-dates.ts';
 import AttendanceClientPage from '@/app/groups/[groupId]/[date]/attendance-client-page.tsx';
-import {getUserFromSession} from "@/lib/user.ts";
+import {getUserFromSession} from '@/lib/user.ts';
 
 export type EditGroupDetailPageProps = {
 	readonly params: {
@@ -32,8 +32,8 @@ export default async function GroupDatePage(props: EditGroupDetailPageProps) {
 	const serializableGroup = makeSerializable(group);
 	const user = await getUserFromSession();
 
-	if (user === null){
-		throw new Error('User not found')
+	if (user === null) {
+		throw new Error('User not found');
 	}
 
 	return (

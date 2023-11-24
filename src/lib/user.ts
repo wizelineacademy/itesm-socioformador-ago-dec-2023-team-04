@@ -26,12 +26,10 @@ export const getUserByAuthId = cache(async (authId: string) => prisma.user.findF
  * @returns {Promise<User>} A Promise that resolves to the user object.
  */
 export async function getUserFromSession(): Promise<User | null> {
-
 	const session = await getSession();
 	if (session === null || session === undefined) {
 		return null;
 	}
-
 
 	return getUserByAuthId(session.user.sub as string);
 }

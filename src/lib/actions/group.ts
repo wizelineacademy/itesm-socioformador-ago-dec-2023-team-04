@@ -7,18 +7,19 @@ import {type FormState} from '@/components/form.tsx';
 import groupUpsertSchema, {type GroupUpsert} from '@/lib/schemas/group.ts';
 import {decodeForm} from '@/lib/schemas/utils.ts';
 import {type ServerActionResult} from '@/lib/server-action-result.ts';
-import {getUserFromSession} from "@/lib/user.ts";
+import {getUserFromSession} from '@/lib/user.ts';
 
 export async function upsertGroupAction(previousState: FormState<GroupUpsert>, formData: FormData): Promise<FormState<GroupUpsert>> {
 	let newId: number | undefined;
-	const user = await getUserFromSession()
+	const user = await getUserFromSession();
 
-	if (user === null || !user.admin){
+	if (user === null || !user.admin) {
 		return	{
 			...previousState,
-			formErrors: ['No estás autorizado para realizar esta acción']
-		}
+			formErrors: ['No estás autorizado para realizar esta acción'],
+		};
 	}
+
 	try {
 		if (previousState.id === undefined) {
 			const validatedGroup = await decodeForm(formData, groupUpsertSchema);

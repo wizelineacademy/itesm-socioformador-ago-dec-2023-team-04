@@ -25,21 +25,19 @@ export default function SidebarNav(props: SidebarNavProps) {
 				Grupos
 			</SidebarButton>
 			{user.admin
-				?<SidebarButton href='/students'>
-				<Icon name='school' className='me-2'/>
-				Alumnos
-			</SidebarButton>:null
-			}
+				? <SidebarButton href='/students'>
+					<Icon name='school' className='me-2'/>
+					Alumnos
+				</SidebarButton> : null}
 			<SidebarButton href='/statistics'>
 				<Icon name='bar_chart' className='me-2'/>
 				Estadísticas
 			</SidebarButton>
 			{user.admin
-				?<SidebarButton href='/notifications'>
-				<Icon name='notifications' className='me-2'/>
-				Notificaciones
-			</SidebarButton>:null
-			}
+				? <SidebarButton href='/notifications'>
+					<Icon name='notifications' className='me-2'/>
+					Notificaciones
+				</SidebarButton> : null}
 
 			<div className='grow'/>
 			<AccountSidebarButton>
