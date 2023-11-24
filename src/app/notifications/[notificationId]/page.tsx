@@ -31,12 +31,12 @@ export default withPageAuthRequired(async ({params}: {
 			</div>
 			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>
 			<h3 className='text-stone-200'>Fecha de envío:</h3>
-			<p
-				className='text-base text-stone-300 mb-4'
-			>{`${notification.sentTime.toLocaleString('es-MX', {timeZone: 'UTC'})}`}</p>
+			<p className='text-base text-stone-300 mb-4'>
+				{notification.sentTime.toLocaleString()}
+			</p>
 			<h3 className='text-stone-200'>Mensaje:</h3>
-			<p className='flex bg-stone-700 justify-between w-full grow rounded text-xs'>
-				{`${notification.message}`}
+			<p className='flex bg-stone-700 w-full h-full grow rounded text-xs'>
+				{notification.message}
 			</p>
 		</div>
 	);

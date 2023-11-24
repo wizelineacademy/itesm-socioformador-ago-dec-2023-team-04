@@ -6,6 +6,8 @@ import Icon from '@/components/icon.tsx';
 import ContactDisplay from '@/components/contact-display.tsx';
 import StudentForm from '@/app/students/student-form.tsx';
 import LinkButton from '@/components/link-button.tsx';
+import {getAllTutors} from '@/lib/actions/tutor.ts';
+import NotificationForm from '@/app/notifications/create/notification-form.tsx';
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {
@@ -26,7 +28,7 @@ export default withPageAuthRequired(async ({params}: {
 					{`${student.givenName} ${student.familyName}`}
 				</h1>
 			</div>
-			<StudentForm student={student}/>
+			{/* <StudentForm student={student}/> */}
 			{
 				student.tutors.length > 0 && (
 					<div>
@@ -39,12 +41,13 @@ export default withPageAuthRequired(async ({params}: {
 					</div>
 				)
 			}
-			<h2 className='text-stone-300'>Grupos</h2>
+			<NotificationForm tutor={student.tutors} student={student}/>
+			{/* <h2 className='text-stone-300'>Grupos</h2>
 			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>
 			<LinkButton href='/assistance' size='xl' color='secondary'><Icon name='calendar_month'/> Asistencias</LinkButton>
 			<h1>
 				{`${student.givenName} ${student.familyName}`}
-			</h1>
+			</h1> */}
 		</div>
 	);
 }, {
