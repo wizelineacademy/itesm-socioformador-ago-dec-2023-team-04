@@ -54,5 +54,18 @@ export const getUserById = cache(async (id: number) => prisma.user.findUnique({
 	},
 }));
 
-export type StudentSearchResult = Awaited<ReturnType<typeof searchForStudentsByName>>[number];
+export const getGroupsWithUserId = cache(async (id: number) => prisma.user.findUnique({
+	where: {
+		id,
+	},
+	include: {
+		groups: {
+			select: {
+				id: true,
+				name: true,
+			},
+		},
+	},
+}));
 
+export type StudentSearchResult = Awaited<ReturnType<typeof searchForStudentsByName>>[number];

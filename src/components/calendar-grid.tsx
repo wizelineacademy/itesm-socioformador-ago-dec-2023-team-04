@@ -29,7 +29,7 @@ export default function CalendarGrid({state, ...props}: CalendarGridProps) {
 						{state.getDatesInWeek(weekIndex).map((date, i) => (
 							date
 								? (
-							/* eslint-disable-next-line react/no-array-index-key */
+									/* eslint-disable-next-line react/no-array-index-key */
 									<CalendarCell key={i} state={state} date={date}/>
 								)
 							// eslint-disable-next-line react/no-array-index-key
