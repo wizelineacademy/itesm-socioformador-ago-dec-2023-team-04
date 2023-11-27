@@ -35,6 +35,7 @@ export default function NotificationForm(props: NotificationFormProps) {
 			}}
 		>
 			<Select
+				className='mb-4'
 				name='tutorId'
 				label='Tutor'
 				items={tutor} selectedKey={selectedTutor}
@@ -51,7 +52,6 @@ export default function NotificationForm(props: NotificationFormProps) {
 				}
 			</Select>
 			<TextArea
-				isRequired
 				name='message'
 				label='Mensaje'
 				className='mb-4'

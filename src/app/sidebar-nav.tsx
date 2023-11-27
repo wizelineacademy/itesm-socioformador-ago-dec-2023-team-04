@@ -24,14 +24,15 @@ export default function SidebarNav(props: SidebarNavProps) {
 				Grupos
 			</SidebarButton>
 			{user.admin
+				? <SidebarButton href='/tutors'>
+					<Icon name='supervisor_account' className='me-2'/>
+					Tutores
+				</SidebarButton> : null}
+			{user.admin
 				? <SidebarButton href='/students'>
 					<Icon name='school' className='me-2'/>
 					Alumnos
 				</SidebarButton> : null}
-			<SidebarButton href='/tutors'>
-				<Icon name='supervisor_account' className='me-2'/>
-				Tutores
-			</SidebarButton>
 			<SidebarButton href='/statistics'>
 				<Icon name='bar_chart' className='me-2'/>
 				Estadísticas
