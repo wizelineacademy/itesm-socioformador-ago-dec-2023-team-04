@@ -1,46 +1,47 @@
-import React, {useState} from 'react';
-import {type Attendance, AttendanceType, type Group, type Student} from '@prisma/client';
+import React from 'react';
+import {AttendanceType} from '@prisma/client';
 import {
 	type CalendarDate,
-	fromDate,
 	getLocalTimeZone,
 	now,
-	type Time,
+	type Time, toCalendarDate,
 	toCalendarDateTime,
-	today,
+	toTime,
 	toZoned,
 } from '@internationalized/date';
 import {Item, type Key} from 'react-stately';
-import {type Serializable} from '@/lib/serializable.ts';
 import Select from '@/components/select.tsx';
 
+export type AttendanceValue = {
+	date: CalendarDate;
+	time: Time | null;
+	type: AttendanceType;
+};
+
 export type AttendanceChipProps = {
-	readonly studentId: number;
-	readonly groupId: number;
-	readonly entryHour: Date;
-	readonly groupTz: string;
-	readonly attendance: Omit<Attendance, 'attendanceDate'> | null;
-	readonly onAttendanceChange: (attendance: Omit<Attendance, 'attendanceDate'> | null) => void;
 	readonly date: CalendarDate;
+	readonly entryTime: Time;
+	readonly groupTz: string;
+	// eslint-disable-next-line react/boolean-prop-naming
+	readonly useCurrentTime?: boolean;
+	readonly attendance: AttendanceValue | null;
+	readonly onAttendanceChange: (attendance: AttendanceValue | null) => void;
 	readonly className?: string;
 };
 
 export function AttendanceChip(props: AttendanceChipProps) {
 	const {
-		studentId,
-		groupId,
-		entryHour,
-		groupTz,
 		attendance,
+		entryTime,
+		groupTz,
+		useCurrentTime = false,
 		onAttendanceChange,
 		date,
 		className,
 	} = props;
 
-	const localTz = getLocalTimeZone();
-
-	const entryDateTime = toZoned(toCalendarDateTime(today(groupTz), fromDate(entryHour, groupTz)), groupTz);
-	const currentDateTime = now(localTz);
+	// Const entryDateTime = toZoned(toCalendarDateTime(today(groupTz), fromDate(entryHour, groupTz)), groupTz);
+	const currentDateTime = now(getLocalTimeZone());
 
 	const selectHandler = (select: Key) => {
 		if (select === 'absence') {
@@ -49,21 +50,19 @@ export function AttendanceChip(props: AttendanceChipProps) {
 		}
 
 		onAttendanceChange({
-			attendanceEntryHour: now(groupTz).toDate(),
-			attendanceExitHour: now(groupTz).toDate(),
+			date,
+			time: useCurrentTime ? toTime(now(getLocalTimeZone())) : null,
 			type: select as AttendanceType,
-			groupId,
-			studentId,
 		});
 	};
 
 	const selection = attendance === null ? 'absence' : attendance.type;
 
 	return (
-		<Select aria-label='Estado de asistencia' selectedKey={selection} className={className} onSelectionChange={selectHandler}>
+		<Select aria-label='Estado de asistencia' selectedKey={selection} className={className} isDisabled={toCalendarDate(currentDateTime) < date} onSelectionChange={selectHandler}>
 			<Item key='absence' textValue='Pendiente'>
 				{
-					currentDateTime < entryDateTime
+					currentDateTime < toZoned(toCalendarDateTime(date, entryTime), groupTz)
 						? (
 							<div className='flex items-center'>
 								<svg viewBox='0 0 4 4' className='w-3 h-3 inline me-2'>
@@ -97,7 +96,7 @@ export function AttendanceChip(props: AttendanceChipProps) {
 					<svg viewBox='0 0 4 4' className='w-3 h-3 inline me-2'>
 						<circle cx='2' cy='2' r='2' className='fill-green-400'/>
 					</svg>
-					Confirmado
+					Presente
 				</div>
 
 			</Item>

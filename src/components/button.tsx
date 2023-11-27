@@ -101,7 +101,7 @@ export type ButtonProps = {
 
 export const Button = React.forwardRef(
 	(props: ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
-		const {children, className} = props;
+		const {children, className, isDisabled} = props;
 		const buttonRef = useObjectRef(ref);
 		const {buttonProps} = useButton(props, buttonRef);
 
@@ -109,7 +109,14 @@ export const Button = React.forwardRef(
 
 		return (
 			// eslint-disable-next-line react/button-has-type
-			<button {...mergeProps(buttonProps, focusProps)} ref={buttonRef} className={cx(buttonVariant(props), isFocusVisible && 'ring-1 ring-stone-50', className)}>
+			<button
+				{...mergeProps(buttonProps, focusProps)} ref={buttonRef} className={cx(
+					buttonVariant(props),
+					isFocusVisible && 'ring-1 ring-stone-50',
+					isDisabled && 'brightness-75 cursor-not-allowed',
+					className,
+				)}
+			>
 				{children}
 			</button>
 		);

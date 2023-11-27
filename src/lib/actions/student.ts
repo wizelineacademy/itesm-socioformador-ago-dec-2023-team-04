@@ -38,7 +38,7 @@ export async function upsertStudentAction(previousState: FormState<Student>, for
 			});
 		}
 
-		revalidatePath('/students');
+		revalidatePath('/student');
 	} catch (error) {
 		console.log(error);
 		return handleErrorAction(previousState, error);
@@ -57,7 +57,7 @@ export async function upsertStudentAction(previousState: FormState<Student>, for
 }
 
 /**
- * Deletes students from the database.
+ * Deletes student from the database.
  *
  * @param {number[]} studentIds - An array of student IDs to delete.
  * @return {Promise<ServerActionResult>} A promise that resolves to a ServerActionResult object indicating the result of the delete operation. The promise resolves to an object with a `success` property indicating whether the delete operation was successful. If the delete operation failed, the object may also contain a `name` property with the error name and a `message` property with the error message.
@@ -89,7 +89,7 @@ export async function deleteStudents(studentIds: number[]): Promise<ServerAction
 			});
 		});
 
-		revalidatePath('/students');
+		revalidatePath('/student');
 
 		return {
 			success: true,

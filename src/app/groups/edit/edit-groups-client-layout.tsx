@@ -20,7 +20,7 @@ const columns = [
 		header: 'Nombre',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('_count.students', {
+	columnHelper.accessor('_count.student', {
 		header: '# de alumnos',
 		cell(info) {
 			return info.getValue();

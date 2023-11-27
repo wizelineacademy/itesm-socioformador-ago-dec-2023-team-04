@@ -70,3 +70,29 @@ export const searchForStudentsByName = async (query: string) => prisma.student.f
 	},
 });
 
+export const getStudentWithAttendancesByGroup = cache(async (studentId: number, groupId: number) => prisma.student.findUnique({
+	where: {
+		id: studentId,
+	},
+	include: {
+		groups: {
+			where: {
+				groupId,
+			},
+			include: {
+				group: true,
+			},
+		},
+		attendances: {
+			where: {
+				groupId,
+			},
+			orderBy: {
+				attendanceDate: 'asc',
+			},
+		},
+	},
+}));
+
+export type StudentWithAttendanceByGroup = Exclude<Awaited<ReturnType<typeof getStudentWithAttendancesByGroup>>, null>;
+

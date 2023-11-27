@@ -14,7 +14,7 @@ export type SelectStudentsDialogProps = {
 };
 
 export default function SelectStudentsDialog(props: SelectStudentsDialogProps) {
-	// Const {students, onStudentSelection, onStudentRemoval} = props;
+	// Const {student, onStudentSelection, onStudentRemoval} = props;
 	const {
 		students,
 	} = props;
