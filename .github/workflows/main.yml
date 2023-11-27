@@ -46,130 +46,52 @@ jobs:
         with:
           xo: true
           # Enable your linters here
-  build:
-    name: Build and push docker image
+  push_to_registries:
+    name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
-
+      contents: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          cosign-release: 'v2.1.1'
-
-      # Set up BuildKit Docker container builder to be able to build
-      # multi-platform images and export cache
-      # https://github.com/docker/setup-buildx-action
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
-
-      - name: Upgrade AWS CLI version and setup lightsailctl
-        run: |
-          aws --version
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-          which aws
-          aws --version
-          sudo curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "/usr/local/bin/lightsailctl"
-          sudo chmod +x /usr/local/bin/lightsailctl
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          role-to-assume: ${{ secrets.AWS_ARN_OICN_ACCESS }}
-          role-session-name: Github
-          aws-region: us-east-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+          images: |
+            my-docker-hub-namespace/my-docker-hub-repository
+            ghcr.io/${{ github.repository }}
+      
+      - name: Build and push Docker images
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            AUTH0_SECRET=${{ secrets.AUTH0_SECRET }}
-            AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}
-            AUTH0_BASE_URL=${{ secrets.AUTH0_BASE_URL }}
-            AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}
-            AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}
-            AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Push the Docker Image to lightsail
-        env: 
-          IMAGE_SHA_TAG: ${{ github.sha }}
-          IMAGE_URL: ${{vars.LIGHTSAIL_IMAGE}}:${{ github.sha }}
-        run: >
-          aws lightsail push-container-image
-          --service-name ${{ vars.SERVICE_NAME }}
-          --image $IMAGE_URL
-          --region us-east-2
-          --label git-push      
-      - name: Save updated LIGHTSAIL_IMAGE_TAG 
-        run: |
-          echo "LIGHTSAIL_DOCKER_IMAGE=$(aws lightsail get-container-images --service-name ${{ vars.SERVICE_NAME }} --region us-east-2 | jq -r .containerImages[0].image)"  >> $GITHUB_ENV
-      
-      - name: Start New Deployment to Light Sail
-        run: |
-          aws lightsail create-container-service-deployment  --region us-east-2 \
-          --service-name ${{vars.SERVICE_NAME}} \
-          --output yaml \
-          --containers "{
-            \"${{vars.SERVICE_NAME}}\": {
-              \"image\": \"$LIGHTSAIL_DOCKER_IMAGE\",
-              \"environment\": {
-                  \"VERSION\": \"${{github.run_number}}\"
-                },
-              \"ports\": {
-                \"8000\": \"HTTP\"
-              }
-            }
-          }" \
-          --public-endpoint "{
-            \"containerName\": \"${{vars.SERVICE_NAME}}\",
-            \"containerPort\": 8000,
-            \"healthCheck\": {
-              \"path\": \"/healthcheck/liveness\",
-              \"intervalSeconds\": 10
-            }
-          }"      
-      - name: Push the Docker Image to lightsail
-        env: 
-          IMAGE_SHA_TAG: ${{ github.sha }}
-          IMAGE_URL: ${{vars.LIGHTSAIL_IMAGE}}:${{ github.sha }}
-        run: >
-          aws lightsail push-container-image
-          --service-name ${{ vars.SERVICE_NAME }}
-          --image $IMAGE_URL
-          --region us-east-2
-          --label git-push
+          build-args: |
+            DATABASE_URL={{ secrets.DATABASE_URL }}
+            AUTH0_SECRET={{ secrets.AUTH0_SECRET }}
+            AUTH0_BASE_URL={{ secrets.AUTH0_BASE_URL }}
+            AUTH0_DOMAIN={{ secrets.AUTH0_DOMAIN }}
+            AUTH0_ISSUER_BASE_URL={{ secrets.AUTH0_ISSUER_BASE_URL }}
+            AUTH0_CLIENT_ID={{ secrets.AUTH0_CLIENT_ID }}
+            AUTH0_CLIENT_SECRET={{ secrets.AUTH0_CLIENT_SECRET }}
+            TWILIO_ACCOUNT_SID={{ secrets.TWILIO_ACCOUNT_SID }}
+            TWILIO_AUTH_TOKEN={{ secrets.TWILIO_AUTH_TOKEN }}
+            
