@@ -73,12 +73,6 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: 'v1.13.1'
       
       - name: Log in to the Container registry
         if: github.event_name != 'pull_request'
@@ -112,13 +106,5 @@ jobs:
             AUTH0_CLIENT_SECRET={{ secrets.AUTH0_CLIENT_SECRET }}
             TWILIO_ACCOUNT_SID={{ secrets.TWILIO_ACCOUNT_SID }}
             TWILIO_AUTH_TOKEN={{ secrets.TWILIO_AUTH_TOKEN }}
-
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
         
             
