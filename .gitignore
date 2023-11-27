@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=webstorm+all,intellij+all,node,dotenv
 
 ### dotenv ###
-.env*
+.env.temp
 .env.local
 
 ### Intellij+all ###
@@ -172,7 +172,7 @@ web_modules/
 .env.development.local
 .env.test.local
 .env.production.local
-.env
+.env.temp
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
