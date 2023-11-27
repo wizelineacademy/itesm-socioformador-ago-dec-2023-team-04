@@ -5,6 +5,7 @@ import {revalidatePath} from 'next/cache';
 import prisma from '@/lib/prisma.ts';
 
 export default async function updateStudentAttendancesAction(studentId: number, groupId: number, attendances: Array<Pick<Attendance, 'attendanceDate' | 'type'>>) {
+	console.log(attendances);
 	await prisma.$transaction(async tx => {
 		await tx.attendance.deleteMany({
 			where: {

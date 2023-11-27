@@ -37,6 +37,6 @@ export default async function GroupDatePage(props: EditGroupDetailPageProps) {
 	}
 
 	return (
-		<AttendanceClientPage group={serializableGroup} date={params.date} user={user} tz={getLocalTimeZone()}/>
+		<AttendanceClientPage group={serializableGroup} date={params.date} user={user} serverTz={getLocalTimeZone()}/>
 	);
 }

@@ -1,9 +1,9 @@
 'use client';
 import React, {useMemo} from 'react';
 import {
-	CalendarDate, DateFormatter, fromDate,
+	CalendarDate, DateFormatter, fromDate, getLocalTimeZone,
 	getWeeksInMonth, isSameMonth, isWeekend,
-	startOfWeek, toCalendarDate, today, toTime,
+	startOfWeek, toCalendarDate, toCalendarDateTime, today, toTime,
 } from '@internationalized/date';
 import {useListData} from 'react-stately';
 import {type StudentWithAttendanceByGroup} from '@/lib/student.ts';
@@ -13,6 +13,8 @@ import LinkButton from '@/components/link-button.tsx';
 import {cx} from '@/lib/cva.ts';
 import {AttendanceChip, type AttendanceValue} from '@/components/attendance-chip.tsx';
 import {Button} from '@/components/button.tsx';
+import updateStudentAttendancesAction
+	from '@/app/groups/[groupId]/student/[studentId]/[yearMonth]/update-student-attendances-action.ts';
 
 const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
 
@@ -37,16 +39,17 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 	const studentGroup = student.groups[0].group;
 
 	const group = {
+		...studentGroup,
 		id: studentGroup.id,
-		entryHour: toTime(fromDate(studentGroup.entryHour, studentGroup.tz)),
+		entryTime: toTime(fromDate(studentGroup.entryHour, studentGroup.tz)),
 		tz: studentGroup.tz,
 	};
 
 	const initialAttendances = useMemo<AttendanceValue[]>(() => student.attendances.map(attendance => ({
-		date: toCalendarDate(fromDate(new Date(attendance.attendanceDate), group.tz)),
-		time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), group.tz)) : null,
+		date: new CalendarDate(attendance.attendanceDate.getUTCFullYear(), attendance.attendanceDate.getUTCMonth() + 1, attendance.attendanceDate.getUTCDate()),
+		time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), serverTz)) : null,
 		type: attendance.type,
-	})), [group.tz, student.attendances]);
+	})), [serverTz, student.attendances]);
 
 	const attendances = useListData({
 		initialItems: initialAttendances,
@@ -94,7 +97,14 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 					<LinkButton href={`/groups/${group.id}/student/${student.id}/${nextMonth.year}-${nextMonth.month}`} color='secondary' isDisabled={currentDate < nextMonth}>
 						<Icon name='arrow_right'/>
 					</LinkButton>
-					<Button color='secondary'>
+					<Button
+						color='secondary' onPress={async () => {
+							await updateStudentAttendancesAction(student.id, group.id, attendances.items.map(item => ({
+								attendanceDate: item.date.toDate(serverTz),
+								type: item.type,
+							})));
+						}}
+					>
 						<Icon name='save' className='me-1'/>
 						Guardar
 					</Button>
@@ -126,8 +136,9 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 								isSameMonth(day, firstDayOfMonth) && (
 									<AttendanceChip
 										date={day}
-										groupTz={group.tz}
-										entryTime={group.entryHour} attendance={attendances.getItem(day.toString()) ?? null} onAttendanceChange={attendance => {
+										serverTz={serverTz}
+										group={group}
+										attendance={attendances.getItem(day.toString()) ?? null} onAttendanceChange={attendance => {
 											if (attendance === null) {
 												console.log('removing');
 												attendances.remove(day.toString());

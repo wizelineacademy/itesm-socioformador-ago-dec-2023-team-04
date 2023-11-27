@@ -1,7 +1,7 @@
 import React from 'react';
-import {AttendanceType} from '@prisma/client';
+import {AttendanceType, Group} from '@prisma/client';
 import {
-	type CalendarDate,
+	type CalendarDate, getDayOfWeek,
 	getLocalTimeZone,
 	now,
 	type Time, toCalendarDate,
@@ -18,10 +18,23 @@ export type AttendanceValue = {
 	type: AttendanceType;
 };
 
+export type GroupValue = {
+	enabledMonday: boolean;
+	enabledTuesday: boolean;
+	enabledWednesday: boolean;
+	enabledThursday: boolean;
+	enabledFriday: boolean;
+	enabledSaturday: boolean;
+	enabledSunday: boolean;
+	entryTime: Time;
+};
+
+const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+
 export type AttendanceChipProps = {
 	readonly date: CalendarDate;
-	readonly entryTime: Time;
-	readonly groupTz: string;
+	readonly group: GroupValue;
+	readonly serverTz: string;
 	// eslint-disable-next-line react/boolean-prop-naming
 	readonly useCurrentTime?: boolean;
 	readonly attendance: AttendanceValue | null;
@@ -32,16 +45,15 @@ export type AttendanceChipProps = {
 export function AttendanceChip(props: AttendanceChipProps) {
 	const {
 		attendance,
-		entryTime,
-		groupTz,
+		group,
+		serverTz,
 		useCurrentTime = false,
 		onAttendanceChange,
 		date,
 		className,
 	} = props;
 
-	// Const entryDateTime = toZoned(toCalendarDateTime(today(groupTz), fromDate(entryHour, groupTz)), groupTz);
-	const currentDateTime = now(getLocalTimeZone());
+	const currentDateTime = now(serverTz);
 
 	const selectHandler = (select: Key) => {
 		if (select === 'absence') {
@@ -51,7 +63,7 @@ export function AttendanceChip(props: AttendanceChipProps) {
 
 		onAttendanceChange({
 			date,
-			time: useCurrentTime ? toTime(now(getLocalTimeZone())) : null,
+			time: useCurrentTime ? toTime(now(serverTz)) : null,
 			type: select as AttendanceType,
 		});
 	};
@@ -59,10 +71,10 @@ export function AttendanceChip(props: AttendanceChipProps) {
 	const selection = attendance === null ? 'absence' : attendance.type;
 
 	return (
-		<Select aria-label='Estado de asistencia' selectedKey={selection} className={className} isDisabled={toCalendarDate(currentDateTime) < date} onSelectionChange={selectHandler}>
+		<Select aria-label='Estado de asistencia' selectedKey={selection} className={className} isDisabled={toCalendarDate(currentDateTime) < date || !group[`enabled${daysOfTheWeek[getDayOfWeek(date, 'en-US')]}`]} onSelectionChange={selectHandler}>
 			<Item key='absence' textValue='Pendiente'>
 				{
-					currentDateTime < toZoned(toCalendarDateTime(date, entryTime), groupTz)
+					currentDateTime < toZoned(toCalendarDateTime(date, group.entryTime), serverTz)
 						? (
 							<div className='flex items-center'>
 								<svg viewBox='0 0 4 4' className='w-3 h-3 inline me-2'>

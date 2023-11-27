@@ -29,7 +29,7 @@ export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
 	readonly user: User;
-	readonly tz: string;
+	readonly serverTz: string;
 };
 
 const columnHelper = createColumnHelper<{
@@ -44,7 +44,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		group,
 		date,
 		user,
-		tz,
+		serverTz,
 	} = props;
 
 	const parsedDate = useMemo(() => parseDate(date), [date]);
@@ -96,8 +96,11 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			// Don't mind the warning, the columns and its dependencies are stable and as such this cell component is stable.
 			cell: props => (
 				<AttendanceChip
-					className='w-36' date={parsedDate} entryTime={entryHour}
-					groupTz={group.tz} attendance={props.cell.getValue()} onAttendanceChange={attendance => {
+					className='w-36' date={parsedDate} group={{
+						...group,
+						entryTime: entryHour,
+					}}
+					serverTz={serverTz} attendance={props.cell.getValue()} onAttendanceChange={attendance => {
 						attendances.update(props.row.original.id, {
 							...props.row.original,
 							attendance,
