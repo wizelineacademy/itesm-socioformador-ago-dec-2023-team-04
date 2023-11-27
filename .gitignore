@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=webstorm+all,intellij+all,node,dotenv
 
 ### dotenv ###
-.env.temp
+.env
 .env.local
 
 ### Intellij+all ###
