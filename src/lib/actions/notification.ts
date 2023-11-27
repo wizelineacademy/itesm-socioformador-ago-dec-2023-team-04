@@ -17,6 +17,13 @@ export async function createNotificationAction(previousState: FormState<TutorNot
 		const validatedNotification = await decodeForm(formData, notificationSchema);
 		const tutor = await getTutorById(validatedNotification.tutorId);
 
+		if (tutor === null) {
+			return {
+				...previousState,
+				formErrors: ['Unknown tutor'],
+			};
+		}
+
 		const notification = await client.messages.create({
 			body: validatedNotification.message,
 			// From: '+16157459905',

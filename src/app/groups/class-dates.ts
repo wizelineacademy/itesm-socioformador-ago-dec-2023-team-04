@@ -12,8 +12,6 @@ const dayAccesor = ['enabledSunday', 'enabledMonday', 'enabledTuesday', 'enabled
 
 export type GroupDates = Pick<Group, 'enabledSunday' | 'enabledMonday' | 'enabledTuesday' | 'enabledWednesday' | 'enabledThursday' | 'enabledFriday' | 'enabledSaturday'>;
 
-export type GroupSchedule = Pick<Group, 'entryHour' | 'exitHour'>;
-
 export function getGroupClassDate(group: GroupDates, offset = 0, baseDate = today(getLocalTimeZone())) {
 	const dayOfTheWeek = getDayOfWeek(baseDate, 'en-US');
 

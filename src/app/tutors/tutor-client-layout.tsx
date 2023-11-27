@@ -1,8 +1,9 @@
 'use client';
-import React, {type Key, useState} from 'react';
+import React, {useState} from 'react';
 import Link from 'next/link';
 import {type Tutor} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
+import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';

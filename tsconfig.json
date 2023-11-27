@@ -10,7 +10,7 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "allowJs": true,
     "allowImportingTsExtensions": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
