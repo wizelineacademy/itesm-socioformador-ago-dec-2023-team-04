@@ -1,58 +1,22 @@
-'use client';
-import React, {useState} from 'react';
-import {type DateValue} from '@internationalized/date';
-import {AttendanceType} from '@prisma/client';
-import {RadioGroup, Radio} from '@/components/radio.tsx';
-import DateRangePicker from '@/components/date-range-picker.tsx';
-import {dateSchema} from '@/lib/statistics.ts';
-import Chart from '@/components/chart.tsx';
-import UserID from '@/app/statistics/user-id.tsx';
-import GroupsList from "@/app/statistics/groups-list.tsx";
-import AbsenceGraph from '@/app/statistics/absence-graph.tsx';
-import JustificatedAbsenceGraph from '@/app/statistics/justificated-absence-graph.tsx';
-import LateGraph from '@/app/statistics/late-graph.tsx';
-import OntimeGraph from '@/app/statistics/ontime-graph.tsx';
-import ComboBox from '@/components/combo-box.tsx';
+import React from 'react';
+import StatisticsClient from '@/app/statistics/statistics-client.tsx';
+import {getUserFromSession, getGroupsWithUserId} from '@/lib/user.ts';
+import Chart from "@/app/statistics/chart.tsx";
 
-export default function Home() {
-	const userId = UserID();
-	const groupList = GroupsList(userId);
+export default async function Page() {
+	const userId = await getUserFromSession();
 
-	const [graphType, setGraphType] = useState('');
-	const [dateRange, setDateRange] = useState<string>([]);
-	const [groupId, setGroupId] = useState(0);
-
-	const handleRadioSelection = () => {
-		switch (graphType) {
-			case AttendanceType.ON_TIME: {
-				const data = OntimeGraph(groupId, dateRange);
-				break;
-			}
-
-			case AttendanceType.LATE: {
-				const data = LateGraph(groupId, dateRange);
-				break;
-			}
-
-			case 'absence': {
-				const data = AbsenceGraph(groupId, dateRange);
-				break;
-			}
-
-			case AttendanceType.JUSTIFICATED_ABSENCE: {
-				const data = JustificatedAbsenceGraph(groupId, dateRange);
-				break;
-			}
-
-			default: {
-				break;
-			}
-		}
-	};
-
-	const handleDateRange = () => {
-
+	if (userId === null) {
+		throw new Error('User not found');
 	}
+
+	const groupList = await getGroupsWithUserId(userId.id);
+
+	if (groupList === null) {
+		throw new Error('Groups not found');
+	}
+
+	const time: Date[] = [new Date('2023-11-26'), new Date('2023-11-27')];
 
 	return (
 		<main className='flex flex-col h-full text-stone-400'>
@@ -60,21 +24,10 @@ export default function Home() {
 				<h1 className='text-4xl text-stone-50'>
 					Estadísticas
 				</h1>
-			</div>
-			<div className='flex flex-col gap-4 h-full p-4'>
-				<div className='bg-stone-800 grow rounded'>
-					<RadioGroup label='Seleccione uno' onChange={handleRadioSelection}>
-						<Radio value={AttendanceType.ON_TIME}>Registro de asistencias</Radio>
-						<Radio value={AttendanceType.LATE}>Registro de retrasos</Radio>
-						<Radio value='absence'>Registro de faltas</Radio>
-						<Radio value={AttendanceType.JUSTIFICATED_ABSENCE}>Registro de faltas justificadas</Radio>
-						<Radio value='entryHours'>Horas de registros</Radio>
-					</RadioGroup>
-					<ComboBox/>
-					<DateRangePicker
-						label='Seleccione un intérvalo de fechas'/>
-					<h2> Gráfico </h2>
-					<Chart/>
+				<div>
+					<div>
+						<StatisticsClient groups={groupList.groups}/>
+					</div>
 				</div>
 			</div>
 		</main>
