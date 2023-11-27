@@ -28,26 +28,26 @@ export default withPageAuthRequired(async ({params}: {
 					{`${student.givenName} ${student.familyName}`}
 				</h1>
 			</div>
-			{/* <StudentForm student={student}/> */}
-			{
-				student.tutors.length > 0 && (
-					<div>
-						{
-							student.tutors.map(tutor => (
-								<ContactDisplay key={tutor.id} infoId={tutor.id}/>
-							))
-						}
-
-					</div>
-				)
-			}
-			<NotificationForm tutor={student.tutors} student={student}/>
-			{/* <h2 className='text-stone-300'>Grupos</h2>
-			<h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2>
-			<LinkButton href='/assistance' size='xl' color='secondary'><Icon name='calendar_month'/> Asistencias</LinkButton>
-			<h1>
-				{`${student.givenName} ${student.familyName}`}
-			</h1> */}
+			<StudentForm student={student}/>
+			{/* { */}
+			{/* 	student.tutors.length > 0 && ( */}
+			{/* 		<div> */}
+			{/* 			{ */}
+			{/* 				student.tutors.map(tutor => ( */}
+			{/* 					<ContactDisplay key={tutor.id} infoId={tutor.id}/> */}
+			{/* 				)) */}
+			{/* 			} */}
+			{/*  */}
+			{/* 		</div> */}
+			{/* 	) */}
+			{/* } */}
+			{/* <NotificationForm tutor={student.tutors} student={student}/> */}
+			{/* /!* <h2 className='text-stone-300'>Grupos</h2> */}
+			{/* <h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2> */}
+			{/* <LinkButton href='/assistance' size='xl' color='secondary'><Icon name='calendar_month'/> Asistencias</LinkButton> */}
+			{/* <h1> */}
+			{/* 	{`${student.givenName} ${student.familyName}`} */}
+			{/* </h1> *!/ */}
 		</div>
 	);
 }, {

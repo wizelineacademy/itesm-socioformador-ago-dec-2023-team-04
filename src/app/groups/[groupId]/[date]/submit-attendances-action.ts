@@ -8,7 +8,7 @@ export type StudentWithCurrentAttendance = {
 	id: number;
 	givenName: string;
 	familyName: string;
-	attendance: Omit<Attendance, 'attendanceDate'> | null;
+	attendance: Attendance | null;
 };
 
 export default async function submitAttendancesAction(students: StudentWithCurrentAttendance[], date: string, groupId: number) {

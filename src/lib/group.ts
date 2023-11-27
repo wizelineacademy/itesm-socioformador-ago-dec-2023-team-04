@@ -35,7 +35,7 @@ export const getGroupById = cache(async (id: number) => prisma.group.findUnique(
 }));
 
 /**
- * Retrieves a group by its unique id and includes the count of students in the group.
+ * Retrieves a group by its unique id and includes the count of student in the group.
  *
  * @param {number} id - The id of the group to retrieve.
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the group and its student count.

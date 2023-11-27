@@ -2,40 +2,52 @@
 
 import React, {useMemo} from 'react';
 import {createColumnHelper} from '@tanstack/table-core';
-import {CalendarDate, getLocalTimeZone, parseDate, today} from '@internationalized/date';
+import {
+	fromDate,
+	getLocalTimeZone,
+	parseDate,
+	toCalendarDate,
+	toCalendarDateTime,
+	today,
+	toTime,
+} from '@internationalized/date';
 import {useListData} from 'react-stately';
 import {type User} from '@prisma/client';
 import {type Serializable} from '@/lib/serializable.ts';
 import {type GroupWithStudentsAttendance} from '@/lib/group.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
-import {AttendanceChip} from '@/components/attendance-chip.tsx';
+import {AttendanceChip, type AttendanceValue} from '@/components/attendance-chip.tsx';
 import Table from '@/components/table.tsx';
 import LinkButton from '@/components/link-button.tsx';
 import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
-import prisma from '@/lib/prisma.ts';
 import submitAttendancesAction, {type StudentWithCurrentAttendance} from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
 
 export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
-	readonly className?: string;
 	readonly user: User;
+	readonly serverTz: string;
 };
 
-const columnHelper = createColumnHelper<StudentWithCurrentAttendance>();
+const columnHelper = createColumnHelper<{
+	id: number;
+	givenName: string;
+	familyName: string;
+	attendance: AttendanceValue | null;
+}>();
 
 export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 	const {
 		group,
 		date,
-		className,
 		user,
+		serverTz,
 	} = props;
 
-	const parsedDate = parseDate(date);
+	const parsedDate = useMemo(() => parseDate(date), [date]);
 
 	const previousDate = getGroupClassDate(group, -1, parsedDate);
 	const nextDate = getGroupClassDate(group, 1, parsedDate);
@@ -43,22 +55,27 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 
 	const localTz = getLocalTimeZone();
 
-	const attendances = useListData<StudentWithCurrentAttendance>({
-		initialItems: group.students.map(student => {
-			const {attendances} = student.student;
+	const entryHour = toTime(fromDate(new Date(group.entryHour), group.tz));
 
-			return {
-				id: student.studentId,
-				givenName: student.student.givenName,
-				familyName: student.student.familyName,
-				attendance: attendances.length === 0 ? null : {
-					...attendances[0],
-					attendanceDate: new Date(attendances[0].attendanceDate),
-					attendanceEntryHour: new Date(attendances[0].attendanceEntryHour),
-					attendanceExitHour: new Date(attendances[0].attendanceExitHour),
-				},
-			};
-		}),
+	const initialAttendances = useMemo(() => group.students.map(student => {
+		const {attendances} = student.student;
+
+		const attendance = attendances.length === 0 ? null : attendances[0];
+
+		return {
+			id: student.studentId,
+			givenName: student.student.givenName,
+			familyName: student.student.familyName,
+			attendance: attendance ? {
+				date: toCalendarDate(fromDate(new Date(attendance.attendanceDate), group.tz)),
+				time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), group.tz)) : null,
+				type: attendance.type,
+			} : null,
+		};
+	}), [group.students, group.tz]);
+
+	const attendances = useListData({
+		initialItems: initialAttendances,
 	});
 
 	const columns = useMemo(() => [
@@ -74,29 +91,16 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 				props.cell.renderValue()
 			),
 		}),
-		columnHelper.accessor(item => {
-			if (item.attendance) {
-				return {
-					...item.attendance,
-					attendanceEntryHour: new Date(item.attendance.attendanceEntryHour),
-					attendanceExitHour: new Date(item.attendance.attendanceExitHour),
-				};
-			}
-
-			return null;
-		}, {
+		columnHelper.accessor('attendance', {
 			header: 'Asistencia',
-			// Don't mind the warning, the columns are memoized and as such this cell component is stable.
+			// Don't mind the warning, the columns and its dependencies are stable and as such this cell component is stable.
 			cell: props => (
 				<AttendanceChip
-					className='w-36'
-					studentId={props.row.original.id}
-					groupId={group.id}
-					groupTz={group.tz}
-					date={parsedDate}
-					entryHour={(new Date(group.entryHour))}
-					attendance={props.cell.getValue()}
-					onAttendanceChange={attendance => {
+					className='w-36' date={parsedDate} group={{
+						...group,
+						entryTime: entryHour,
+					}}
+					serverTz={serverTz} attendance={props.cell.getValue()} onAttendanceChange={attendance => {
 						attendances.update(props.row.original.id, {
 							...props.row.original,
 							attendance,
@@ -125,7 +129,19 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					</LinkButton>
 					<Button
 						color='secondary' onPress={() => {
-							void submitAttendancesAction(attendances.items, date, group.id);
+							void submitAttendancesAction(attendances.items.map(attendance => ({
+								id: attendance.id,
+								givenName: attendance.givenName,
+								familyName: attendance.familyName,
+								attendance: attendance.attendance ? {
+									attendanceDate: attendance.attendance.date.toDate(group.tz),
+									attendanceEntryHour: attendance.attendance.time ? toCalendarDateTime(attendance.attendance.date, attendance.attendance.time).toDate(group.tz) : null,
+									attendanceExitHour: null,
+									groupId: group.id,
+									studentId: attendance.id,
+									type: attendance.attendance.type,
+								} : null,
+							})), date, group.id);
 						}}
 					>
 						<Icon name='save' className='me-1'/>
@@ -141,7 +157,9 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 						'',
 						'',
 						'w-0',
+						'w-12',
 					]}
+					getDetailsLink={({id}) => `/groups/${group.id}/student/${id}`}
 					data={attendances.items} columns={columns}
 				/>
 			</div>

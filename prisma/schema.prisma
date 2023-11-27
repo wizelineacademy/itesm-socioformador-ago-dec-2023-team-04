@@ -101,9 +101,9 @@ enum AttendanceType {
 }
 
 model Attendance {
-  attendanceDate      DateTime @db.Date()
-  attendanceEntryHour DateTime @db.Time()
-  attendanceExitHour  DateTime @db.Time()
+  attendanceDate      DateTime  @db.Date()
+  attendanceEntryHour DateTime? @db.Time()
+  attendanceExitHour  DateTime? @db.Time()
 
   type AttendanceType
 
