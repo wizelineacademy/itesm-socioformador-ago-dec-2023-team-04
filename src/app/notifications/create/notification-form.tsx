@@ -13,11 +13,11 @@ import SubmitButton from '@/components/submit-button.tsx';
 
 export type NotificationFormProps = {
 	readonly tutor: Tutor[];
-	readonly student: Student;
+	readonly student: number;
 	readonly action: (state: FormState<NotificationInit>, data: FormData) => Promise<FormState<NotificationInit>>;
 };
 
-export default function NotificationForm(props: NotificationFormProps) {
+export default function 	NotificationForm(props: NotificationFormProps) {
 	const {
 		tutor,
 		student,
@@ -36,7 +36,7 @@ export default function NotificationForm(props: NotificationFormProps) {
 				title: 'Notificación creada con éxito',
 			}}
 			staticValues={{
-				studentId: student.id,
+				studentId: student,
 			}}
 		>
 			<Select

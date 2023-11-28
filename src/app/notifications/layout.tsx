@@ -1,7 +1,7 @@
 import React, {type ReactNode} from 'react';
 import {type Metadata} from 'next';
 import {revalidatePath} from 'next/cache';
-import {getAllNotifications} from '@/lib/notification.ts';
+import {getAllNotificationsWithStudentsAndTutors, deleteNotifications} from '@/lib/notifications.ts';
 import NotificationClientLayout from '@/app/notifications/notification-client-layout.tsx';
 import {deleteNotifications} from '@/lib/notifications.ts';
 import Modal from '@/components/modal.tsx';
@@ -17,7 +17,7 @@ export type NotificationsLayoutProps = {
 
 export default async function NotificationsLayout(props: NotificationsLayoutProps) {
 	const {children} = props;
-	const notifications = await getAllNotifications();
+	const notifications = await getAllNotificationsWithStudentsAndTutors();
 
 	const deleteNotificationsAction = async (notifications: number[]) => {
 		'use server';

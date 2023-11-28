@@ -8,7 +8,7 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import Table from '@/components/table.tsx';
-import {type NotificationsWithStudentsAndTutors} from '@/lib/notification.ts';
+import {type NotificationsWithStudentsAndTutors} from '@/lib/notifications.ts';
 import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<NotificationsWithStudentsAndTutors>();

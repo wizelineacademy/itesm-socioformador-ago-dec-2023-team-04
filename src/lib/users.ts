@@ -245,3 +245,43 @@ export async function deleteUsers(userIds: number[]): Promise<number> {
 
 	return deletedRecords;
 }
+
+export const searchForUsersByName = async (query: string) => {
+	const user = await getUserFromSession();
+	if (!user) {
+		throw new AuthenticationError();
+	}
+
+	if (!user.admin) {
+		throw new AuthorizationError();
+	}
+
+	return prisma.user.findMany({
+		take: 10,
+		select: {
+			id: true,
+			givenName: true,
+			familyName: true,
+			email: true,
+		},
+		where: {
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			OR: [
+				{
+					givenName: {
+						contains: query,
+						mode: 'insensitive',
+					},
+				},
+				{
+					familyName: {
+						contains: query,
+						mode: 'insensitive',
+					},
+				},
+			],
+		},
+	});
+};
+
+export type UsersSearchResult = Awaited<ReturnType<typeof searchForUsersByName>>[number];

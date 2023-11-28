@@ -1,3 +1,4 @@
+import {cache} from 'react';
 import {client} from '@/lib/twilio.ts';
 import {type NotificationInit} from '@/lib/schemas/notification.ts';
 import prisma from '@/lib/prisma.ts';
@@ -72,4 +73,21 @@ export async function deleteNotifications(notificationIds: number[]): Promise<nu
 	});
 	return count;
 }
+
+export async function getAllNotificationsWithStudentsAndTutors() {
+	return prisma.tutorNotification.findMany({
+		include: {
+			tutor: true,
+			student: true,
+		},
+	});
+}
+
+export type NotificationsWithStudentsAndTutors = Awaited<ReturnType<typeof getAllNotifications>>;
+
+export const getNotificationById = cache(async (id: number) => prisma.tutorNotification.findUnique({
+	where: {
+		id,
+	},
+}));
 

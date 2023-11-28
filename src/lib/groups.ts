@@ -322,6 +322,7 @@ export const getGroupByIdWithStudentIds = cache(async (id: number) => {
 					student: true,
 				},
 			},
+			users: true,
 		},
 	});
 });
