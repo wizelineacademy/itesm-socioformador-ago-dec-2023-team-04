@@ -1,6 +1,5 @@
 'use client';
 import React, {type ReactNode, useState} from 'react';
-import {type TutorNotification} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
 import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
@@ -31,7 +30,7 @@ const columns = [
 		cell: info => info.getValue(),
 	}),
 	columnHelper.accessor('sentTime', {
-		header: 'Fechas de envío',
+		header: 'Fecha de envío',
 		cell: info => (info.getValue() as Date).toLocaleString(),
 	}),
 ];
