@@ -1,11 +1,10 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
 import {type User} from '@prisma/client';
 import {SidebarButton} from '@/components/sidebar-button.tsx';
 import Icon from '@/components/icon.tsx';
-import AccountSidebarButton from '@/components/account-sidebar-button.tsx';
-import {Button} from '@/components/button.tsx';
+import ButtonPopoverTrigger from '@/components/button-popover-trigger.tsx';
+import LinkButton from '@/components/link-button.tsx';
 
 export type SidebarNavProps = {
 	readonly user: User;
@@ -43,24 +42,28 @@ export default function SidebarNav(props: SidebarNavProps) {
 				</SidebarButton> : null}
 
 			<div className='grow'/>
-			<AccountSidebarButton>
-				<p className='text-stone-300 text-lg'>
-					{`${user.givenName} ${user.familyName}`}
-				</p>
-				<p className='text-xs mb-2'>
-					{user.email}
-				</p>
-				<Link href='/account'>
-					<Button size='xs' variant='text' color='secondary' className='mb-2' href='/account'>
+			<ButtonPopoverTrigger
+				variant='text' color='tertiary'
+				label={<>
+					<Icon name='account_circle' className='me-2'/>
+					Mi cuenta
+				</>}
+			>
+				<div className='p-4'>
+					<p className='text-stone-300 text-lg'>
+						{`${user.givenName} ${user.familyName}`}
+					</p>
+					<p className='text-xs text-stone-300 mb-2'>
+						{user.email}
+					</p>
+					<LinkButton href='/account' size='sm' variant='text' color='secondary' className='mb-2'>
 						Opciones de cuenta
-					</Button>
-				</Link>
-				<a href='/api/auth/logout'>
-					<Button size='xs' variant='contained' color='secondary'>
+					</LinkButton>
+					<LinkButton href='/api/auth/logout' size='sm' variant='contained' color='secondary'>
 						Cerrar sesión
-					</Button>
-				</a>
-			</AccountSidebarButton>
+					</LinkButton>
+				</div>
+			</ButtonPopoverTrigger>
 			<SidebarButton href='/assistance' className='w-full'>
 				<Icon name='photo_camera' className='me-2'/>
 				Asistencia
