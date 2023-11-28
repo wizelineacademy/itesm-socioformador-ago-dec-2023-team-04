@@ -1,5 +1,5 @@
 import {type NextRequest, NextResponse} from 'next/server';
-import {searchForStudentsByName} from '@/lib/student.ts';
+import {searchForStudentsByName} from '@/lib/students.ts';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GET = async (request: NextRequest) => {

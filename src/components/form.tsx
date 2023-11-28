@@ -1,30 +1,24 @@
-import React, {type ReactNode} from 'react';
+import React, {type ReactNode, useMemo} from 'react';
 import {FormValidationContext} from 'react-stately';
 import {useFormState} from 'react-dom';
+import {Seq} from 'immutable';
 
 export type FormState<T> = {
-	readonly id?: number;
 	readonly formErrors: string[];
 	readonly fieldErrors: {
 		[K in keyof T]?: string[];
 	};
 };
 
-type ValidFormValues = string | boolean | string[] | number | undefined | null;
-
 export type FormProps<T> = {
 	readonly children: ReactNode;
-	readonly id?: number;
 	readonly action: (previousState: FormState<T>, data: FormData) => Promise<FormState<T>>;
-	readonly staticValues?: {
-		readonly [K in keyof T]?: ValidFormValues;
-	};
+	readonly staticValues?: Partial<T>;
 };
 
 export default function Form<T>(props: FormProps<T>) {
-	const {children, action, staticValues, id} = props;
+	const {children, action, staticValues} = props;
 	const [state, formAction] = useFormState(action, {
-		id,
 		formErrors: [],
 		fieldErrors: {},
 	});
@@ -34,13 +28,35 @@ export default function Form<T>(props: FormProps<T>) {
 		fieldErrors,
 	} = state;
 
+	const processedStaticValues = useMemo(() => staticValues === undefined
+		? []
+		: Seq(Object.entries(staticValues)).filter(([, value]) => value !== undefined).map(
+			([key, value]) => {
+				if (typeof value === 'boolean') {
+					return [key, value ? 'true' : ''] as const;
+				}
+
+				if (value instanceof Date) {
+					return [key, value.toString()] as const;
+				}
+
+				if (typeof value === 'object') {
+					return [key, JSON.stringify(value)] as const;
+				}
+
+				if (typeof value === 'string' || typeof value === 'number') {
+					return [key, value] as const;
+				}
+
+				throw new Error('failed to process static values for form');
+			},
+		).toArray(), [staticValues]);
+
 	return (
 		<form action={formAction}>
 			{
-				staticValues && Object.entries(staticValues).map(([key, value]) => (
-					value === undefined
-						? null
-						: <input key={key} readOnly hidden name={key} value={typeof value === 'boolean' ? (value ? 'on' : 'off') : value as string | string[] | number | null ?? ''}/>
+				processedStaticValues.map(([key, value]) => (
+					<input key={key} readOnly hidden name={key} value={value}/>
 				))
 			}
 

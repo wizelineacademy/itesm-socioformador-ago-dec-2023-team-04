@@ -7,26 +7,28 @@ import {Button} from '@/components/button.tsx';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 import TextField from '@/components/text-field.tsx';
 import Icon from '@/components/icon.tsx';
-import Form from '@/components/form.tsx';
-import {upsertStudentAction} from '@/lib/actions/student.ts';
+import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
-import {studentSchema} from '@/lib/schemas/student.ts';
+import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
 
 export type StudentCreationFormProps = {
-	readonly student?: Student;
+	readonly student: Student;
+	readonly action: (state: FormState<Partial<StudentInit>>, data: FormData) => Promise<FormState<Partial<StudentInit>>>;
+} | {
+	readonly action: (state: FormState<StudentInit>, data: FormData) => Promise<FormState<StudentInit>>;
 };
 
 export default function StudentForm(props: StudentCreationFormProps) {
-	const {student} = props;
+	const {action} = props;
+	const student = 'student' in props ? props.student : undefined;
 	const [biometricData, setBiometricData] = useState<number[] | undefined>(student?.biometricData);
 
-	const validate = formValidators(studentSchema);
+	const validate = formValidators(studentInitSchema);
 
 	return (
 		<Form
-			id={student?.id}
-			action={upsertStudentAction} staticValues={{
-				biometricData: biometricData ? JSON.stringify(biometricData) : undefined,
+			action={action} staticValues={{
+				biometricData: biometricData ?? undefined,
 			}}
 		>
 			<TextField

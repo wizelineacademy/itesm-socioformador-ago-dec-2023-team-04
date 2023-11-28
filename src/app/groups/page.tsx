@@ -1,12 +1,12 @@
 import React from 'react';
 import {List} from 'immutable';
-import {getAllGroupsWithColors} from '@/lib/group.ts';
+import {getAllGroupsWithColors} from '@/lib/groups.ts';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {GroupCard} from '@/components/group-card.tsx';
 import {groupHasClass} from '@/app/groups/class-dates.ts';
 import GroupsTopbarItems from '@/app/groups/groups-topbar-items.tsx';
 import Separator from '@/components/separator.tsx';
-import {getUserFromSession} from '@/lib/user.ts';
+import {getUserFromSession} from '@/lib/users.ts';
 
 export default async function GroupsPage() {
 	const groups = await getAllGroupsWithColors();

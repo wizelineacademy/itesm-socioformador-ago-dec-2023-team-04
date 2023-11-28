@@ -6,8 +6,8 @@ import ComboBox from '@/components/combo-box.tsx';
 import List from '@/components/list.tsx';
 import {Button} from '@/components/button.tsx';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
-import {type StudentSearchResult} from '@/lib/user.ts';
 import Checkbox from '@/components/checkbox.tsx';
+import {type StudentSearchResult} from '@/lib/students.ts';
 
 export type SelectStudentsDialogProps = {
 	readonly students: ListData<StudentSearchResult>;

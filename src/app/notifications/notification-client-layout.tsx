@@ -1,7 +1,6 @@
 'use client';
-import React, {useState} from 'react';
-import Link from 'next/link';
-import {type Student, type Tutor, type TutorNotification} from '@prisma/client';
+import React, {type ReactNode, useState} from 'react';
+import {type TutorNotification} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
 import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
@@ -9,7 +8,6 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import Table from '@/components/table.tsx';
-import {deleteNotifications} from '@/lib/actions/notification.ts';
 
 const columnHelper = createColumnHelper<TutorNotification>();
 
@@ -30,23 +28,19 @@ const columns = [
 
 export type NotificationClientLayoutProps = {
 	readonly notifications: TutorNotification[];
-	readonly children: React.ReactNode;
+	readonly children: ReactNode;
+	readonly action: (notifications: number[]) => Promise<void>;
 };
 
-export default function NotificationClientLayout({children, notifications}: {
-	readonly notifications: TutorNotification[];
-	readonly children: React.ReactNode;
-}) {
+export default function NotificationClientLayout(props: NotificationClientLayoutProps) {
+	const {notifications, children, action} = props;
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
 	const handleDelete = async () => {
-		const result = await deleteNotifications([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
-
-		if (result.success) {
-			setSelectedKeys(new Set());
-		}
+		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+		setSelectedKeys(new Set());
 	};
 
 	return (

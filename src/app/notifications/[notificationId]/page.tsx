@@ -2,7 +2,7 @@ import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
 import {getNotificationById} from '@/lib/notification.ts';
-import {getStudentById} from '@/lib/student.ts';
+import {getStudentById} from '@/lib/students.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
 import Icon from '@/components/icon.tsx';
 

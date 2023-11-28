@@ -14,7 +14,7 @@ import {
 import {useListData} from 'react-stately';
 import {type User} from '@prisma/client';
 import {type Serializable} from '@/lib/serializable.ts';
-import {type GroupWithStudentsAttendance} from '@/lib/group.ts';
+import {type GroupWithStudentsAttendance} from '@/lib/groups.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {AttendanceChip, type AttendanceValue} from '@/components/attendance-chip.tsx';
@@ -108,7 +108,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					}}/>
 			),
 		}),
-	], [attendances, group.entryHour, group.id, group.tz, parsedDate]);
+	], [attendances, entryHour, group, parsedDate, serverTz]);
 
 	return (
 		<TopBarPageTemplate

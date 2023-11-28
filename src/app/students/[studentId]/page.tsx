@@ -1,25 +1,44 @@
 import React from 'react';
-import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {redirect} from 'next/navigation';
-import {getStudentById} from '@/lib/student.ts';
-import Icon from '@/components/icon.tsx';
-import ContactDisplay from '@/components/contact-display.tsx';
+import {revalidatePath} from 'next/cache';
+import {getStudentById, updateStudent} from '@/lib/students.ts';
 import StudentForm from '@/app/students/student-form.tsx';
-import LinkButton from '@/components/link-button.tsx';
-import {getAllTutors} from '@/lib/actions/tutor.ts';
-import NotificationForm from '@/app/notifications/create/notification-form.tsx';
+import {type FormState} from '@/components/form.tsx';
+import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
+import {decodeForm} from '@/lib/schemas/utils.ts';
+import {handleActionError} from '@/lib/action-utils.ts';
 
-export default withPageAuthRequired(async ({params}: {
-	readonly params?: {
-		studentId?: string;
+export type StudentEditPageProps = {
+	readonly params: {
+		readonly studentId: string;
 	};
-}) => {
-	const studentId = params!.studentId!;
-	const student = await getStudentById(Number.parseInt(studentId, 10));
+};
+
+export default async function StudentEditPage(props: StudentEditPageProps) {
+	const {params} = props;
+	const studentId = Number.parseInt(params.studentId, 10);
+	const student = await getStudentById(studentId);
 
 	if (student === null) {
 		redirect('/students');
 	}
+
+	const updateStudentAction = async (state: FormState<Partial<StudentInit>>, data: FormData): Promise<FormState<Partial<StudentInit>>> => {
+		'use server';
+		try {
+			const parsedData = await decodeForm(data, studentInitSchema.partial());
+			await updateStudent(studentId, parsedData);
+		} catch (error) {
+			return handleActionError(state, error);
+		}
+
+		revalidatePath('/students');
+		return {
+			...state,
+			formErrors: [],
+			fieldErrors: {},
+		};
+	};
 
 	return (
 		<div>
@@ -28,28 +47,7 @@ export default withPageAuthRequired(async ({params}: {
 					{`${student.givenName} ${student.familyName}`}
 				</h1>
 			</div>
-			<StudentForm student={student}/>
-			{/* { */}
-			{/* 	student.tutors.length > 0 && ( */}
-			{/* 		<div> */}
-			{/* 			{ */}
-			{/* 				student.tutors.map(tutor => ( */}
-			{/* 					<ContactDisplay key={tutor.id} infoId={tutor.id}/> */}
-			{/* 				)) */}
-			{/* 			} */}
-			{/*  */}
-			{/* 		</div> */}
-			{/* 	) */}
-			{/* } */}
-			{/* <NotificationForm tutor={student.tutors} student={student}/> */}
-			{/* /!* <h2 className='text-stone-300'>Grupos</h2> */}
-			{/* <h2 className='text-stone-300'>Asistencia en los últimos cinco días</h2> */}
-			{/* <LinkButton href='/assistance' size='xl' color='secondary'><Icon name='calendar_month'/> Asistencias</LinkButton> */}
-			{/* <h1> */}
-			{/* 	{`${student.givenName} ${student.familyName}`} */}
-			{/* </h1> *!/ */}
+			<StudentForm student={student} action={updateStudentAction}/>
 		</div>
 	);
-}, {
-	returnTo: '/',
-});
+}

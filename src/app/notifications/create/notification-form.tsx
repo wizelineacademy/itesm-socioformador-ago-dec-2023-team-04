@@ -4,32 +4,33 @@ import {useRouter} from 'next/navigation';
 import {type Student, type Tutor} from '@prisma/client';
 import {Item} from 'react-stately';
 import {Button} from '@/components/button.tsx';
-import {notificationSchema} from '@/lib/schemas/notification.ts';
-import {createNotificationAction} from '@/lib/actions/notification.ts';
+import {type NotificationInit, notificationInit} from '@/lib/schemas/notification.ts';
 import Select from '@/components/select.tsx';
 import TextArea from '@/components/text-area.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
-import Form from '@/components/form.tsx';
+import Form, {type FormState} from '@/components/form.tsx';
 
 export type NotificationFormProps = {
 	readonly tutor: Tutor[];
 	readonly student: Student;
+	readonly action: (state: FormState<NotificationInit>, data: FormData) => Promise<FormState<NotificationInit>>;
 };
 
 export default function NotificationForm(props: NotificationFormProps) {
 	const {
 		tutor,
 		student,
+		action,
 	} = props;
 
 	const [selectedTutor, setSelectedTutor] = useState<number | undefined>(undefined);
-	const validate = formValidators(notificationSchema);
+	const validate = formValidators(notificationInit);
 
 	const router = useRouter();
 
 	return (
 		<Form
-			action={createNotificationAction}
+			action={action}
 			staticValues={{
 				studentId: student.id,
 			}}

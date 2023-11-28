@@ -1,7 +1,7 @@
 import {type NextRequest, NextResponse} from 'next/server';
 import {withApiAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
-import {getBestStudentMatch} from '@/lib/student.ts';
+import {getBestStudentMatch} from '@/lib/students.ts';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const POST = withApiAuthRequired(async (request: NextRequest) => {

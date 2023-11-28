@@ -4,23 +4,28 @@ import Link from 'next/link';
 import {useListData} from 'react-stately';
 import {Button} from '@/components/button.tsx';
 import TextField from '@/components/text-field.tsx';
-import Form from '@/components/form.tsx';
+import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
-import {tutorSchema} from '@/lib/schemas/tutor.ts';
-import {type TutorByIdWithStudents, upsertTutorAction} from '@/lib/actions/tutor.ts';
+import {type TutorInit, tutorInitSchema} from '@/lib/schemas/tutor.ts';
+import {type TutorByIdWithStudents} from '@/lib/tutors.ts';
 import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
-import {type StudentSearchResult} from '@/lib/user.ts';
+import {type StudentSearchResult} from '@/lib/students.ts';
 
 export type TutorCreationFormProps = {
-	readonly tutor?: TutorByIdWithStudents;
+	readonly tutor: TutorByIdWithStudents;
+	readonly action: (state: FormState<Partial<TutorInit>>, data: FormData) => Promise<FormState<Partial<TutorInit>>>;
+} | {
+	readonly action: (state: FormState<TutorInit>, data: FormData) => Promise<FormState<TutorInit>>;
 };
 
 export default function TutorForm(props: TutorCreationFormProps) {
 	const {
-		tutor,
+		action,
 	} = props;
 
-	const validate = formValidators(tutorSchema);
+	const tutor = 'tutor' in props ? props.tutor : undefined;
+
+	const validate = formValidators(tutorInitSchema);
 
 	const tutorStudents = useListData<StudentSearchResult>({
 		initialItems: tutor?.students?.map(student => student) ?? [],
@@ -28,9 +33,8 @@ export default function TutorForm(props: TutorCreationFormProps) {
 
 	return (
 		<Form
-			id={tutor?.id}
-			action={upsertTutorAction}
-			staticValues={{students: JSON.stringify(tutorStudents.items.map(student => student.id))}}
+			action={action}
+			staticValues={{students: tutorStudents.items.map(student => student.id)}}
 		>
 			<TextField
 				isRequired name='givenName'

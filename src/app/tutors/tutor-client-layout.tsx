@@ -11,7 +11,7 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import TopbarPageTemplate from '@/components/top-bar-page-template.tsx';
-import {deleteTutors} from '@/lib/actions/tutor.ts';
+import {deleteTutors} from '@/lib/tutors.ts';
 
 const columnHelper = createColumnHelper<Tutor>();
 

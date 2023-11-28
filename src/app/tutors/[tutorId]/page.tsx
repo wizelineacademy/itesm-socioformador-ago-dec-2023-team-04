@@ -1,19 +1,44 @@
 import React from 'react';
-import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {redirect} from 'next/navigation';
-import {getTutorByIdWithStudents} from '@/lib/actions/tutor.ts';
+import {revalidatePath} from 'next/cache';
+import {getTutorByIdWithStudents, updateTutor} from '@/lib/tutors.ts';
 import TutorForm from '@/app/tutors/tutor-form.tsx';
+import {type FormState} from '@/components/form.tsx';
+import {type TutorInit, tutorInitSchema} from '@/lib/schemas/tutor.ts';
+import {decodeForm} from '@/lib/schemas/utils.ts';
+import {handleActionError} from '@/lib/action-utils.ts';
 
-export default withPageAuthRequired(async ({params}: {
-	readonly params?: {
-		tutorId?: string;
+export type EditTutorPageProps = {
+	readonly params: {
+		readonly tutorId: string;
 	};
-}) => {
-	const tutorId = params!.tutorId!;
-	const tutor = await getTutorByIdWithStudents(Number.parseInt(tutorId, 10));
+};
+
+export default async function EditTutorPage(props: EditTutorPageProps) {
+	const {params} = props;
+	const tutorId = Number.parseInt(params.tutorId, 10);
+	const tutor = await getTutorByIdWithStudents(tutorId);
 	if (tutor === null) {
 		redirect('/tutors');
 	}
+
+	const updateTutorAction = async (state: FormState<Partial<TutorInit>>, data: FormData): Promise<FormState<Partial<TutorInit>>> => {
+		'use server';
+
+		try {
+			const parsedData = await decodeForm(data, tutorInitSchema.partial());
+			await updateTutor(tutorId, parsedData);
+		} catch (error) {
+			return handleActionError(state, error);
+		}
+
+		revalidatePath('/tutors');
+		return {
+			...state,
+			formErrors: [],
+			fieldErrors: {},
+		};
+	};
 
 	return (
 		<div>
@@ -22,9 +47,7 @@ export default withPageAuthRequired(async ({params}: {
 					{`${tutor.givenName} ${tutor.familyName}`}
 				</h1>
 			</div>
-			<TutorForm tutor={tutor}/>
+			<TutorForm tutor={tutor} action={updateTutorAction}/>
 		</div>
 	);
-}, {
-	returnTo: '/',
-});
+}
