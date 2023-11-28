@@ -1,7 +1,13 @@
 import React from 'react';
 import {revalidatePath} from 'next/cache';
+import {type Metadata} from 'next';
 import {deleteStudents, getAllStudents} from '@/lib/students.ts';
 import StudentClientLayout from '@/app/students/student-client-layout.tsx';
+
+export const metadata: Metadata = {
+	title: 'Estudiantes | SATS',
+	description: 'metaphora. Student Attendance Tracking System',
+};
 
 export default async function StudentsLayout({children}: {children: React.ReactNode}) {
 	const students = await getAllStudents();

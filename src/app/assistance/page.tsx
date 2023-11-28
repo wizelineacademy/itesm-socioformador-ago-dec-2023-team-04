@@ -5,6 +5,7 @@ import {type FaceResult} from '@stock17944/human';
 import {useCountdown} from 'usehooks-ts';
 import {clamp, motion, useMotionTemplate, useMotionValue, useSpring, useTransform} from 'framer-motion';
 import {Item} from 'react-stately';
+import {type Metadata} from 'next';
 import useWebcam from '@/lib/hooks/use-webcam.ts';
 import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
 import {type StudentWithSimilarity} from '@/lib/students.ts';

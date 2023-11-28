@@ -1,5 +1,6 @@
 import React from 'react';
 import {List} from 'immutable';
+import {type Metadata} from 'next';
 import {getAllGroupsWithColors} from '@/lib/groups.ts';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {GroupCard} from '@/components/group-card.tsx';
@@ -7,6 +8,11 @@ import {groupHasClass} from '@/app/groups/class-dates.ts';
 import GroupsTopbarItems from '@/app/groups/groups-topbar-items.tsx';
 import Separator from '@/components/separator.tsx';
 import {getUserFromSession} from '@/lib/users.ts';
+
+export const metadata: Metadata = {
+	title: 'Grupos | SATS',
+	description: 'metaphora. Student Attendance Tracking System',
+};
 
 export default async function GroupsPage() {
 	const groups = await getAllGroupsWithColors();
