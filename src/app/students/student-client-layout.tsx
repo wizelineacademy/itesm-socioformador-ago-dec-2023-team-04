@@ -33,22 +33,18 @@ const columns = [
 export type StudentClientLayoutProps = {
 	readonly students: Student[];
 	readonly children: React.ReactNode;
+	readonly action: (students: number[]) => Promise<void>;
 };
 
-export default function StudentClientLayout({children, students}: {
-	readonly students: Student[];
-	readonly children: React.ReactNode;
-}) {
+export default function StudentClientLayout(props: StudentClientLayoutProps) {
+	const {students, children, action} = props;
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
 	const handleDelete = async () => {
-		const result = await deleteStudents([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
-
-		if (result.success) {
-			setSelectedKeys(new Set());
-		}
+		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+		setSelectedKeys(new Set());
 	};
 
 	return (
