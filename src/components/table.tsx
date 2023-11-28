@@ -1,5 +1,4 @@
 import React, {useMemo, useState} from 'react';
-import clsx from 'clsx';
 import {type ColumnDef, flexRender, getFilteredRowModel, getSortedRowModel, useReactTable} from '@tanstack/react-table';
 import {getCoreRowModel, type SortingState} from '@tanstack/table-core';
 import {useLocale} from 'react-aria';

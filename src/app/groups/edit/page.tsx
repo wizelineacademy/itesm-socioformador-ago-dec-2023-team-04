@@ -1,5 +1,4 @@
 import React from 'react';
-import {type Group} from '@prisma/client';
 import Icon from '@/components/icon.tsx';
 
 export default function EditGroupsPage() {

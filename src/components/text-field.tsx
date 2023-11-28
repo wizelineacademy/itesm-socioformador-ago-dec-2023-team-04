@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {type AriaTextFieldOptions, type AriaTextFieldProps, useTextField} from 'react-aria';
+import {type AriaTextFieldProps, useTextField} from 'react-aria';
 import {cx} from '@/lib/cva.ts';
 import Icon from '@/components/icon.tsx';
 

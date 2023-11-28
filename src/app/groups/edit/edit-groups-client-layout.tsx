@@ -10,7 +10,7 @@ import Icon from '@/components/icon.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
-import {deleteGroups, type GroupWithStudentCount} from '@/lib/groups.ts';
+import {type GroupWithStudentCount} from '@/lib/groups.ts';
 
 const columnHelper = createColumnHelper<GroupWithStudentCount>();
 

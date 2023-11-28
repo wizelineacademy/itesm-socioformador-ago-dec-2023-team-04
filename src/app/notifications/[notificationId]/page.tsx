@@ -4,7 +4,6 @@ import {notFound} from 'next/navigation';
 import {getNotificationById} from '@/lib/notification.ts';
 import {getStudentById} from '@/lib/students.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
-import Icon from '@/components/icon.tsx';
 
 export default withPageAuthRequired(async ({params}: {
 	readonly params?: {

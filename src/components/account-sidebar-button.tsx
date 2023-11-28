@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import clsx from 'clsx';
 import * as Popover from '@radix-ui/react-popover';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';

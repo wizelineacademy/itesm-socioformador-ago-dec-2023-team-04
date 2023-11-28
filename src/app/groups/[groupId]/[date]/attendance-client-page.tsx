@@ -23,7 +23,7 @@ import LinkButton from '@/components/link-button.tsx';
 import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
-import submitAttendancesAction, {type StudentWithCurrentAttendance} from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
+import submitAttendancesAction from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
 
 export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;

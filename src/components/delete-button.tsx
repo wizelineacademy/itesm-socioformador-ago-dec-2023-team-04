@@ -1,6 +1,4 @@
 import React, {type ReactNode} from 'react';
-import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
-import Popover from '@/components/popover.tsx';
 import ButtonPopoverTrigger from '@/components/button-popover-trigger.tsx';
 import Icon from '@/components/icon.tsx';
 import {Button} from '@/components/button.tsx';

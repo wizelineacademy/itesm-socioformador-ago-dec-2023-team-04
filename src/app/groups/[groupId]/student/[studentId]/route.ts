@@ -1,8 +1,6 @@
 import {type NextRequest} from 'next/server';
 import {notFound, redirect} from 'next/navigation';
-import {NextURL} from 'next/dist/server/web/next-url';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
-import {getGroupById} from '@/lib/groups.ts';
 import prisma from '@/lib/prisma.ts';
 
 type GetGroupParameters = {

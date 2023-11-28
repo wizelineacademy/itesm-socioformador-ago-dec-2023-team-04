@@ -11,7 +11,6 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
-import {deleteUsers} from '@/lib/users.ts';
 
 const columnHelper = createColumnHelper<User>();
 
@@ -57,7 +56,7 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 				<>
 					<Spacer/>
 					<DeleteButton label='¿Borrar los registros seleccionados?' isDisabled={selectedStudents.size === 0} onDelete={handleDeleteClick}/>
-					<Link href='/admin/users/create'>
+					<Link href='/users/create'>
 						<Button color='secondary'><Icon name='add'/></Button>
 					</Link>
 

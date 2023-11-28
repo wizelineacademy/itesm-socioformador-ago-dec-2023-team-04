@@ -1,10 +1,6 @@
 import React, {forwardRef, useRef, type ForwardedRef} from 'react';
 import {
 	type AriaListBoxOptions,
-	type AriaListBoxProps,
-	type AriaOptionProps,
-	mergeProps,
-	useFocusRing,
 	useListBox,
 	useListBoxSection,
 	useOption,

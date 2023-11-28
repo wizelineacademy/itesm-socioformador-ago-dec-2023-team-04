@@ -1,7 +1,6 @@
 import React from 'react';
 import {type DateFieldState, type DateSegment as DateSegmentState} from 'react-stately';
 import {useDateSegment} from 'react-aria';
-import {cx} from '@/lib/cva.ts';
 
 export type DateSegmentProps = {
 	readonly segment: DateSegmentState;

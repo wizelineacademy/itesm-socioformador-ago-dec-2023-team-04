@@ -1,8 +1,7 @@
 import React from 'react';
-import {AttendanceType, Group} from '@prisma/client';
+import {AttendanceType} from '@prisma/client';
 import {
 	type CalendarDate, getDayOfWeek,
-	getLocalTimeZone,
 	now,
 	type Time, toCalendarDate,
 	toCalendarDateTime,

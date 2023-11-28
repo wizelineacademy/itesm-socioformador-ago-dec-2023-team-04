@@ -1,6 +1,6 @@
 'use client';
 
-import {DateFormatter, getLocalTimeZone, parseDate} from '@internationalized/date';
+import {DateFormatter, parseDate} from '@internationalized/date';
 
 export type FormattedDateProps = {
 	readonly date: string;

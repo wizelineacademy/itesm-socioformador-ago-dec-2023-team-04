@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import Icon from '@/components/icon.tsx';
 
 export default function TutorPage() {
