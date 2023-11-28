@@ -15,6 +15,8 @@ export default async function Page() {
 		throw new Error('Groups not found');
 	}
 
+	const data = await fetch('GET',`api/groups/`)
+
 	return (
 		<main className='flex flex-col h-full text-stone-400'>
 			<div className='flex items-top mb-4 gap-4'>
@@ -24,7 +26,7 @@ export default async function Page() {
 			</div>
 			<div>
 				<div>
-					<StatisticsClient groups={groupList.groups}/>
+					<StatisticsClient groups={groupList.groups, userId}/>
 				</div>
 			</div>
 		</main>

@@ -1,13 +1,21 @@
 import {type NextRequest, NextResponse} from 'next/server';
 import {AttendanceType} from '@prisma/client';
+import {type CalendarDate, parseDate} from '@internationalized/date';
 import {attendanceAbsence, attendanceJustificatedAbsence, attendanceLate, attendanceOnTime} from '@/lib/attendance.ts';
-import {CalendarDate, parseDate} from "@internationalized/date";
-import {type DateValue} from 'react-aria';
 
-export const GET = async (request: NextRequest, params: {
+function formatDataForChart(data: Array<{attendanceDate: Date; _count: {type: number}}>) {
+	return data.map(entry => ({
+		date: entry.attendanceDate,
+		count: entry._count.type,
+	}));
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const GET = async (request: NextRequest, parameters: {
 	groupId: string;
 }) => {
-	const groupId = Number.parseInt(params.groupId, 10);
+	const groupId = Number.parseInt(parameters.groupId, 10);
+	const graphInfoType = request.nextUrl.searchParams.get('graphInfoType');
 	const searchMinDate = request.nextUrl.searchParams.get('minDate');
 	const searchMaxDate = request.nextUrl.searchParams.get('maxDate');
 	if (groupId === null) {
@@ -16,14 +24,46 @@ export const GET = async (request: NextRequest, params: {
 		});
 	}
 
-	const minDate: DateValue;
-	const maxDate: DateValue;
+	let minDate: CalendarDate;
+	let maxDate: CalendarDate;
 	if (searchMinDate !== null && searchMaxDate !== null) {
 		minDate = parseDate(searchMinDate);
 		maxDate = parseDate(searchMaxDate);
 	}
 
-	const foundData = await attendanceOnTime(groupId, minDate, maxDate);
+	let foundData;
+	switch (graphInfoType) {
+		case AttendanceType.ON_TIME: {
+			foundData = formatDataForChart(await attendanceOnTime(groupId, minDate, maxDate));
+			break;
+		}
+
+		case AttendanceType.LATE: {
+			foundData = formatDataForChart(await attendanceLate(groupId, minDate, maxDate));
+			break;
+		}
+
+		case 'absence': {
+			foundData = formatDataForChart(await attendanceAbsence(groupId, minDate, maxDate));
+			break;
+		}
+
+		case AttendanceType.JUSTIFICATED_ABSENCE: {
+			foundData = formatDataForChart(await attendanceJustificatedAbsence(groupId, minDate, maxDate));
+			break;
+		}
+
+		default: {
+			break;
+		}
+	}
 
 	return NextResponse.json(foundData);
-}
+};
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const POST = async (request: NextRequest, parameters: {
+	groupId: string;
+}) => {
+	return NextResponse;
+};

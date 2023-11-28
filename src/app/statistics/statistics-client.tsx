@@ -10,14 +10,14 @@ import Select from '@/components/select.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
 import StatisticsBarChart from '@/app/statistics/statistics-bar-chart.tsx';
-import getData from '@/app/statistics/get-data.ts';
+
 
 export type Groups = {
 	readonly id: number;
 	readonly name: string;
 };
 
-export default function StatisticsClient({groups}: {readonly groups: Groups[]}) {
+export default function StatisticsClient({groups, userId}: {readonly groups: Groups[]: userId: number}) {
 	const [groupId, setGroupId] = useState(0);
 	const [graphTypeInfo, setGraphTypeInfo] = useState('');
 
@@ -45,8 +45,11 @@ export default function StatisticsClient({groups}: {readonly groups: Groups[]}) 
 		}
 	};
 
-	let data = [];
 	async function getGraphData() {
+		const response = await fetch(`/api/groups/${groupId}/assistances`,{
+			method: 'POST',
+			body: JSON.stringify()
+		})
 		data = getData(graphTypeInfo, groupId, dateRange);
 	}
 
