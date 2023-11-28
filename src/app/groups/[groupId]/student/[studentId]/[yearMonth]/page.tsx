@@ -41,7 +41,7 @@ export default async function GroupStudentAttendancePage(props: GroupStudentAtte
 		notFound();
 	}
 
-	if (startOfMonth(new CalendarDate(year, month, 1)).compare(today(getLocalTimeZone())) > 0) {
+	if (startOfMonth(new CalendarDate(year, month, 1)).compare(today(getLocalTimeZone())) >= 0) {
 		notFound();
 	}
 
