@@ -79,7 +79,7 @@ export const getUserById = cache(async (id: number) => {
  * @param {number} id - The ID of the user to update.
  * @param {Partial<UserInit>} data - The data to update the user with.
  * @throws {AuthenticationError} - If no user is found in the session.
- * @throws {AuthorizationError} - If the user is not an admin and is trying to update another user's admin status.
+ * @throws {AuthorizationError} - If the user is not an users and is trying to update another user's users status.
  * @throws {Error} - If the password or email update fails.
  * @returns {Promise<User>} - A Promise that resolves to the updated user.
  */
@@ -102,9 +102,21 @@ export async function updateUser(id: number, data: Partial<UserInit>) {
 			data: {
 				givenName: data.givenName,
 				familyName: data.familyName,
+				email: data.email,
 				admin: data.admin,
 			},
 		});
+
+		if (data.admin) {
+			const response = await management.users.update({
+				id: updatedUser.authId,
+			}, {
+				// eslint-disable-next-line @typescript-eslint/naming-convention
+				app_metadata: {
+					admin: data.admin,
+				},
+			});
+		}
 
 		if (data.password) {
 			const response = await management.users.update({
@@ -140,7 +152,7 @@ export async function updateUser(id: number, data: Partial<UserInit>) {
  *
  * @param {UserInit} data - The data required to create a user.
  * @throws {AuthenticationError} If the current user is not authenticated.
- * @throws {AuthorizationError} If the current user does not have admin privileges.
+ * @throws {AuthorizationError} If the current user does not have users privileges.
  * @returns {Promise<User>} A Promise that resolves to the created User object.
  */
 export async function createUser(data: UserInit) {
@@ -189,7 +201,7 @@ export async function createUser(data: UserInit) {
  * @returns {Promise<number>} - A promise that resolves to the number of deleted records.
  *
  * @throws {AuthenticationError} - If no user is found in the current session.
- * @throws {AuthorizationError} - If the user is not an admin and is trying to delete another user's account or multiple user accounts.
+ * @throws {AuthorizationError} - If the user is not an users and is trying to delete another user's account or multiple user accounts.
  */
 export async function deleteUsers(userIds: number[]): Promise<number> {
 	const user = await getUserFromSession();

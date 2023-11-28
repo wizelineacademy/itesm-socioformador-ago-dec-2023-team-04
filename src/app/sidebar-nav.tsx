@@ -67,7 +67,7 @@ export default function SidebarNav(props: SidebarNavProps) {
 			</SidebarButton>
 			{
 				user.admin
-					? <SidebarButton href='/admin' className='w-full'> <Icon name='admin_panel_settings' className='me-2'/>Administración</SidebarButton> : null
+					? <SidebarButton href='/users' className='w-full'> <Icon name='manage_accounts' className='me-2'/>Usuarios</SidebarButton> : null
 			}
 		</nav>
 	);

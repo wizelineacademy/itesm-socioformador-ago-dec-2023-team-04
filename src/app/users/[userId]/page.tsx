@@ -1,8 +1,8 @@
 import React from 'react';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
-import {createUser, getUserById, updateUser} from '@/lib/users.ts';
-import UserForm from '@/app/admin/users/user-form.tsx';
+import {getUserById, updateUser} from '@/lib/users.ts';
+import UserForm from '@/app/users/user-form.tsx';
 import {type FormState} from '@/components/form.tsx';
 import {type UserInit, userInitSchema} from '@/lib/schemas/user.ts';
 import {decodeForm} from '@/lib/schemas/utils.ts';
@@ -33,10 +33,11 @@ export default async function EditUserPage(props: EditUserPageProps) {
 			const parsedData = await decodeForm(data, userInitSchema.partial());
 			await updateUser(userId, parsedData);
 		} catch (error) {
+			console.log(error);
 			return handleActionError(state, error);
 		}
 
-		revalidatePath('/admin/users');
+		revalidatePath('/users');
 		return {
 			...state,
 			formErrors: [],

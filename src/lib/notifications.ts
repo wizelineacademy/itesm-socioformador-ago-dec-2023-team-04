@@ -20,7 +20,7 @@ export async function createNotification(data: NotificationInit) {
 		throw new AuthenticationError();
 	}
 
-	// A user can only get a tutor if they're an admin, or the tutor has a student in a group of the user
+	// A user can only get a tutor if they're an users, or the tutor has a student in a group of the user
 	const tutor = await getTutorById(data.tutorId);
 
 	if (tutor === null) {

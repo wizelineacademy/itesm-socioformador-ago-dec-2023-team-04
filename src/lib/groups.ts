@@ -9,7 +9,7 @@ import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
  *
  * @param {GroupInit} data - The data for creating the group.
  * @throws {AuthenticationError} If there is no authenticated user.
- * @throws {AuthorizationError} If the authenticated user is not an admin.
+ * @throws {AuthorizationError} If the authenticated user is not an users.
  * @returns {Promise<Group>} A Promise that resolves with the created group.
  */
 export async function createGroup(data: GroupInit) {
@@ -123,7 +123,7 @@ export async function updateGroup(id: number, data: Partial<GroupInit>) {
  *
  * @param {number[]} groupIds - An array of group ids to be deleted.
  * @throws {AuthenticationError} Throws an error if user is not authenticated.
- * @throws {AuthorizationError} Throws an error if the user is not an admin.
+ * @throws {AuthorizationError} Throws an error if the user is not an users.
  * @returns {Promise<number>} Returns a promise which resolves to the number of groups deleted.
  */
 export async function deleteGroups(groupIds: number[]): Promise<number> {
@@ -153,7 +153,7 @@ export async function deleteGroups(groupIds: number[]): Promise<number> {
  * @async
  * @function getAllGroupsWithColors
  * @throws {AuthenticationError} If user is not authenticated.
- * @throws {AuthorizationError} If user is not an admin.
+ * @throws {AuthorizationError} If user is not an users.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of group objects, each containing the color and student count.
  */
 export const getAllGroupsWithColors = cache(async () => {
@@ -185,7 +185,7 @@ export type GroupWithColor = Awaited<ReturnType<typeof getAllGroupsWithColors>>[
  * Retrieves all groups
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of group objects.
  * @throws {AuthenticationError} If user is not authenticated.
- * @throws {AuthorizationError} If user is not an admin.
+ * @throws {AuthorizationError} If user is not an users.
  */
 export const getAllGroups = cache(async () => {
 	const user = await getUserFromSession();
@@ -210,7 +210,7 @@ export const getAllGroups = cache(async () => {
  * @async
  * @returns {Promise<Array>} A promise that resolves to an array of groups with their respective student count.
  * @throws {AuthenticationError} If the user is not authenticated.
- * @throws {AuthorizationError} If the user is not an admin.
+ * @throws {AuthorizationError} If the user is not an users.
  */
 export const getAllGroupsWithStudentCount = cache(async () => {
 	const user = await getUserFromSession();

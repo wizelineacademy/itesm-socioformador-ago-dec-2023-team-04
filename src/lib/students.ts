@@ -9,7 +9,7 @@ import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
  * Retrieves all the students from the database.
  *
  * @throws {AuthenticationError} If there is no user in the session.
- * @throws {AuthorizationError} If the user is not an admin.
+ * @throws {AuthorizationError} If the user is not an users.
  *
  * @returns {Promise<Array>} A promise that resolves to an array containing all the students.
  */
@@ -110,7 +110,7 @@ export const getStudentById = cache(async (id: number) => {
  * @param {string} query - The search query to match against student names.
  * @returns {Promise<Student[]>} - A promise that resolves with an array of Student objects that match the query.
  * @throws {AuthenticationError} if the user session is not valid.
- * @throws {AuthorizationError} if the user session does not have admin privileges.
+ * @throws {AuthorizationError} if the user session does not have users privileges.
  *
  * @example
  * searchForStudentsByName('John')
@@ -226,7 +226,7 @@ export type StudentSearchResult = Awaited<ReturnType<typeof searchForStudentsByN
  *
  * @param {StudentInit} data - The data object containing the information of the student to be created.
  * @throws {AuthenticationError} - Thrown if the user is not authenticated.
- * @throws {AuthorizationError} - Thrown if the authenticated user is not an admin.
+ * @throws {AuthorizationError} - Thrown if the authenticated user is not an users.
  * @returns {Promise<Student>} - A promise that resolves to the newly created student object.
  */
 export async function createStudent(data: StudentInit) {

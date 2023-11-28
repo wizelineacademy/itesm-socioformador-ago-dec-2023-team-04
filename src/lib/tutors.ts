@@ -9,7 +9,7 @@ import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
  *
  * @param {TutorInit} data - The data for creating the tutor
  * @throws {AuthenticationError} If there is no user in the current session
- * @throws {AuthorizationError} If the user is not an admin
+ * @throws {AuthorizationError} If the user is not an users
  * @returns {Promise<Tutor>} A promise that resolves to the created tutor
  */
 export async function createTutor(data: TutorInit) {
@@ -72,7 +72,7 @@ export async function updateTutor(id: number, data: Partial<TutorInit>) {
  *
  * @param {number} id - The ID of the tutor to retrieve.
  * @throws {AuthenticationError} if the user is not authenticated.
- * @throws {AuthorizationError} if the user is not authorized as an admin.
+ * @throws {AuthorizationError} if the user is not authorized as an users.
  * @returns {Promise<Tutor>} A promise that resolves to the tutor object if found, or null if not found.
  */
 export const getTutorById = cache(async (id: number) => {
@@ -176,7 +176,7 @@ export const getAllTutors = cache(async () => {
  * @param {number[]} tutorIds - An array of tutor IDs to delete.
  * @return {Promise<number>} - A Promise that resolves with the number of tutors deleted.
  * @throws {AuthenticationError} - If the user is not authenticated.
- * @throws {AuthorizationError} - If the user does not have admin privileges.
+ * @throws {AuthorizationError} - If the user does not have users privileges.
  */
 export async function deleteTutors(tutorIds: number[]): Promise<number> {
 	const user = await getUserFromSession();

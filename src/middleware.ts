@@ -46,7 +46,7 @@ export default async function middleware(request: NextRequest) {
 		return NextResponse.redirect(new URL('/api/auth/login', request.url));
 	}
 
-	if (request.nextUrl.pathname.startsWith('/admin') && !session.user.admin) {
+	if (request.nextUrl.pathname.startsWith('/users') && !session.user.admin) {
 		return NextResponse.redirect(new URL('/', request.url));
 	}
 

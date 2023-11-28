@@ -1,7 +1,7 @@
 import React from 'react';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
-import UserForm from '@/app/admin/users/user-form.tsx';
+import UserForm from '@/app/users/user-form.tsx';
 import {type FormState} from '@/components/form.tsx';
 import {type UserInit, userInitSchema} from '@/lib/schemas/user.ts';
 import {decodeForm} from '@/lib/schemas/utils.ts';
@@ -20,8 +20,8 @@ export default function UsersPage() {
 			return handleActionError(state, error);
 		}
 
-		revalidatePath('/admin/users');
-		redirect(`/admin/users/${userId}`);
+		revalidatePath('/users');
+		redirect(`/users/${userId}`);
 	};
 
 	return (

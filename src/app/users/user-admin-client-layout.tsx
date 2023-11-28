@@ -71,7 +71,7 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 						className='w-full'
 						data={users ?? []} columns={columns}
 						selectedKeys={selectedStudents} globalFilter={globalFilter}
-						getDetailsLink={user => `/admin/users/${user.id}`}
+						getDetailsLink={user => `/users/${user.id}`}
 						onSelectedKeysChange={setSelectedStudents}
 					/>
 				</div>
