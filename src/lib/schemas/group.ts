@@ -1,7 +1,7 @@
 import z from 'zod';
 import {boolean, json, timeToDate} from '@/lib/schemas/utils.ts';
 
-const groupUpsertSchema = z.object({
+const groupInitSchema = z.object({
 	name: z.string(),
 	active: boolean,
 	description: z.string(),
@@ -9,7 +9,9 @@ const groupUpsertSchema = z.object({
 	duration: z.coerce.number().int().positive(),
 	tz: z.string(),
 	colorId: z.coerce.number(),
+
 	students: json(z.array(z.number())),
+	users: json(z.array(z.number())),
 
 	enabledMonday: boolean,
 	enabledTuesday: boolean,
@@ -20,6 +22,6 @@ const groupUpsertSchema = z.object({
 	enabledSunday: boolean,
 });
 
-export type GroupUpsert = z.infer<typeof groupUpsertSchema>;
+export type GroupInit = z.infer<typeof groupInitSchema>;
 
-export default groupUpsertSchema;
+export default groupInitSchema;

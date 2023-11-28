@@ -1,5 +1,5 @@
 'use client';
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {type Color} from '@prisma/client';
 import {getLocalTimeZone, Time} from '@internationalized/date';
 import {useListData} from 'react-stately';
@@ -10,28 +10,35 @@ import ColorRadioGroup from '@/components/color-selector.tsx';
 import Switch from '@/components/switch.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import groupUpsertSchema from '@/lib/schemas/group.ts';
-import Form from '@/components/form.tsx';
-import {upsertGroupAction} from '@/lib/actions/group.ts';
+import groupInitSchema, {type GroupInit} from '@/lib/schemas/group.ts';
+import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
-import {type GroupByIdWithStudents} from '@/lib/group.ts';
-import {type StudentSearchResult} from '@/lib/user.ts';
+import {type GroupByIdWithStudents} from '@/lib/groups.ts';
 import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
 import {NumberField} from '@/components/number-field.tsx';
+import {type StudentSearchResult} from '@/lib/students.ts';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
-	readonly group?: GroupByIdWithStudents;
-};
+} & ({
+	readonly action: (state: FormState<GroupInit>, data: FormData) => Promise<FormState<GroupInit>>;
+
+} | {
+	readonly action: (state: FormState<Partial<GroupInit>>, data: FormData) => Promise<FormState<Partial<GroupInit>>>;
+	readonly group: GroupByIdWithStudents;
+}
+);
 
 export default function GroupForm(props: GroupFormProps) {
 	const {
 		colors,
-		group,
+		action,
 	} = props;
 
-	const validate = formValidators(groupUpsertSchema);
+	const validate = formValidators(groupInitSchema);
+
+	const group = 'group' in props ? props.group : undefined;
 
 	const [active, setActive] = useState(group?.active ?? true);
 
@@ -76,11 +83,11 @@ export default function GroupForm(props: GroupFormProps) {
 
 	return (
 		<Form
-			id={group?.id}
-			action={upsertGroupAction} staticValues={{
+			action={action} staticValues={{
 				tz: getLocalTimeZone(),
 				active: active ? undefined : false,
-				students: JSON.stringify(groupStudents.items.map(student => student.id)),
+				students: groupStudents.items.map(student => student.id),
+				users: [],
 				enabledMonday: daysActive.includes('monday') ? undefined : false,
 				enabledTuesday: daysActive.includes('tuesday') ? undefined : false,
 				enabledWednesday: daysActive.includes('wednesday') ? undefined : false,

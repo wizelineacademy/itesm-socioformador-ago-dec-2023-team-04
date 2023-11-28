@@ -2,7 +2,7 @@ import React from 'react';
 import {notFound} from 'next/navigation';
 import clsx from 'clsx';
 import Icon from '@/components/icon.tsx';
-import {getTutorById} from '@/lib/actions/tutor.ts';
+import {getTutorById} from '@/lib/tutors.ts';
 
 type TutorContactInfoProps = {
 	readonly infoId: number;

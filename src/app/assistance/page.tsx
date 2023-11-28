@@ -7,7 +7,7 @@ import {clamp, motion, useMotionTemplate, useMotionValue, useSpring, useTransfor
 import {Item} from 'react-stately';
 import useWebcam from '@/lib/hooks/use-webcam.ts';
 import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
-import {type StudentWithSimilarity} from '@/lib/student.ts';
+import {type StudentWithSimilarity} from '@/lib/students.ts';
 import {cx} from '@/lib/cva.ts';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
 import Icon from '@/components/icon.tsx';

@@ -11,7 +11,6 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import TopbarPageTemplate from '@/components/top-bar-page-template.tsx';
-import {deleteTutors} from '@/lib/actions/tutor.ts';
 
 const columnHelper = createColumnHelper<Tutor>();
 
@@ -37,22 +36,19 @@ const columns = [
 export type TutorClientLayoutProps = {
 	readonly tutors: Tutor[];
 	readonly children: React.ReactNode;
+	readonly action: (tutors: number[]) => Promise<void>;
 };
 
-export default function TutorClientLayout({children, tutors}: {
-	readonly tutors: Tutor[];
-	readonly children: React.ReactNode;
-}) {
+export default function TutorClientLayout(props: TutorClientLayoutProps) {
+	const {tutors, children, action} = props;
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
 	const handleDelete = async () => {
-		const result = await deleteTutors([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
 
-		if (result.success) {
-			setSelectedKeys(new Set());
-		}
+		setSelectedKeys(new Set());
 	};
 
 	return (

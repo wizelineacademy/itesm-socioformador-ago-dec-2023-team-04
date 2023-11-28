@@ -11,7 +11,7 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
-import {deleteUsers} from '@/lib/actions/user.ts';
+import {deleteUsers} from '@/lib/users.ts';
 
 const columnHelper = createColumnHelper<User>();
 
@@ -37,19 +37,18 @@ const columns = [
 export type UserAdminClientLayoutProps = {
 	readonly children: ReactNode;
 	readonly users: User[];
+	readonly action: (users: number[]) => Promise<void>;
 };
 
 export default function UserAdminClientLayout(props: UserAdminClientLayoutProps) {
-	const {children, users} = props;
+	const {children, users, action} = props;
 	const [globalFilter, setGlobalFilter] = useState('');
 	const [selectedStudents, setSelectedStudents] = useState<Set<Key>>(new Set());
 
 	const handleDeleteClick = async () => {
-		const result = await deleteUsers([...selectedStudents].map(key => Number.parseInt(key.toString(), 10)));
+		await action([...selectedStudents].map(key => Number.parseInt(key.toString(), 10)));
 
-		if (result.success) {
-			setSelectedStudents(new Set());
-		}
+		setSelectedStudents(new Set());
 	};
 
 	return (

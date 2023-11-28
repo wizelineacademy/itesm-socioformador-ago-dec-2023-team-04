@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Logo from './logo_full-nobg_196.png';
 import '@/app/globals.css';
 import ClientProviders from '@/components/client-providers.tsx';
-import {getUserFromSession} from '@/lib/user.ts';
+import {getUserFromSession} from '@/lib/users.ts';
 import SidebarNav from '@/app/sidebar-nav.tsx';
 
 const sourceSans = Source_Sans_3({

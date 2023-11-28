@@ -1,11 +1,11 @@
 import React from 'react';
 import {notFound, redirect} from 'next/navigation';
 import {getLocalTimeZone, parseDate, today} from '@internationalized/date';
-import {getGroupWithStudentsAttendance} from '@/lib/group.ts';
+import {getGroupWithStudentsAttendance} from '@/lib/groups.ts';
 import {makeSerializable} from '@/lib/serializable.ts';
 import {groupHasClass} from '@/app/groups/class-dates.ts';
 import AttendanceClientPage from '@/app/groups/[groupId]/[date]/attendance-client-page.tsx';
-import {getUserFromSession} from '@/lib/user.ts';
+import {getUserFromSession} from '@/lib/users.ts';
 
 export type EditGroupDetailPageProps = {
 	readonly params: {

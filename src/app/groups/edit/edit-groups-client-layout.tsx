@@ -10,8 +10,7 @@ import Icon from '@/components/icon.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
-import {deleteGroups} from '@/lib/actions/group.ts';
-import {type GroupWithStudentCount} from '@/lib/group.ts';
+import {deleteGroups, type GroupWithStudentCount} from '@/lib/groups.ts';
 
 const columnHelper = createColumnHelper<GroupWithStudentCount>();
 
@@ -37,18 +36,21 @@ const columns = [
 export type EditGroupsClientLayoutProps = {
 	readonly children: ReactNode;
 	readonly groups: GroupWithStudentCount[];
+	readonly action: (groups: number[]) => Promise<void>;
 };
 
 export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProps) {
-	const {children, groups} = props;
+	const {
+		children,
+		groups,
+		action,
+	} = props;
+
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
 	const deleteHandler = async () => {
-		const result = await deleteGroups([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
-		if (result.success) {
-			setSelectedKeys(new Set());
-		}
+		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
 	};
 
 	return (

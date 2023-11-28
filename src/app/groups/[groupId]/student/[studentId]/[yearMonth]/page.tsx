@@ -1,7 +1,7 @@
 import React from 'react';
 import {notFound} from 'next/navigation';
 import {CalendarDate, endOfMonth, getLocalTimeZone, startOfMonth, today} from '@internationalized/date';
-import {getStudentWithAttendancesByGroup} from '@/lib/student.ts';
+import {getStudentWithGroupAttendances} from '@/lib/students.ts';
 import GroupStudentClientPage
 	from '@/app/groups/[groupId]/student/[studentId]/[yearMonth]/group-student-client-page.tsx';
 
@@ -35,7 +35,7 @@ export default async function GroupStudentAttendancePage(props: GroupStudentAtte
 		notFound();
 	}
 
-	const student = await getStudentWithAttendancesByGroup(studentId, groupId);
+	const student = await getStudentWithGroupAttendances(studentId, groupId);
 
 	if (!student) {
 		notFound();

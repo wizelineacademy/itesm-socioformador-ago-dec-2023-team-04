@@ -1,12 +1,12 @@
 'use client';
 import React, {useMemo} from 'react';
 import {
-	CalendarDate, DateFormatter, fromDate, getLocalTimeZone,
+	CalendarDate, DateFormatter, fromDate,
 	getWeeksInMonth, isSameMonth, isWeekend,
-	startOfWeek, toCalendarDate, toCalendarDateTime, today, toTime,
+	startOfWeek, today, toTime,
 } from '@internationalized/date';
 import {useListData} from 'react-stately';
-import {type StudentWithAttendanceByGroup} from '@/lib/student.ts';
+import {type StudentWithGroupAttendances} from '@/lib/students.ts';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import Icon from '@/components/icon.tsx';
 import LinkButton from '@/components/link-button.tsx';
@@ -19,7 +19,7 @@ import updateStudentAttendancesAction
 const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
 
 export type GroupStudentClientPageProps = {
-	readonly student: StudentWithAttendanceByGroup;
+	readonly student: StudentWithGroupAttendances;
 	readonly year: number;
 	readonly month: number;
 	readonly serverTz: string;
@@ -45,11 +45,11 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 		tz: studentGroup.tz,
 	};
 
-	const initialAttendances = useMemo<AttendanceValue[]>(() => student.attendances.map(attendance => ({
+	const initialAttendances = useMemo<AttendanceValue[]>(() => studentGroup.attendances.map(attendance => ({
 		date: new CalendarDate(attendance.attendanceDate.getUTCFullYear(), attendance.attendanceDate.getUTCMonth() + 1, attendance.attendanceDate.getUTCDate()),
 		time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), serverTz)) : null,
 		type: attendance.type,
-	})), [serverTz, student.attendances]);
+	})), [serverTz, studentGroup.attendances]);
 
 	const attendances = useListData({
 		initialItems: initialAttendances,

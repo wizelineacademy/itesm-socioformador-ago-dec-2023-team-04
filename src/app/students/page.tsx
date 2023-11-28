@@ -1,7 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
 import Icon from '@/components/icon.tsx';
-import StudentForm from '@/app/students/student-form.tsx';
 
 export default function StudentPage() {
 	return (
