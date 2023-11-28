@@ -23,6 +23,8 @@ export type GroupStudentClientPageProps = {
 	readonly year: number;
 	readonly month: number;
 	readonly serverTz: string;
+	readonly title: string;
+	readonly subtitle: string;
 };
 
 export default function GroupStudentClientPage(props: GroupStudentClientPageProps) {
@@ -30,6 +32,8 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 		student,
 		year,
 		month,
+		title,
+		subtitle,
 		serverTz,
 	} = props;
 	const firstDayOfMonth = new CalendarDate(year, month, 1);
@@ -81,14 +85,11 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 
 	const currentDate = today(serverTz);
 
-	const formatter = new DateFormatter('es-MX', {
-		year: 'numeric',
-		month: 'long',
-	});
-
 	return (
 		<TopBarPageTemplate
-			subtitle={`Asistencias de ${student.givenName} ${student.familyName}`} title={`${formatter.format(firstDayOfMonth.toDate(serverTz))}`} topBarItems={(
+			title={title}
+			subtitle={subtitle}
+			topBarItems={(
 				<>
 					<span className='grow'/>
 					<LinkButton href={`/groups/${group.id}/student/${student.id}/${previousMonth.year}-${previousMonth.month}`} color='secondary'>

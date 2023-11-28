@@ -1,6 +1,6 @@
 import React from 'react';
 import {notFound} from 'next/navigation';
-import {CalendarDate, getLocalTimeZone, startOfMonth, today} from '@internationalized/date';
+import {CalendarDate, DateFormatter, getLocalTimeZone, startOfMonth, today} from '@internationalized/date';
 import {getStudentWithGroupAttendances} from '@/lib/students.ts';
 import GroupStudentClientPage
 	from '@/app/groups/[groupId]/student/[studentId]/[yearMonth]/group-student-client-page.tsx';
@@ -45,7 +45,14 @@ export default async function GroupStudentAttendancePage(props: GroupStudentAtte
 		notFound();
 	}
 
+	const firstDayOfMonth = new CalendarDate(year, month, 1);
+
+	const formatter = new DateFormatter('es-MX', {
+		year: 'numeric',
+		month: 'long',
+	});
+
 	return (
-		<GroupStudentClientPage student={student} year={year} month={month} serverTz={getLocalTimeZone()}/>
+		<GroupStudentClientPage subtitle={`Asistencias de ${student.givenName} ${student.familyName}`} title={`${formatter.format(firstDayOfMonth.toDate(getLocalTimeZone()))}`} student={student} year={year} month={month} serverTz={getLocalTimeZone()}/>
 	);
 }
