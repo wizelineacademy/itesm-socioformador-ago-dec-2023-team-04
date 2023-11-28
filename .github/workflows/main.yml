@@ -49,6 +49,7 @@ jobs:
   deploy-db:
     name: Deploy database schema
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
