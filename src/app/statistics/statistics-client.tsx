@@ -1,5 +1,5 @@
 'use client';
-import React, {FormEvent, useState} from 'react';
+import React, {useState} from 'react';
 import {getLocalTimeZone, today} from '@internationalized/date';
 import {AttendanceType} from '@prisma/client';
 import {Item} from 'react-stately';
@@ -9,6 +9,8 @@ import DateRangePicker from '@/components/date-range-picker.tsx';
 import Select from '@/components/select.tsx';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
+import StatisticsBarChart from '@/app/statistics/statistics-bar-chart.tsx';
+import getData from '@/app/statistics/get-data.ts';
 
 export type Groups = {
 	readonly id: number;
@@ -21,9 +23,13 @@ export default function StatisticsClient({groups}: {readonly groups: Groups[]}) 
 
 	const [selectedDates, setSelectedDates] = useState<DateRange | null>(null);
 	const [dateRange, setDateRange] = useState<Date[]>([]);
+	const [initialDate, setInitialDate] = useState();
+	const [endDate, setEndDate] = useState();
 	const handleGetDateRange = (value: DateRange | null) => {
 		setSelectedDates(value);
 		if (selectedDates) {
+			value?.start.toString();
+			value?.end.toString();
 			const startDateString = selectedDates.start.toDate(getLocalTimeZone());
 			const endDateString = selectedDates.end.toDate(getLocalTimeZone());
 			const dateRangeAsStrings: Date[] = [];
@@ -39,20 +45,14 @@ export default function StatisticsClient({groups}: {readonly groups: Groups[]}) 
 		}
 	};
 
-	async function onSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-
-		const formData = new FormData(event.currentTarget);
-		const response = await fetch('api/statistics', {
-			method: 'POST',
-			body: JSON.stringify(formData),
-		});
+	let data = [];
+	async function getGraphData() {
+		data = getData(graphTypeInfo, groupId, dateRange);
 	}
 
 	return (
 		<div className='flex flex-col gap-4 h-full p-4'>
-			{/* eslint-disable-next-line react/jsx-no-bind */}
-			<form className='bg-stone-800 grow rounded p-2' onSubmit={onSubmit}>
+			<div className='bg-stone-800 grow rounded p-2'>
 				<Select
 					label='Seleccione un grupo'
 					items={groups} selectedKey={groupId}
@@ -87,8 +87,10 @@ export default function StatisticsClient({groups}: {readonly groups: Groups[]}) 
 					onChange={value => {
 						handleGetDateRange(value);
 					}}/>
-				<Button type='submit' className='px-2'><Icon name='insert_chart'/>Generar gráfico</Button>
-			</form>
+				<Button className='px-2' color='secondary' onPress={getGraphData}><Icon name='insert_chart'/>Generar gráfico</Button>
+			</div>
+			<h2> Gráfico </h2>
+			<StatisticsBarChart data={data}/>
 		</div>
 	);
 }
