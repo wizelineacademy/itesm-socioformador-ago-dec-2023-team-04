@@ -176,30 +176,34 @@ export const getStudentWithGroupAttendances = cache(async (studentId: number, gr
 	return prisma.student.findUnique({
 		where: {
 			id: studentId,
-			groups: {
-				some: {
-					groupId,
-					group: {
-						users: {
-							some: {
-								id: user.id,
+			groups: user.admin
+				? undefined
+				: {
+					some: {
+						groupId,
+						group: {
+							users: {
+								some: {
+									id: user.id,
+								},
 							},
 						},
 					},
 				},
-			},
 		},
 		include: {
 			groups: {
 				where: {
 					groupId,
-					group: {
-						users: {
-							some: {
-								id: user.id,
+					group: user.admin
+						? undefined
+						: {
+							users: {
+								some: {
+									id: user.id,
+								},
 							},
 						},
-					},
 				},
 				include: {
 					group: {
