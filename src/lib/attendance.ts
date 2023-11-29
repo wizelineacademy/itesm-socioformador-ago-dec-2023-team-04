@@ -1,62 +1,53 @@
 import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 
-export const attendanceOnTime = cache(async (groupId: number, initialDate: Date, endDate: Date) => prisma.attendance.groupBy({
-	by: ['attendanceDate'],
-	where: {
-		groupId,
-		attendanceDate: {
-			gte: initialDate,
-			lte: endDate,
-		},
-		type: 'ON_TIME',
-	},
-	_count: {
-		type: true,
-	},
-}));
+export async function getLastMonthAttendanceOnTime(groupId: number) {
+	const currentDate = new Date();
+	const lastMonthStartDate = new Date();
+	lastMonthStartDate.setMonth(currentDate.getMonth() - 1);
 
-export const attendanceLate = cache(async (groupId: number, initialDate: Date, endDate: Date) => prisma.attendance.groupBy({
-	by: ['attendanceDate'],
-	where: {
-		groupId,
-		attendanceDate: {
-			gte: initialDate,
-			lte: endDate,
+	return prisma.attendance.count({
+		where: {
+			groupId,
+			attendanceDate: {
+				gte: lastMonthStartDate,
+				lte: currentDate,
+			},
+			type: 'ON_TIME',
 		},
-		type: 'LATE',
-	},
-	_count: {
-		type: true,
-	},
-}));
+	});
+}
 
-export const attendanceAbsence = cache(async (groupId: number, initialDate: Date, endDate: Date) => prisma.attendance.groupBy({
-	by: ['attendanceDate'],
-	where: {
-		groupId,
-		attendanceDate: {
-			gte: initialDate,
-			lte: endDate,
-		},
-		type: undefined,
-	},
-	_count: {
-		type: true,
-	},
-}));
+export async function getLastMonthAttendanceLate(groupId: number) {
+	const currentDate = new Date();
+	const lastMonthStartDate = new Date();
+	lastMonthStartDate.setMonth(currentDate.getMonth() - 1);
 
-export const attendanceJustificatedAbsence = cache(async (groupId: number, initialDate: Date, endDate: Date) => prisma.attendance.groupBy({
-	by: ['attendanceDate'],
-	where: {
-		groupId,
-		attendanceDate: {
-			gte: initialDate,
-			lte: endDate,
+	return prisma.attendance.count({
+		where: {
+			groupId,
+			attendanceDate: {
+				gte: lastMonthStartDate,
+				lte: currentDate,
+			},
+			type: 'LATE',
 		},
-		type: 'JUSTIFICATED_ABSENCE',
-	},
-	_count: {
-		type: true,
-	},
-}));
+	});
+}
+
+export async function getLastMonthAttendanceJustificatedAbsence(groupId: number) {
+	const currentDate = new Date();
+	const lastMonthStartDate = new Date();
+	lastMonthStartDate.setMonth(currentDate.getMonth() - 1);
+
+	return prisma.attendance.count({
+		where: {
+			groupId,
+			attendanceDate: {
+				gte: lastMonthStartDate,
+				lte: currentDate,
+			},
+			type: 'JUSTIFICATED_ABSENCE',
+		},
+	});
+}
