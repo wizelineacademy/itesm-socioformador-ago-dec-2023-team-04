@@ -314,6 +314,13 @@ export async function deleteStudents(studentIds: number[]): Promise<number> {
 	}
 
 	return prisma.$transaction(async tx => {
+		await tx.attendance.deleteMany({
+			where: {
+				studentId: {
+					in: studentIds,
+				},
+			},
+		});
 		await tx.studentInGroup.deleteMany({
 			where: {
 				studentId: {
