@@ -1,6 +1,6 @@
 import React from 'react';
 import {List} from 'immutable';
-import GroupStatisticsCard from '@/app/statistics/group-statistics-card.tsx';
+import GroupStatisticsCard from '@/components/group-statistics-card.tsx';
 import {getAllGroupsWithColors} from '@/lib/groups.ts';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {getUserFromSession} from '@/lib/users.ts';

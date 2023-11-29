@@ -1,7 +1,7 @@
 import React from 'react';
 import {AttendanceType} from '@prisma/client';
 import Icon from '@/components/icon.tsx';
-import StatisticsStraightAnglePieChart from '@/app/statistics/statistics-straight-angle-pie-chart.tsx';
+import StatisticsStraightAnglePieChart from '@/components/statistics-straight-angle-pie-chart.tsx';
 import {
 	getLastMonthAttendanceJustificatedAbsence,
 	getLastMonthAttendanceLate,
