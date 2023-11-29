@@ -34,20 +34,3 @@ export async function getLastMonthAttendanceLate(groupId: number) {
 		},
 	});
 }
-
-export async function getLastMonthAttendanceJustificatedAbsence(groupId: number) {
-	const currentDate = new Date();
-	const lastMonthStartDate = new Date();
-	lastMonthStartDate.setMonth(currentDate.getMonth() - 1);
-
-	return prisma.attendance.count({
-		where: {
-			groupId,
-			attendanceDate: {
-				gte: lastMonthStartDate,
-				lte: currentDate,
-			},
-			type: 'JUSTIFICATED_ABSENCE',
-		},
-	});
-}

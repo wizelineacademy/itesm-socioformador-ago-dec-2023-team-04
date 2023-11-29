@@ -3,9 +3,8 @@ import Icon from '@/components/icon.tsx';
 import {
 	getLastMonthAttendanceOnTime,
 	getLastMonthAttendanceLate,
-	getLastMonthAttendanceJustificatedAbsence,
 } from '@/lib/attendance.ts';
-import StatisticsStraightAnglePieChart from '@/components/statistics-straight-angle-pie-chart.tsx';
+import StatisticsPieChart from '@/components/statistics-pie-chart.tsx';
 
 type StatisticsGroupCardProps = {
 	readonly id: number;
@@ -18,12 +17,10 @@ export default async function StatisticsGroupCard(props: StatisticsGroupCardProp
 	const {studentCount, name, color, id} = props;
 	const lastMonthOnTime = await getLastMonthAttendanceOnTime(id);
 	const lastMonthLate = await getLastMonthAttendanceLate(id);
-	const lastMonthJustificatedAbsence = await getLastMonthAttendanceJustificatedAbsence(id);
-	const lastMonthAbsence = (studentCount * 30) - lastMonthJustificatedAbsence - lastMonthLate - lastMonthOnTime;
+	const lastMonthAbsence = (studentCount * 30) - lastMonthLate - lastMonthOnTime;
 	const data = [
 		{type: 'ON_TIME', value: lastMonthOnTime},
 		{type: 'LATE', value: lastMonthLate},
-		{type: 'JUSTIFICATED_ABSENCE', value: lastMonthJustificatedAbsence},
 		{type: 'ABSENCE', value: lastMonthAbsence},
 	];
 	const averageAttendance = (lastMonthOnTime + lastMonthLate) / (studentCount * 30);
@@ -45,11 +42,11 @@ export default async function StatisticsGroupCard(props: StatisticsGroupCardProp
 				{studentCount} estudiante{studentCount === 1 ? '' : 's'}
 			</div>
 			<div className='p-2'>
-				Promedio de asistencia: {averageAttendance}
+				Promedio de asistencia del último mes: {averageAttendance}
 			</div>
 			<div className='p-2'>
 				Gráfica de asistencia en el último mes
-				<StatisticsStraightAnglePieChart data={data}/>
+				<StatisticsPieChart data={data}/>
 			</div>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import React from 'react';
 import {AttendanceType} from '@prisma/client';
 import Icon from '@/components/icon.tsx';
-import StatisticsStraightAnglePieChart from '@/components/statistics-straight-angle-pie-chart.tsx';
+import StatisticsPieChart from '@/components/statistics-pie-chart.tsx';
 import {
 	getLastMonthAttendanceJustificatedAbsence,
 	getLastMonthAttendanceLate,
@@ -56,7 +56,7 @@ export default async function GroupStatisticsCard(props: StatisticsCardProps) {
 			<div className='p-2'>Promedio de asistencia: {averageAttendance}</div>
 			<div className='p-2'>
 				Gráfica de asistencia del último mes
-				<StatisticsStraightAnglePieChart data={data}/>
+				<StatisticsPieChart data={data}/>
 			</div>
 		</div>
 	);
