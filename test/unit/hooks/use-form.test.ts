@@ -15,7 +15,7 @@ describe('useForm', () => {
 		);
 
 		// Assert initial form values
-		expect(result.current.values).toEqual(); // Replace with expected initial entity values
+		expect(result.current.values).toEqual(); /
 
 		// Assert the presence and types of handlers
 		expect(typeof result.current.changeHandler).toBe('object');

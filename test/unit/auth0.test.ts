@@ -8,6 +8,7 @@ describe('Auth0 Management Client', () => {
 
 	beforeAll(() => {
 		// Mock the global fetch function
+		// @ts-ignore
 		global.fetch = mockFetch;
 	});
 

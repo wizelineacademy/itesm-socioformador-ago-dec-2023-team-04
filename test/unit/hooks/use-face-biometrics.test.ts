@@ -1,9 +1,11 @@
-import {expect, jest, test} from '@jest/globals';
+import {expect, test} from '@jest/globals';
 import {renderHook} from '@testing-library/react';
 import useFaceBiometrics, { FaceBiometricsOptions } from '@/lib/hooks/use-face-biometrics.ts';
 import {Input} from "@stock17944/human";
 
+
 const mockInput: Input = {
+	// @ts-ignore
 	image: {
 		// Simulating image data for face detection
 		data: 'TestImage',
@@ -32,6 +34,7 @@ describe('useFaceBiometrics', () => {
 			input: mockInput,
 		};
 
+		// @ts-ignore
 		const { result, waitForNextUpdate } = renderHook(() => useFaceBiometrics(options));
 
 		expect(result.current.isProcessing).toBe(true);
