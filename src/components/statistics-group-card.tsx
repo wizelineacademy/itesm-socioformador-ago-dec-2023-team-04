@@ -28,7 +28,7 @@ export default async function StatisticsGroupCard(props: StatisticsGroupCardProp
 	return (
 		<div className='border border-stone-700 rounded bg-stone-800 w-64 flex flex-col'>
 			<div
-				className='rounded-t pt-6 px-2 grow flex flex-col justify-end'
+				className='rounded-t pt-12 px-2 grow flex flex-col justify-end'
 				style={{
 					backgroundColor: `#${color}`,
 				}}

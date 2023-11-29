@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {Suspense, useMemo} from 'react';
 import {List} from 'immutable';
+import dynamic from 'next/dynamic';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import {getAllGroupsWithColors} from '@/lib/groups.ts';
-import StatisticsGroupCard from '@/components/statistics-group-card.tsx';
+
+const StatisticsGroupCard = dynamic(async () => import('@/components/statistics-group-card.tsx')
+	, {
+		ssr: false,
+		loading: () => <div className='bg-stone-800 animate-pulse w-64 h-96'/>,
+	});
 
 export default async function Home() {
 	const groups = await getAllGroupsWithColors();
