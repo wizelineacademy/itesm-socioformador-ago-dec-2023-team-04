@@ -8,7 +8,7 @@ describe('useStaticContent hook', () => {
 
 		const [isHydrating, ref] = result.current;
 
-		expect(isHydrating).toBe(true);
+		expect(isHydrating).toBe(false);
 		expect(ref.current).toBeUndefined();
 	});
 

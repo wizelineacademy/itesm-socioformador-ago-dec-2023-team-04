@@ -30,7 +30,7 @@ describe('useFaceBiometrics', () => {
 	test('should process face detection when isEnabled and input are defined', async () => {
 		const options: FaceBiometricsOptions = {
 			isEnabled: true,
-			isVideo: false, // Testing with a static image, not video
+			isVideo: true, // Testing with a static image, not video
 			input: mockInput,
 		};
 

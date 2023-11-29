@@ -14,6 +14,7 @@ describe('useWebcam', () => {
 	});
 
 	test('should set permissionGranted and fetch cameras on permission granted', async () => {
+		// @ts-ignore
 		const mockEnumerateDevices = jest.fn().mockResolvedValue([
 			{ kind: 'videoinput', deviceId: '1' },]);
 

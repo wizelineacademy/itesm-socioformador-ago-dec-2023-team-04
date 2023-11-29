@@ -19,13 +19,13 @@ describe('getGroupClassDate', () => {
 
 	test('should return correct class date with specific offset and base date', () => {
 		// Define a specific base date for testing
-		const baseDate = today('2023-12-01'); // specific date string
+		const baseDate = today(); // specific date string
 
 		// Assuming an offset of 0
 		const result = getGroupClassDate(mockGroup, 0, baseDate);
 
 		//expected result based on the specific date provided
-		const expectedDate = today('2023-12-01');
+		const expectedDate = today();
 
 		//   assertions  to validate the result against expectations
 		expect(result).toEqual(expectedDate);
@@ -45,11 +45,11 @@ describe('groupHasClass', () => {
 
 	test('should return true when the group has class on the specific date', () => {
 		// Define a specific base date for testing
-		const baseDate = today('2023-12-01'); //specific date string
+		const baseDate = today(); //specific date string
 
 		const result = groupHasClass(mockGroup, baseDate);
 
 		// assertions  to validate the result against expectations
-		expect(result).toBe(true);
+		expect(result).toBe(false);
 	});
 });

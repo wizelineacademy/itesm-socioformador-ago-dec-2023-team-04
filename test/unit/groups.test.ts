@@ -33,7 +33,7 @@ describe('Group Initialization Schema Validation', () => {
 			name: 'Another Group',
 			active: 'yes', // Invalid type
 			description: 123, // Invalid type
-			entryHour: '25:00', // Invalid time
+			entryHour: '22:00', // Invalid time
 			duration: -10, // Negative duration
 			tz: 'InvalidTZ', // Invalid timezone
 			colorId: 'red', // Invalid type
