@@ -25,16 +25,16 @@ export default withPageAuthRequired(async ({params}: {
 
 	return (
 		<div className='flex flex-col h-full'>
-			<h1 className='text-stone-200 text-xl mb-2'>
+			<h1 className='text-stone-200 text-xl mb-5'>
 				{`${student.givenName} ${student.familyName}`}
 			</h1>
-			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>
+			<TutorContactInfo infoId={notification.tutorId} className='mb-5'/>
 			<h3 className='text-stone-200'>Fecha de envío:</h3>
-			<p className='text-base text-stone-300 mb-4'>
+			<p className='text-base text-stone-300 mb-5'>
 				{notification.sentTime.toLocaleString()}
 			</p>
 			<h3 className='text-stone-200'>Mensaje:</h3>
-			<p className='flex text-stone-200 bg-stone-700 w-full h-full grow rounded text-s min-h-[80px] p-1 border border-stone-600 '>
+			<p className='flex text-stone-400 bg-stone-700 w-full h-full grow rounded text-s min-h-[80px] p-1 border border-stone-600 '>
 				{notification.message}
 			</p>
 		</div>

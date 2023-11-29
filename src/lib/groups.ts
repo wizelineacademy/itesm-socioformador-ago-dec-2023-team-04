@@ -370,6 +370,7 @@ export const getGroupWithStudentsAttendance = cache(async (id: number, date: Dat
 									groupId: id,
 								},
 							},
+							tutors: true,
 						},
 					},
 				},

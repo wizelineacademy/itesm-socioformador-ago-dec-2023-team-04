@@ -19,11 +19,15 @@ export default async function ContactDisplay({infoId, className}: TutorContactIn
 	return (
 		<div className={clsx('flex rounded bg-stone-700 w-full justify-items-stretch p-3 mb-4', className)}>
 			<div className='grid grid-rows-2 grid-cols-1 w-full text-xs text-stone-300 content-center items-center align-middle'>
-				<div className='text-base text-stone-100'>
+				<div className='text-lg text-stone-100 font-bold'>
+					Tutor
+				</div>
+				<div className='text-base text-stone-300'>
+					<Icon className='align-middle mr-1' name='person' size='sm'/>
 					{info.givenName} {info.familyName}
 				</div>
-				<div className='text-base'>
-					<Icon name='phone' size='xs'/>
+				<div className='text-base text-stone-300'>
+					<Icon className='align-middle mr-1' name='phone' size='sm'/>
 					{info.phoneNumber}
 				</div>
 			</div>

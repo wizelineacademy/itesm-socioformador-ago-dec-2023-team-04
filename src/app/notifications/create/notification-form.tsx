@@ -62,16 +62,7 @@ export default function 	NotificationForm(props: NotificationFormProps) {
 				className='mb-4'
 				validate={validate.message}
 			/>
-			<div className='flex justify-between'>
-				<Button
-					color='secondary'
-					variant='outlined'
-					onPress={() => {
-						router.push('/students');
-					}}
-				>Cancelar</Button>
 				<SubmitButton/>
-			</div>
 		</Form>
 	);
 }

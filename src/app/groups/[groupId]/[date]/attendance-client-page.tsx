@@ -11,8 +11,9 @@ import {
 	today,
 	toTime,
 } from '@internationalized/date';
-import {useListData} from 'react-stately';
-import {type User} from '@prisma/client';
+import {Item, useListData} from 'react-stately';
+import {type Tutor, type User} from '@prisma/client';
+import {redirect} from 'next/navigation';
 import {type Serializable} from '@/lib/serializable.ts';
 import {type GroupWithStudentsAttendance} from '@/lib/groups.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
@@ -24,6 +25,7 @@ import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
 import submitAttendancesAction from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
+import SendNotificationsDialog from '@/app/groups/[groupId]/[date]/send-notification.tsx';
 import {useToasts} from '@/components/toast.tsx';
 
 export type AttendanceClientPageProps = {
@@ -38,6 +40,7 @@ const columnHelper = createColumnHelper<{
 	givenName: string;
 	familyName: string;
 	attendance: AttendanceValue | null;
+	tutors: Tutor[];
 }>();
 
 export default function AttendanceClientPage(props: AttendanceClientPageProps) {
@@ -67,6 +70,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			id: student.studentId,
 			givenName: student.student.givenName,
 			familyName: student.student.familyName,
+			tutors: student.student.tutors,
 			attendance: attendance ? {
 				date: toCalendarDate(fromDate(new Date(attendance.attendanceDate), group.tz)),
 				time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), group.tz)) : null,
@@ -90,6 +94,12 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			header: 'Apellido(s)',
 			cell: props => (
 				props.cell.renderValue()
+			),
+		}),
+		columnHelper.accessor('tutors', {
+			header: 'Notificación',
+			cell: props => (
+				<SendNotificationsDialog familyName={props.row.original.familyName} givenName={props.row.original.givenName} studentId={props.row.original.id} tutors={props.cell.getValue()}/>
 			),
 		}),
 		columnHelper.accessor('attendance', {
@@ -162,8 +172,9 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					colClassNames={[
 						'',
 						'',
-						'w-0',
+						'',
 						'w-12',
+						'w-0',
 					]}
 					getDetailsLink={({id}) => `/groups/${group.id}/student/${id}`}
 					data={attendances.items} columns={columns}

@@ -20,7 +20,6 @@ export default async function GroupDatePage(props: EditGroupDetailPageProps) {
 	const date = parseDate(params.date);
 
 	const group = await getGroupWithStudentsAttendance(id, date.toDate(getLocalTimeZone()));
-
 	if (group === null) {
 		redirect('/groups');
 	}
