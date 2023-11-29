@@ -5,6 +5,7 @@ export const studentInitSchema = z.object({
 	registration: z.string(),
 	givenName: z.string(),
 	familyName: z.string(),
+	tutors: json(z.array(z.number())),
 	biometricData: json(z.array(z.number()).min(1, 'Los datos biometricos son requeridos')),
 });
 

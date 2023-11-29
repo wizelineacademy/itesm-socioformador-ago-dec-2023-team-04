@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {type ReactNode} from 'react';
 import {revalidatePath} from 'next/cache';
 import {type Metadata} from 'next';
 import {deleteStudents, getAllStudents} from '@/lib/students.ts';
@@ -9,7 +9,13 @@ export const metadata: Metadata = {
 	description: 'metaphora. Student Attendance Tracking System',
 };
 
-export default async function StudentsLayout({children}: {children: React.ReactNode}) {
+export type StudentsLayoutProps = {
+	readonly children: ReactNode;
+};
+
+export default async function StudentsLayout(props: StudentsLayoutProps) {
+	const {children} = props;
+
 	const students = await getAllStudents();
 
 	const deleteStudentsAction = async (students: number[]) => {

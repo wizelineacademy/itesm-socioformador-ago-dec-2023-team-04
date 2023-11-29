@@ -12,5 +12,5 @@ export default function useStaticContent() {
 		}
 	}, []);
 
-	return [isHydrating && ref.current === undefined, ref] as const;
+	return [isHydrating, ref] as const;
 }

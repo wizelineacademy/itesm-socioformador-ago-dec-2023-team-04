@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import {type Student} from '@prisma/client';
 import Link from 'next/link';
+import {useListData} from 'react-stately';
 import BiometricDataDialog from './biometric-data-dialog.tsx';
 import {Button} from '@/components/button.tsx';
 import ButtonModalTrigger from '@/components/button-modal-trigger.tsx';
@@ -11,9 +12,13 @@ import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
 import SubmitButton from '@/components/submit-button.tsx';
+import SelectTutorsDialog from '@/app/students/select-tutors-dialog.tsx';
+import {StudentSearchResult, type StudentWithTutors} from '@/lib/students.ts';
+import {type TutorsSearchResult} from '@/lib/tutors.ts';
+import LinkButton from '@/components/link-button.tsx';
 
 export type StudentCreationFormProps = {
-	readonly student: Student;
+	readonly student: StudentWithTutors;
 	readonly action: (state: FormState<Partial<StudentInit>>, data: FormData) => Promise<FormState<Partial<StudentInit>>>;
 } | {
 	readonly action: (state: FormState<StudentInit>, data: FormData) => Promise<FormState<StudentInit>>;
@@ -24,6 +29,10 @@ export default function StudentForm(props: StudentCreationFormProps) {
 	const student = 'student' in props ? props.student : undefined;
 	const [biometricData, setBiometricData] = useState<number[] | undefined>(student?.biometricData);
 
+	const tutors = useListData<TutorsSearchResult>({
+		initialItems: student?.tutors ?? [],
+	});
+
 	const validate = formValidators(studentInitSchema);
 
 	return (
@@ -33,6 +42,7 @@ export default function StudentForm(props: StudentCreationFormProps) {
 			}}
 			action={action} staticValues={{
 				biometricData: biometricData ?? undefined,
+				tutors: tutors.items.map(tutor => tutor.id),
 			}}
 		>
 			<TextField
@@ -86,6 +96,11 @@ export default function StudentForm(props: StudentCreationFormProps) {
 					)
 				}
 			</ButtonModalTrigger>
+
+			<p className='mb-2'>
+				Hay {tutors.items.length} tutor(es) asignado(s) a este estudiante.
+			</p>
+			<SelectTutorsDialog tutors={tutors}/>
 
 			<div className='flex justify-between'>
 				<Link href='/students'>

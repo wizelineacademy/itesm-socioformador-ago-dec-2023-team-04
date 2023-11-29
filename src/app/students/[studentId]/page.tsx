@@ -1,7 +1,7 @@
 import React from 'react';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
-import {getStudentById, updateStudent} from '@/lib/students.ts';
+import {getStudentByIdWithTutors, updateStudent} from '@/lib/students.ts';
 import StudentForm from '@/app/students/student-form.tsx';
 import {type FormState} from '@/components/form.tsx';
 import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
@@ -17,7 +17,7 @@ export type StudentEditPageProps = {
 export default async function StudentEditPage(props: StudentEditPageProps) {
 	const {params} = props;
 	const studentId = Number.parseInt(params.studentId, 10);
-	const student = await getStudentById(studentId);
+	const student = await getStudentByIdWithTutors(studentId);
 
 	if (student === null) {
 		redirect('/students');

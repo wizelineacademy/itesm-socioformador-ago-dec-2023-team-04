@@ -14,11 +14,12 @@ import groupInitSchema, {type GroupInit} from '@/lib/schemas/group.ts';
 import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type GroupByIdWithStudents} from '@/lib/groups.ts';
-import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
+import SelectTutorsDialog from '@/app/students/select-tutors-dialog.tsx';
 import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
 import {NumberField} from '@/components/number-field.tsx';
 import {type StudentSearchResult} from '@/lib/students.ts';
 import SubmitButton from '@/components/submit-button.tsx';
+import SelectStudentsDialog from '@/app/groups/select-students-dialog.tsx';
 
 export type GroupFormProps = {
 	readonly colors: Color[];

@@ -3,6 +3,46 @@ import prisma from '@/lib/prisma.ts';
 import {type TutorInit} from '@/lib/schemas/tutor.ts';
 import {getUserFromSession} from '@/lib/users.ts';
 import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
+import {searchForStudentsByName} from '@/lib/students.ts';
+
+export const searchForTutorsByName = async (query: string) => {
+	const user = await getUserFromSession();
+	if (!user) {
+		throw new AuthenticationError();
+	}
+
+	if (!user.admin) {
+		throw new AuthorizationError();
+	}
+
+	return prisma.tutor.findMany({
+		take: 10,
+		select: {
+			id: true,
+			givenName: true,
+			familyName: true,
+		},
+		where: {
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			OR: [
+				{
+					givenName: {
+						contains: query,
+						mode: 'insensitive',
+					},
+				},
+				{
+					familyName: {
+						contains: query,
+						mode: 'insensitive',
+					},
+				},
+			],
+		},
+	});
+};
+
+export type TutorsSearchResult = Awaited<ReturnType<typeof searchForTutorsByName>>[number];
 
 /**
  * Creates a new tutor

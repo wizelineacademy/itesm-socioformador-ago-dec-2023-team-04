@@ -69,12 +69,12 @@ export async function getBestStudentMatch(descriptor: number[]): Promise<Student
  * Retrieves a student from cache by their ID.
  *
  * @async
- * @function getStudentById
+ * @function getStudentByIdWithTutors
  * @param {number} id - The ID of the student to retrieve.
  * @returns {Promise<Student | null>} - A promise that resolves with the student object if found, otherwise null.
  * @throws {AuthenticationError} - If the user is not authenticated.
  */
-export const getStudentById = cache(async (id: number) => {
+export const getStudentByIdWithTutors = cache(async (id: number) => {
 	const user = await getUserFromSession();
 
 	if (!user) {
@@ -103,6 +103,8 @@ export const getStudentById = cache(async (id: number) => {
 		},
 	});
 });
+
+export type StudentWithTutors = Awaited<ReturnType<typeof getStudentByIdWithTutors>>;
 
 /**
  * Retrieves a list of students that match the given query.
@@ -245,7 +247,14 @@ export async function createStudent(data: StudentInit) {
 	}
 
 	return prisma.student.create({
-		data,
+		data: {
+			...data,
+			tutors: {
+				connect: data.tutors.map(tutorId => ({
+					id: tutorId,
+				})),
+			},
+		},
 	});
 }
 
@@ -275,7 +284,14 @@ export async function updateStudent(id: number, data: Partial<StudentInit>) {
 		where: {
 			id,
 		},
-		data,
+		data: {
+			...data,
+			tutors: data.tutors ? {
+				set: data.tutors.map(tutorId => ({
+					id: tutorId,
+				})),
+			} : undefined,
+		},
 	});
 }
 

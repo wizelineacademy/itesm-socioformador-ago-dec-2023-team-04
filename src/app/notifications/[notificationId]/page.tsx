@@ -2,7 +2,7 @@ import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
 import {notFound} from 'next/navigation';
 import {getNotificationById} from '@/lib/notification.ts';
-import {getStudentById} from '@/lib/students.ts';
+import {getStudentByIdWithTutors} from '@/lib/students.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
 
 export default withPageAuthRequired(async ({params}: {
@@ -17,7 +17,7 @@ export default withPageAuthRequired(async ({params}: {
 		notFound();
 	}
 
-	const student = await getStudentById(notification.studentId);
+	const student = await getStudentByIdWithTutors(notification.studentId);
 
 	if (student === null) {
 		notFound();

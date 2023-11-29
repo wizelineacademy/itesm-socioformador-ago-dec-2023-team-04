@@ -8,9 +8,9 @@ import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type TutorInit, tutorInitSchema} from '@/lib/schemas/tutor.ts';
 import {type TutorByIdWithStudents} from '@/lib/tutors.ts';
-import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 import {type StudentSearchResult} from '@/lib/students.ts';
 import SubmitButton from '@/components/submit-button.tsx';
+import SelectStudentsDialog from '@/app/groups/select-students-dialog.tsx';
 
 export type TutorCreationFormProps = {
 	readonly tutor: TutorByIdWithStudents;
