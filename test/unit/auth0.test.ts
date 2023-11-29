@@ -13,16 +13,16 @@ describe('Auth0 Management Client', () => {
 	});
 
 	afterAll(() => {
-		// Restore the original fetch function after tests
+		// Restore the original fetch function after tests.
 		global.fetch.mockRestore();
 	});
 
 	test('should initialize ManagementClient with correct configuration', () => {
 		// Ensure management object is initialized correctly
 		expect(management).toBeDefined();
-		expect(management.domain).toBe(process.env.AUTH0_DOMAIN);
-		expect(management.clientId).toBe(process.env.AUTH0_CLIENT_ID);
-		expect(management.clientSecret).toBe(process.env.AUTH0_CLIENT_SECRET);
+		expect(management.customDomains).toBe(process.env.AUTH0_DOMAIN);
+		expect(management.clients).toBe(process.env.AUTH0_CLIENT_ID);
+		expect(management.clientGrants).toBe(process.env.AUTH0_CLIENT_SECRET);
 	});
 
 	test('should use no-cache option in fetch configuration', async () => {

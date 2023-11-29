@@ -33,7 +33,8 @@ export const decodeForm = async <Schema extends z.ZodTypeAny>(
 	const formData
 			= formDataOrRequest instanceof FormData
 				? formDataOrRequest
-				: await formDataOrRequest.clone().formData();
+		// @ts-ignore
+		: await formDataOrRequest.clone().formData();
 
 	const data = Object.fromEntries(
 		[...formData].map(([key, value]) => [key, preprocessFormValue(value)]));
