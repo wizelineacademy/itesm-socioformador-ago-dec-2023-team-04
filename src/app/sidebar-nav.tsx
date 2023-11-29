@@ -13,7 +13,7 @@ export type SidebarNavProps = {
 export default function SidebarNav(props: SidebarNavProps) {
 	const {user} = props;
 	return (
-		<nav className='flex flex-col h-full w-full'>
+		<nav className='flex flex-col h-full w-full fill-stone-50'>
 			<SidebarButton href='/'>
 				<Icon name='home' className='me-2'/>
 				Inicio

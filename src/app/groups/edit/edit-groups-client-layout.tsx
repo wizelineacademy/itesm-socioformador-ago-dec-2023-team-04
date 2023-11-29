@@ -11,6 +11,7 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import {type GroupWithStudentCount} from '@/lib/groups.ts';
+import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<GroupWithStudentCount>();
 
@@ -36,7 +37,7 @@ const columns = [
 export type EditGroupsClientLayoutProps = {
 	readonly children: ReactNode;
 	readonly groups: GroupWithStudentCount[];
-	readonly action: (groups: number[]) => Promise<void>;
+	readonly action: (groups: number[]) => Promise<number>;
 };
 
 export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProps) {
@@ -49,8 +50,23 @@ export default function EditGroupsClientLayout(props: EditGroupsClientLayoutProp
 	const [globalFilter, setGlobalFilter] = useState<string>('');
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
+	const {add} = useToasts();
+
 	const deleteHandler = async () => {
-		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+		try {
+			const count = await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+			add({
+				title: `${count} grupo${count === 1 ? '' : 's'} eliminado${count === 1 ? '' : 's'}.`,
+			});
+		} catch (error) {
+			add({
+				variant: 'error',
+				title: 'Error al borrar los grupos.',
+				description: error instanceof Error ? error.message : undefined,
+			}, {
+				timeout: 5000,
+			});
+		}
 	};
 
 	return (

@@ -6,6 +6,7 @@ export async function handleActionError<T>(previousState: FormState<T>, error: u
 		return {
 			...previousState,
 			...error.formErrors,
+			success: false,
 		};
 	}
 
@@ -14,6 +15,7 @@ export async function handleActionError<T>(previousState: FormState<T>, error: u
 			...previousState,
 			formErrors: [error.message],
 			fieldErrors: {},
+			success: false,
 		};
 	}
 
@@ -21,5 +23,6 @@ export async function handleActionError<T>(previousState: FormState<T>, error: u
 		...previousState,
 		formErrors: ['Unknown form error'],
 		fieldErrors: {},
+		success: false,
 	};
 }

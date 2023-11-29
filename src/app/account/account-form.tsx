@@ -1,41 +1,32 @@
 'use client';
 import React, {useState} from 'react';
 import {type User} from '@prisma/client';
-import {Button} from '@/components/button.tsx';
 import Form, {type FormState} from '@/components/form.tsx';
-import {formValidators} from '@/lib/schemas/utils.ts';
 import {type UserInit, userInitSchema} from '@/lib/schemas/user.ts';
 import TextField from '@/components/text-field.tsx';
-import Checkbox from '@/components/checkbox.tsx';
-import Icon from '@/components/icon.tsx';
+import {formValidators} from '@/lib/schemas/utils.ts';
 import SubmitButton from '@/components/submit-button.tsx';
 
-export type UserUpdateFormProps = {
+export type AccountFormProps = {
 	readonly user: User;
 	readonly action: (state: FormState<Partial<UserInit>>, data: FormData) => Promise<FormState<Partial<UserInit>>>;
-} | {
-	readonly action: (state: FormState<UserInit>, data: FormData) => Promise<FormState<Partial<UserInit>>>;
 };
 
-export default function UserForm(props: UserUpdateFormProps) {
-	const {action} = props;
-	const user = 'user' in props ? props.user : undefined;
-
-	const validate = formValidators(user ? userInitSchema.partial() : userInitSchema);
-
-	const [admin, setAdmin] = useState(user?.admin ?? false);
+export default function AccountForm(props: AccountFormProps) {
+	const {action, user} = props;
 
 	const [password, setPassword] = useState('');
 	const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+	const validate = formValidators(user ? userInitSchema.partial() : userInitSchema);
 
 	return (
 		<Form
 			action={action}
 			successToast={{
-				title: 'Usuario modificado con éxito',
+				title: 'Tu información se ha actualizado con éxito',
 			}}
 			staticValues={{
-				admin: admin ? undefined : false,
 				password: password.trim() === '' ? undefined : password,
 			}}
 		>
@@ -45,7 +36,7 @@ export default function UserForm(props: UserUpdateFormProps) {
 				label='Nombre(s)'
 				className='mb-4 w-full'
 				validate={validate.givenName}
-				defaultValue={user?.givenName}
+				defaultValue={user.givenName}
 			/>
 			<TextField
 				isRequired
@@ -53,7 +44,7 @@ export default function UserForm(props: UserUpdateFormProps) {
 				label='Apellido(s)'
 				className='mb-4'
 				validate={validate.familyName}
-				defaultValue={user?.familyName}
+				defaultValue={user.familyName}
 			/>
 			<TextField
 				isRequired
@@ -61,10 +52,9 @@ export default function UserForm(props: UserUpdateFormProps) {
 				label='Correo electrónico(s)'
 				className='mb-4'
 				validate={validate.email}
-				defaultValue={user?.email}
+				defaultValue={user.email}
 			/>
 			<TextField
-				isRequired={user === undefined}
 				label='Contraseña'
 				className='mb-4'
 				type='password'
@@ -73,7 +63,6 @@ export default function UserForm(props: UserUpdateFormProps) {
 				onChange={setPassword}
 			/>
 			<TextField
-				isRequired={user === undefined}
 				label='Repite la contraseña'
 				className='mb-4'
 				type='password'
@@ -85,9 +74,6 @@ export default function UserForm(props: UserUpdateFormProps) {
 				}}
 				onChange={setPasswordConfirmation}
 			/>
-			<Checkbox name='admin' className='mb-4' isSelected={admin} onChange={setAdmin}>
-				Es administrador
-			</Checkbox>
 			<div className='flex justify-end'>
 				<SubmitButton/>
 			</div>

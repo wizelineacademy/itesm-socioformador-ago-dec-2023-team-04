@@ -10,6 +10,7 @@ import {type TutorInit, tutorInitSchema} from '@/lib/schemas/tutor.ts';
 import {type TutorByIdWithStudents} from '@/lib/tutors.ts';
 import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 import {type StudentSearchResult} from '@/lib/students.ts';
+import SubmitButton from '@/components/submit-button.tsx';
 
 export type TutorCreationFormProps = {
 	readonly tutor: TutorByIdWithStudents;
@@ -34,6 +35,9 @@ export default function TutorForm(props: TutorCreationFormProps) {
 	return (
 		<Form
 			action={action}
+			successToast={{
+				title: 'Tutor modificado con éxito.',
+			}}
 			staticValues={{students: tutorStudents.items.map(student => student.id)}}
 		>
 			<TextField
@@ -71,11 +75,11 @@ export default function TutorForm(props: TutorCreationFormProps) {
 			<div className='flex justify-between'>
 				<Link href='/tutors'>
 					<Button
-						color='secondary' size='sm'
+						color='secondary'
 						variant='outlined'
 					>Cancelar</Button>
 				</Link>
-				<Button color='secondary' type='submit' size='sm'>Confirmar</Button>
+				<SubmitButton/>
 			</div>
 		</Form>
 	);

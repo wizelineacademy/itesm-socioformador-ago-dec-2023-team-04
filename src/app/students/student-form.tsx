@@ -10,6 +10,7 @@ import Icon from '@/components/icon.tsx';
 import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
+import SubmitButton from '@/components/submit-button.tsx';
 
 export type StudentCreationFormProps = {
 	readonly student: Student;
@@ -27,6 +28,9 @@ export default function StudentForm(props: StudentCreationFormProps) {
 
 	return (
 		<Form
+			successToast={{
+				title: 'Estudiante modificado con éxito.',
+			}}
 			action={action} staticValues={{
 				biometricData: biometricData ?? undefined,
 			}}
@@ -86,11 +90,11 @@ export default function StudentForm(props: StudentCreationFormProps) {
 			<div className='flex justify-between'>
 				<Link href='/students'>
 					<Button
-						color='secondary' size='sm'
+						color='secondary'
 						variant='outlined'
 					>Cancelar</Button>
 				</Link>
-				<Button color='secondary' type='submit' size='sm'>Confirmar</Button>
+				<SubmitButton/>
 			</div>
 		</Form>
 	);

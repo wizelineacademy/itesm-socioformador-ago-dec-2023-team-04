@@ -11,6 +11,7 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
+import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -32,7 +33,7 @@ const columns = [
 export type StudentClientLayoutProps = {
 	readonly students: Student[];
 	readonly children: React.ReactNode;
-	readonly action: (students: number[]) => Promise<void>;
+	readonly action: (students: number[]) => Promise<number>;
 };
 
 export default function StudentClientLayout(props: StudentClientLayoutProps) {
@@ -41,9 +42,23 @@ export default function StudentClientLayout(props: StudentClientLayoutProps) {
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
+	const {add} = useToasts();
+
 	const handleDelete = async () => {
-		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
-		setSelectedKeys(new Set());
+		try {
+			const count = await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+			add({
+				title: `${count} estudiante${count === 1 ? '' : 's'} eliminado${count === 1 ? '' : 's'}.`,
+			});
+		} catch (error) {
+			add({
+				variant: 'error',
+				title: 'Error al borrar los estudiantes.',
+				description: error instanceof Error ? error.message : undefined,
+			}, {
+				timeout: 5000,
+			});
+		}
 	};
 
 	return (

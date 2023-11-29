@@ -1,33 +1,91 @@
-import React from 'react';
-import clsx from 'clsx';
+'use client';
+import React, {type ComponentProps, createElement, memo, Suspense, use, useDeferredValue} from 'react';
+import {cx} from '@/lib/cva.ts';
+import getIcon from '@/lib/get-icon.ts';
+import useStaticContent from '@/lib/hooks/use-static-content.ts';
 
-export default function Icon({
-	name,
-	className,
-	size = 'md',
-	...props
-}: {
-	readonly className?: string;
+type IconProps = {
 	readonly name: string;
-	readonly size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
-} & React.ComponentProps<'span'>) {
+	readonly weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700;
+	readonly isFilled?: boolean;
+	readonly grade?: -25 | 0 | 200;
+	readonly size?: 'sm' | 'md' | 'lg' | 'xl';
+	readonly className?: string;
+} & ComponentProps<'div'>;
+
+function IconLoader(props: IconProps) {
+	const [isHydrating, ref] = useStaticContent();
+
+	// Only render on the server. The client ignores the JS payload and just accepts whatever the server provides.
+	if (!isHydrating) {
+		return createElement('div', {
+			ref,
+			suppressHydrationWarning: true,
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			dangerouslySetInnerHTML: {
+				__html: '',
+			},
+		});
+	}
+
+	const {name, className, weight = 400, grade = 0, isFilled = true, size = 'md'} = props;
+
+	let properties = '';
+
+	if (weight === 400 && grade === 0 && !isFilled) {
+		properties = 'default';
+	} else {
+		if (weight !== 400) {
+			properties += 'wght' + weight;
+		}
+
+		if (grade) {
+			properties += 'grad' + grade.toString().replace('-', 'N');
+		}
+
+		if (isFilled) {
+			properties += 'fill1';
+		}
+	}
+
+	const icon = use(getIcon(name, {
+		weight,
+		grade,
+		isFilled,
+		size,
+	}));
+
+	if (icon === null) {
+		throw new Error('unknown icon');
+	}
+
 	return (
-		<span
-			{...props} className={clsx(
-				'material-symbols-rounded select-none leading-none',
-				size === 'xs' && 'material-symbols-xs text-base',
-				size === 'sm' && 'material-symbols-sm text-xl',
-				size === 'md' && 'material-symbols-md text-2xl w-6 h-6',
-				size === 'lg' && 'material-symbols-lg text-3xl',
-				size === 'xl' && 'material-symbols-xl text-4xl',
-				size === '2xl' && 'material-symbols-2xl text-5xl',
-				size === '3xl' && 'material-symbols-3xl text-6xl',
-				size === '4xl' && 'material-symbols-4xl text-7xl',
-				size === '5xl' && 'material-symbols-5xl text-8xl',
-				size === '6xl' && 'material-symbols-6xl text-9xl',
-				className)}
-		>
-			{name}
-		</span>
+		<div
+			// eslint-disable-next-line react/no-danger
+			dangerouslySetInnerHTML={{
+				__html: icon,
+			}}
+			suppressHydrationWarning
+			className={cx('fill-current', className)}
+		/>
 	);
 }
+
+const Icon = memo((props: IconProps) => {
+	const {size = 'md', className} = props;
+	return (
+		<Suspense fallback={<div className={cx(
+			'animate-pulse flex items-center justify-center',
+			size === 'sm' && 'w-5 h-5',
+			size === 'md' && 'w-6 h-6',
+			size === 'lg' && 'w-10 h-10',
+			size === 'xl' && 'w-12 h-12',
+			className,
+		)}/>}
+		>
+			<IconLoader {...props}/>
+		</Suspense>
+	);
+});
+
+export default Icon;

@@ -54,6 +54,7 @@ export async function createGroup(data: GroupInit) {
  * @throws {AuthorizationError} - If the user is not authorized to perform the update.
  */
 export async function updateGroup(id: number, data: Partial<GroupInit>) {
+	console.log(data);
 	const user = await getUserFromSession();
 
 	if (!user) {
@@ -137,12 +138,30 @@ export async function deleteGroups(groupIds: number[]): Promise<number> {
 		throw new AuthorizationError();
 	}
 
-	const {count} = await prisma.group.deleteMany({
-		where: {
-			id: {
-				in: groupIds,
+	const {count} = await prisma.$transaction(async tx => {
+		await tx.attendance.deleteMany({
+			where: {
+				groupId: {
+					in: groupIds,
+				},
 			},
-		},
+		});
+
+		await tx.studentInGroup.deleteMany({
+			where: {
+				groupId: {
+					in: groupIds,
+				},
+			},
+		});
+
+		return tx.group.deleteMany({
+			where: {
+				id: {
+					in: groupIds,
+				},
+			},
+		});
 	});
 
 	return count;

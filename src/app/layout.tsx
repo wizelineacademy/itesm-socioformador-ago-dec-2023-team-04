@@ -7,6 +7,7 @@ import '@/app/globals.css';
 import ClientProviders from '@/components/client-providers.tsx';
 import {getUserFromSession} from '@/lib/users.ts';
 import SidebarNav from '@/app/sidebar-nav.tsx';
+import {ToastProvider} from '@/components/toast.tsx';
 
 const sourceSans = Source_Sans_3({
 	subsets: ['latin'],
@@ -34,14 +35,15 @@ export default async function RootLayout({
 		>
 			<ClientProviders>
 				<body className='bg-stone-900 min-w-full min-h-screen'>
-					<div className='bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center'>
-						<Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
-						<SidebarNav user={user}/>
-					</div>
-					<div className='ml-48 min-h-screen'>
-						{children}
-					</div>
-
+					<ToastProvider>
+						<div className='bg-stone-800 h-full fixed flex flex-col w-48 p-4 justify-start items-center'>
+							<Image src={Logo} width={128} alt='logo' className='mt-2 mb-4'/>
+							<SidebarNav user={user}/>
+						</div>
+						<div className='ml-48 min-h-screen'>
+							{children}
+						</div>
+					</ToastProvider>
 				</body>
 			</ClientProviders>
 		</html>

@@ -24,6 +24,7 @@ import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
 import submitAttendancesAction from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
+import {useToasts} from '@/components/toast.tsx';
 
 export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
@@ -110,6 +111,8 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		}),
 	], [attendances, entryHour, group, parsedDate, serverTz]);
 
+	const {add} = useToasts();
+
 	return (
 		<TopBarPageTemplate
 			title={group.name} subtitle={<FormattedDate date={date} tz={group.tz}/>} topBarItems={
@@ -142,6 +145,9 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 									type: attendance.attendance.type,
 								} : null,
 							})), date, group.id);
+							add({
+								title: 'Asistencias actualizadas con éxito',
+							});
 						}}
 					>
 						<Icon name='save' className='me-1'/>

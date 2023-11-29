@@ -35,6 +35,7 @@ export default async function StudentEditPage(props: StudentEditPageProps) {
 		revalidatePath('/students');
 		return {
 			...state,
+			success: true,
 			formErrors: [],
 			fieldErrors: {},
 		};

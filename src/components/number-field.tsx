@@ -58,10 +58,10 @@ export const NumberField = React.forwardRef((
 				<input {...inputProps} ref={inputRef} name={name} className='p-1 bg-transparent min-w-0 w-full text-stone-200 outline-none disabled:text-stone-600 disabled:cursor-not-allowed'/>
 				<div className='flex-none basis-4'>
 					<Button {...incrementButtonProps} variant='text' size='xs' color='tertiary'>
-						<Icon name='arrow_drop_up' size='xs'/>
+						<Icon name='arrow_drop_up' size='sm' className='h-4 w-4'/>
 					</Button>
-					<Button {...decrementButtonProps} variant='text' size='xs' color='tertiary'>
-						<Icon name='arrow_drop_down' size='xs'/>
+					<Button {...decrementButtonProps} variant='text' size='xs' color='tertiary' className='h-4 w-4'>
+						<Icon name='arrow_drop_down' size='sm'/>
 					</Button>
 				</div>
 			</div>

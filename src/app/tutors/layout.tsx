@@ -13,8 +13,9 @@ export default async function StudentsLayout({children}: {children: React.ReactN
 	const tutors = await getAllTutors();
 	const deleteTutorsAction = async (tutors: number[]) => {
 		'use server';
-		await deleteTutors(tutors);
+		const count = await deleteTutors(tutors);
 		revalidatePath('/tutors');
+		return count;
 	};
 
 	return (

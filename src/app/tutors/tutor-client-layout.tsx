@@ -11,6 +11,7 @@ import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import TextField from '@/components/text-field.tsx';
 import TopbarPageTemplate from '@/components/top-bar-page-template.tsx';
+import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<Tutor>();
 
@@ -36,7 +37,7 @@ const columns = [
 export type TutorClientLayoutProps = {
 	readonly tutors: Tutor[];
 	readonly children: React.ReactNode;
-	readonly action: (tutors: number[]) => Promise<void>;
+	readonly action: (tutors: number[]) => Promise<number>;
 };
 
 export default function TutorClientLayout(props: TutorClientLayoutProps) {
@@ -45,10 +46,23 @@ export default function TutorClientLayout(props: TutorClientLayoutProps) {
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
-	const handleDelete = async () => {
-		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+	const {add} = useToasts();
 
-		setSelectedKeys(new Set());
+	const handleDelete = async () => {
+		try {
+			const count = await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+			add({
+				title: `${count} tutor${count === 1 ? '' : 'es'} eliminado${count === 1 ? '' : 's'}.`,
+			});
+		} catch (error) {
+			add({
+				variant: 'error',
+				title: 'Error al borrar los tutores.',
+				description: error instanceof Error ? error.message : undefined,
+			}, {
+				timeout: 5000,
+			});
+		}
 	};
 
 	return (
