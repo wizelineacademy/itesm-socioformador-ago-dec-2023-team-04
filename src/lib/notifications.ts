@@ -1,5 +1,4 @@
 import {cache} from 'react';
-import {revalidatePath} from 'next/cache';
 import {client} from '@/lib/twilio.ts';
 import {type NotificationInit} from '@/lib/schemas/notification.ts';
 import prisma from '@/lib/prisma.ts';
@@ -81,11 +80,14 @@ export const getAllNotificationsWithStudentsAndTutors = cache(async () => prisma
 	},
 }));
 
-export type NotificationsWithStudentsAndTutors = Awaited<ReturnType<typeof getAllNotificationsWithStudentsAndTutors>>;
+export type NotificationsWithStudentsAndTutors = Awaited<ReturnType<typeof getAllNotificationsWithStudentsAndTutors>>[number];
 
-export const getNotificationById = cache(async (id: number) => prisma.tutorNotification.findUnique({
+export const getNotificationByIdWithStudent = cache(async (id: number) => prisma.tutorNotification.findUnique({
 	where: {
 		id,
+	},
+	include: {
+		student: true,
 	},
 }));
 

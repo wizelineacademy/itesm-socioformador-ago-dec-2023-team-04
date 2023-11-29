@@ -1,7 +1,7 @@
 'use client';
 import React, {useMemo} from 'react';
 import {
-	CalendarDate, DateFormatter, fromDate,
+	CalendarDate, fromDate,
 	getWeeksInMonth, isSameMonth, isWeekend,
 	startOfWeek, today, toTime,
 } from '@internationalized/date';

@@ -1,13 +1,11 @@
 'use client';
 import React, {useState} from 'react';
 import {type User} from '@prisma/client';
-import {Button} from '@/components/button.tsx';
 import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type UserInit, userInitSchema} from '@/lib/schemas/user.ts';
 import TextField from '@/components/text-field.tsx';
 import Checkbox from '@/components/checkbox.tsx';
-import Icon from '@/components/icon.tsx';
 import SubmitButton from '@/components/submit-button.tsx';
 
 export type UserUpdateFormProps = {

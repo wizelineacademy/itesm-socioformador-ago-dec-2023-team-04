@@ -31,12 +31,12 @@ const columns = [
 	}),
 	columnHelper.accessor('sentTime', {
 		header: 'Fecha de envío',
-		cell: info => (info.getValue() as Date).toLocaleString(),
+		cell: info => (info.getValue()).toLocaleString(),
 	}),
 ];
 
 export type NotificationClientLayoutProps = {
-	readonly notifications: NotificationsWithStudentsAndTutors;
+	readonly notifications: NotificationsWithStudentsAndTutors[];
 	readonly children: ReactNode;
 	readonly action: (notifications: number[]) => Promise<number>;
 };

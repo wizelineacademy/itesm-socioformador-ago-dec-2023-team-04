@@ -1,6 +1,5 @@
 'use client';
 import React, {useState} from 'react';
-import {type Student} from '@prisma/client';
 import Link from 'next/link';
 import {useListData} from 'react-stately';
 import BiometricDataDialog from './biometric-data-dialog.tsx';
@@ -13,9 +12,8 @@ import {formValidators} from '@/lib/schemas/utils.ts';
 import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
 import SubmitButton from '@/components/submit-button.tsx';
 import SelectTutorsDialog from '@/app/students/select-tutors-dialog.tsx';
-import {StudentSearchResult, type StudentWithTutors} from '@/lib/students.ts';
+import {type StudentWithTutors} from '@/lib/students.ts';
 import {type TutorsSearchResult} from '@/lib/tutors.ts';
-import LinkButton from '@/components/link-button.tsx';
 
 export type StudentCreationFormProps = {
 	readonly student: StudentWithTutors;

@@ -3,7 +3,6 @@ import React from 'react';
 import {useFormStatus} from 'react-dom';
 import {Button} from '@/components/button.tsx';
 import Icon from '@/components/icon.tsx';
-import {cx} from '@/lib/cva.ts';
 
 export default function SubmitButton() {
 	const {pending} = useFormStatus();
