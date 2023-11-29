@@ -1,9 +1,9 @@
 import React, {type ReactNode} from 'react';
 import {type Metadata} from 'next';
 import {revalidatePath} from 'next/cache';
+import {redirect} from 'next/navigation';
 import {getAllNotificationsWithStudentsAndTutors, deleteNotifications} from '@/lib/notifications.ts';
 import NotificationClientLayout from '@/app/notifications/notification-client-layout.tsx';
-import {deleteNotifications} from '@/lib/notifications.ts';
 import Modal from '@/components/modal.tsx';
 
 export const metadata: Metadata = {

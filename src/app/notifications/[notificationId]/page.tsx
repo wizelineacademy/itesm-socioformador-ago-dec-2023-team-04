@@ -1,6 +1,6 @@
 import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
-import {notFound} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
 import {getStudentByIdWithTutors} from '@/lib/students.ts';
 import {getNotificationById} from '@/lib/notifications.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
@@ -14,14 +14,10 @@ export default withPageAuthRequired(async ({params}: {
 	const notification = await getNotificationById(Number.parseInt(notificationId, 10));
 
 	if (notification === null) {
-		notFound();
+		redirect('/notifications');
 	}
 
 	const student = await getStudentByIdWithTutors(notification.studentId);
-
-	if (student === null) {
-		notFound();
-	}
 
 	return (
 		<div className='flex flex-col h-full'>

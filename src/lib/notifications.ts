@@ -1,4 +1,5 @@
 import {cache} from 'react';
+import {revalidatePath} from 'next/cache';
 import {client} from '@/lib/twilio.ts';
 import {type NotificationInit} from '@/lib/schemas/notification.ts';
 import prisma from '@/lib/prisma.ts';
