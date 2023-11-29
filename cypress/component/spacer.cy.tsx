@@ -1,7 +1,7 @@
 import Spacer from "@/components/spacer"
 
 describe('spacer.cy.tsx', () => {
-  it('playground', () => {
+  it('Renderiza correctamente y deveuelve los valores correctos', () => {
 
      cy.mount(<Spacer/>)
 

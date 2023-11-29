@@ -1,12 +1,12 @@
-import {Button} from '@/components/button';
-import 'cypress-real-events/support';
+import React from 'react'
+import { Button } from '@/components/button.tsx'
 
-describe('button.cy.tsx', () => {
-	it('playground', () => {
-		cy.mount(<Button variant='primary' size='xl'>Hola</Button>);
+describe('<Button />', () => {
+  it('Verifica que se activa al presionarlo', () => {
+    // see: https://on.cypress.io/mounting-react
+    cy.mount(<Button variant='contained' size='xl'>Boton</Button>)
 
-		const boton = cy.get('Button');
-
-		boton.realHover().should('have.css', 'background-color', 'rgb(212, 84, 89)');
-	});
-});
+    cy.get('Button').click()
+    cy.get('Button').should('be.enabled')
+  })
+})
