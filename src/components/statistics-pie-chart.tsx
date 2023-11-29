@@ -12,7 +12,7 @@ const renderCustomizedLabel = ({cx, cy, midAngle, innerRadius, outerRadius, perc
 	innerRadius: number;
 	outerRadius: number;
 	percent: number;
-	index: number
+	index: number;
 }) => {
 	const radius = innerRadius + ((outerRadius - innerRadius) * 0.5);
 	const x = cx + (radius * Math.cos(-midAngle * radian));
@@ -25,7 +25,7 @@ const renderCustomizedLabel = ({cx, cy, midAngle, innerRadius, outerRadius, perc
 	);
 };
 
-export default function StatisticsPieChart({data}: { readonly data: any[] }) {
+export default function StatisticsPieChart({data}: {readonly data: any[]}) {
 	return (
 		<PieChart width={232} height={168}>
 			<Pie
