@@ -1,3 +1,4 @@
+import {cache} from 'react';
 import {client} from '@/lib/twilio.ts';
 import {type NotificationInit} from '@/lib/schemas/notification.ts';
 import prisma from '@/lib/prisma.ts';
@@ -29,8 +30,7 @@ export async function createNotification(data: NotificationInit) {
 
 	const notification = await client.messages.create({
 		body: data.message,
-		// From: '+16157459905',
-		from: '+15005550006',
+		from: '+16157459905',
 		to: tutor.phoneNumber,
 	});
 
@@ -72,4 +72,22 @@ export async function deleteNotifications(notificationIds: number[]): Promise<nu
 	});
 	return count;
 }
+
+export const getAllNotificationsWithStudentsAndTutors = cache(async () => prisma.tutorNotification.findMany({
+	include: {
+		tutor: true,
+		student: true,
+	},
+}));
+
+export type NotificationsWithStudentsAndTutors = Awaited<ReturnType<typeof getAllNotificationsWithStudentsAndTutors>>[number];
+
+export const getNotificationByIdWithStudent = cache(async (id: number) => prisma.tutorNotification.findUnique({
+	where: {
+		id,
+	},
+	include: {
+		student: true,
+	},
+}));
 

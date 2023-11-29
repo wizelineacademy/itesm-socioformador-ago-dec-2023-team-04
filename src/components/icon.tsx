@@ -1,5 +1,5 @@
 'use client';
-import React, {type ComponentProps, createElement, memo, Suspense, use, useDeferredValue} from 'react';
+import React, {type ComponentProps, createElement, memo, Suspense, use} from 'react';
 import {cx} from '@/lib/cva.ts';
 import getIcon from '@/lib/get-icon.ts';
 import useStaticContent from '@/lib/hooks/use-static-content.ts';
@@ -29,24 +29,6 @@ function IconLoader(props: IconProps) {
 	}
 
 	const {name, className, weight = 400, grade = 0, isFilled = true, size = 'md'} = props;
-
-	let properties = '';
-
-	if (weight === 400 && grade === 0 && !isFilled) {
-		properties = 'default';
-	} else {
-		if (weight !== 400) {
-			properties += 'wght' + weight;
-		}
-
-		if (grade) {
-			properties += 'grad' + grade.toString().replace('-', 'N');
-		}
-
-		if (isFilled) {
-			properties += 'fill1';
-		}
-	}
 
 	const icon = use(getIcon(name, {
 		weight,

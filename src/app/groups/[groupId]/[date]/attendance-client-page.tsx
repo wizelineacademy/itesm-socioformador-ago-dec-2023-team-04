@@ -12,7 +12,7 @@ import {
 	toTime,
 } from '@internationalized/date';
 import {useListData} from 'react-stately';
-import {type User} from '@prisma/client';
+import {type Tutor, type User} from '@prisma/client';
 import {type Serializable} from '@/lib/serializable.ts';
 import {type GroupWithStudentsAttendance} from '@/lib/groups.ts';
 import FormattedDate from '@/app/groups/[groupId]/[date]/formatted-date.tsx';
@@ -24,13 +24,17 @@ import Icon from '@/components/icon.tsx';
 import {getGroupClassDate} from '@/app/groups/class-dates.ts';
 import {Button} from '@/components/button.tsx';
 import submitAttendancesAction from '@/app/groups/[groupId]/[date]/submit-attendances-action.ts';
+import SendNotificationDialog from '@/app/groups/[groupId]/[date]/send-notification-dialog.tsx';
 import {useToasts} from '@/components/toast.tsx';
+import {type FormState} from '@/components/form.tsx';
+import {type NotificationInit} from '@/lib/schemas/notification.ts';
 
 export type AttendanceClientPageProps = {
 	readonly group: Serializable<GroupWithStudentsAttendance>;
 	readonly date: string;
 	readonly user: User;
 	readonly serverTz: string;
+	readonly sendNotificationAction: (state: FormState<NotificationInit>, data: FormData) => Promise<FormState<NotificationInit>>;
 };
 
 const columnHelper = createColumnHelper<{
@@ -38,6 +42,7 @@ const columnHelper = createColumnHelper<{
 	givenName: string;
 	familyName: string;
 	attendance: AttendanceValue | null;
+	tutors: Tutor[];
 }>();
 
 export default function AttendanceClientPage(props: AttendanceClientPageProps) {
@@ -46,6 +51,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 		date,
 		user,
 		serverTz,
+		sendNotificationAction,
 	} = props;
 
 	const parsedDate = useMemo(() => parseDate(date), [date]);
@@ -67,6 +73,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 			id: student.studentId,
 			givenName: student.student.givenName,
 			familyName: student.student.familyName,
+			tutors: student.student.tutors,
 			attendance: attendance ? {
 				date: toCalendarDate(fromDate(new Date(attendance.attendanceDate), group.tz)),
 				time: attendance.attendanceEntryHour ? toTime(fromDate(new Date(attendance.attendanceEntryHour), group.tz)) : null,
@@ -92,6 +99,12 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 				props.cell.renderValue()
 			),
 		}),
+		columnHelper.accessor('tutors', {
+			header: 'Notificación',
+			cell: props => (
+				<SendNotificationDialog familyName={props.row.original.familyName} givenName={props.row.original.givenName} studentId={props.row.original.id} tutors={props.cell.getValue()} action={sendNotificationAction}/>
+			),
+		}),
 		columnHelper.accessor('attendance', {
 			header: 'Asistencia',
 			// Don't mind the warning, the columns and its dependencies are stable and as such this cell component is stable.
@@ -109,7 +122,7 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					}}/>
 			),
 		}),
-	], [attendances, entryHour, group, parsedDate, serverTz]);
+	], [attendances, entryHour, group, parsedDate, sendNotificationAction, serverTz]);
 
 	const {add} = useToasts();
 
@@ -162,8 +175,9 @@ export default function AttendanceClientPage(props: AttendanceClientPageProps) {
 					colClassNames={[
 						'',
 						'',
-						'w-0',
+						'',
 						'w-12',
+						'w-0',
 					]}
 					getDetailsLink={({id}) => `/groups/${group.id}/student/${id}`}
 					data={attendances.items} columns={columns}

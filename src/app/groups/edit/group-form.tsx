@@ -8,17 +8,16 @@ import TextArea from '@/components/text-area.tsx';
 import TimeField from '@/components/time-field.tsx';
 import ColorRadioGroup from '@/components/color-selector.tsx';
 import Switch from '@/components/switch.tsx';
-import {Button} from '@/components/button.tsx';
-import Icon from '@/components/icon.tsx';
 import groupInitSchema, {type GroupInit} from '@/lib/schemas/group.ts';
 import Form, {type FormState} from '@/components/form.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import {type GroupByIdWithStudents} from '@/lib/groups.ts';
-import SelectTutorsDialog from '@/app/students/select-tutors-dialog.tsx';
 import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
 import {NumberField} from '@/components/number-field.tsx';
 import {type StudentSearchResult} from '@/lib/students.ts';
 import SubmitButton from '@/components/submit-button.tsx';
+import {type UsersSearchResult} from '@/lib/users.ts';
+import SelectUsersDialog from '@/app/groups/edit/select-users-dialog.tsx';
 import SelectStudentsDialog from '@/app/groups/select-students-dialog.tsx';
 
 export type GroupFormProps = {
@@ -83,6 +82,10 @@ export default function GroupForm(props: GroupFormProps) {
 		initialItems: group?.students?.map(student => student.student) ?? [],
 	});
 
+	const groupUsers = useListData<UsersSearchResult>({
+		initialItems: group?.users?.map(user => user) ?? [],
+	});
+
 	return (
 		<Form
 			successToast={{
@@ -92,7 +95,7 @@ export default function GroupForm(props: GroupFormProps) {
 				tz: getLocalTimeZone(),
 				active: active ? undefined : false,
 				students: groupStudents.items.map(student => student.id),
-				users: [],
+				users: groupUsers.items.map(user => user.id),
 				enabledMonday: daysActive.includes('monday'),
 				enabledTuesday: daysActive.includes('tuesday'),
 				enabledWednesday: daysActive.includes('wednesday'),
@@ -187,6 +190,10 @@ export default function GroupForm(props: GroupFormProps) {
 				Hay {groupStudents.items.length} estudiante(s) en el grupo.
 			</p>
 			<SelectStudentsDialog students={groupStudents}/>
+			<p className='mb-2'>
+				{groupUsers.items.length} usuario(s) con acceso al grupo.
+			</p>
+			<SelectUsersDialog users={groupUsers}/>
 			<ColorRadioGroup
 				isRequired
 				name='colorId'

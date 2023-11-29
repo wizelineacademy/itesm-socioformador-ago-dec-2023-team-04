@@ -1,8 +1,7 @@
 import React from 'react';
 import {withPageAuthRequired} from '@auth0/nextjs-auth0';
-import {notFound} from 'next/navigation';
-import {getNotificationById} from '@/lib/notification.ts';
-import {getStudentByIdWithTutors} from '@/lib/students.ts';
+import {redirect} from 'next/navigation';
+import {getNotificationByIdWithStudent} from '@/lib/notifications.ts';
 import TutorContactInfo from '@/components/contact-display.tsx';
 
 export default withPageAuthRequired(async ({params}: {
@@ -11,30 +10,26 @@ export default withPageAuthRequired(async ({params}: {
 	};
 }) => {
 	const notificationId = params!.notificationId!;
-	const notification = await getNotificationById(Number.parseInt(notificationId, 10));
+	const notification = await getNotificationByIdWithStudent(Number.parseInt(notificationId, 10));
 
 	if (notification === null) {
-		notFound();
+		redirect('/notifications');
 	}
 
-	const student = await getStudentByIdWithTutors(notification.studentId);
-
-	if (student === null) {
-		notFound();
-	}
+	const {student} = notification;
 
 	return (
 		<div className='flex flex-col h-full'>
-			<div className='flex justify-between w-full'>
-				<h1 className='text-2xl text-stone-50'/>
-			</div>
-			<TutorContactInfo infoId={notification.tutorId} className='mb-4'/>
+			<h1 className='text-stone-200 text-xl mb-5'>
+				{`${student.givenName} ${student.familyName}`}
+			</h1>
+			<TutorContactInfo infoId={notification.tutorId} className='mb-5'/>
 			<h3 className='text-stone-200'>Fecha de envío:</h3>
-			<p className='text-base text-stone-300 mb-4'>
+			<p className='text-base text-stone-300 mb-5'>
 				{notification.sentTime.toLocaleString()}
 			</p>
 			<h3 className='text-stone-200'>Mensaje:</h3>
-			<p className='flex bg-stone-700 w-full h-full grow rounded text-xs'>
+			<p className='flex text-stone-400 bg-stone-700 w-full h-full grow rounded text-s min-h-[80px] p-1 border border-stone-600 '>
 				{notification.message}
 			</p>
 		</div>

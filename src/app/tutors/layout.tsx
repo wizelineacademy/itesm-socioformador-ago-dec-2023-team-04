@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 	description: 'metaphora. Student Attendance Tracking System',
 };
 
-export default async function StudentsLayout({children}: {children: React.ReactNode}) {
+export default async function TutorsLayout({children}: {children: React.ReactNode}) {
 	const tutors = await getAllTutors();
 	const deleteTutorsAction = async (tutors: number[]) => {
 		'use server';

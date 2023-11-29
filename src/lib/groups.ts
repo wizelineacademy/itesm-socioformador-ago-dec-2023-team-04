@@ -322,6 +322,7 @@ export const getGroupByIdWithStudentIds = cache(async (id: number) => {
 					student: true,
 				},
 			},
+			users: true,
 		},
 	});
 });
@@ -369,6 +370,7 @@ export const getGroupWithStudentsAttendance = cache(async (id: number, date: Dat
 									groupId: id,
 								},
 							},
+							tutors: true,
 						},
 					},
 				},

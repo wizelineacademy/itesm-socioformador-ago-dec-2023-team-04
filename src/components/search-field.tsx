@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSearchFieldState, type SearchFieldProps as SearchFieldStateProps} from 'react-stately';
-import {type AriaSearchFieldProps, type SearchFieldAria, useSearchField} from 'react-aria';
+import {type AriaSearchFieldProps, useSearchField} from 'react-aria';
 import Icon from '@/components/icon.tsx';
 import {cx} from '@/lib/cva.ts';
 import {Button} from '@/components/button.tsx';

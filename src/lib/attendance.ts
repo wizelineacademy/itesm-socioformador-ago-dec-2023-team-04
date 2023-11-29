@@ -1,4 +1,3 @@
-import {cache} from 'react';
 import prisma from '@/lib/prisma.ts';
 
 export async function getLastMonthAttendanceOnTime(groupId: number) {

@@ -1,6 +1,5 @@
 'use client';
 import React, {type ReactNode, useState} from 'react';
-import {type TutorNotification} from '@prisma/client';
 import {createColumnHelper} from '@tanstack/table-core';
 import {type Key} from 'react-stately';
 import Spacer from '@/components/spacer.tsx';
@@ -8,27 +7,36 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import Table from '@/components/table.tsx';
+import {type NotificationsWithStudentsAndTutors} from '@/lib/notifications.ts';
 import {useToasts} from '@/components/toast.tsx';
 
-const columnHelper = createColumnHelper<TutorNotification>();
+const columnHelper = createColumnHelper<NotificationsWithStudentsAndTutors>();
 
 const columns = [
-	columnHelper.accessor('studentId', {
-		header: 'Apellido del alumno',
+	columnHelper.accessor('student.givenName', {
+		header: 'Nombre(s) alumno',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('tutorId', {
-		header: 'Nombre del tutor',
+	columnHelper.accessor('student.familyName', {
+		header: 'Apellido(s) alumno',
 		cell: info => info.getValue(),
 	}),
-	columnHelper.accessor('tutorId', {
-		header: 'Apellido del tutor',
+	columnHelper.accessor('tutor.givenName', {
+		header: 'Nombre(s) tutor',
 		cell: info => info.getValue(),
+	}),
+	columnHelper.accessor('tutor.familyName', {
+		header: 'Apellido(s) tutor',
+		cell: info => info.getValue(),
+	}),
+	columnHelper.accessor('sentTime', {
+		header: 'Fecha de envío',
+		cell: info => (info.getValue()).toLocaleString(),
 	}),
 ];
 
 export type NotificationClientLayoutProps = {
-	readonly notifications: TutorNotification[];
+	readonly notifications: NotificationsWithStudentsAndTutors[];
 	readonly children: ReactNode;
 	readonly action: (notifications: number[]) => Promise<number>;
 };

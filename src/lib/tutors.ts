@@ -3,7 +3,6 @@ import prisma from '@/lib/prisma.ts';
 import {type TutorInit} from '@/lib/schemas/tutor.ts';
 import {getUserFromSession} from '@/lib/users.ts';
 import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
-import {searchForStudentsByName} from '@/lib/students.ts';
 
 export const searchForTutorsByName = async (query: string) => {
 	const user = await getUserFromSession();

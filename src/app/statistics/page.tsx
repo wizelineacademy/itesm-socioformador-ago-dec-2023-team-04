@@ -1,4 +1,4 @@
-import React, {Suspense, useMemo} from 'react';
+import React from 'react';
 import {List} from 'immutable';
 import dynamic from 'next/dynamic';
 import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
