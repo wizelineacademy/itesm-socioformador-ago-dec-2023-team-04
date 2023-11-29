@@ -62,7 +62,7 @@ export default function 	NotificationForm(props: NotificationFormProps) {
 				className='mb-4'
 				validate={validate.message}
 			/>
-				<SubmitButton/>
+			<SubmitButton/>
 		</Form>
 	);
 }
