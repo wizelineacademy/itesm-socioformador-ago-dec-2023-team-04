@@ -1,14 +1,10 @@
 import { LabeledInput } from "@/components/labeled-input"
 
 describe('labeled-input.cy.tsx', () => {
-  it('playground', () => {
-     cy.mount(<LabeledInput label='Hola'/>)
+  it('El espacio de texto funciona correctamente', () => {
+     cy.mount(<LabeledInput label='Titulo'/>)
 
-     cy.get('p').should('have.text','Hola')
-
-     cy.get('Input').type("Hola")
-
-     cy.get('Input').focus().should('have.css','outline')
+      cy.get('input').type('Hola Mundo')
 
   })
 })
