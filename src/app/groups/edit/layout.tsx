@@ -8,9 +8,11 @@ export default async function NotificationsLayout({children}: {children: React.R
 
 	const deleteGroupsAction = async (groups: number[]) => {
 		'use server';
-		await deleteGroups(groups);
+		const count = await deleteGroups(groups);
 
 		revalidatePath('/groups');
+
+		return count;
 	};
 
 	return (

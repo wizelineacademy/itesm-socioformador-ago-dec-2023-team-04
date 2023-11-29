@@ -35,6 +35,7 @@ export default async function EditTutorPage(props: EditTutorPageProps) {
 		revalidatePath('/tutors');
 		return {
 			...state,
+			success: true,
 			formErrors: [],
 			fieldErrors: {},
 		};

@@ -8,7 +8,8 @@ export default async function middleware(request: NextRequest) {
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'nonce-${nonce}' 'strict-dynamic';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data:;
+    img-src 'self' blob: data: 'unsafe-eval';
+    connect-src 'self' fonts.gstatic.com;
     font-src 'self';
     object-src 'none';
     base-uri 'self';

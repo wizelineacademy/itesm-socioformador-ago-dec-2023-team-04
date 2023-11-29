@@ -11,6 +11,7 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import Table from '@/components/table.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
+import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<User>();
 
@@ -36,7 +37,7 @@ const columns = [
 export type UserAdminClientLayoutProps = {
 	readonly children: ReactNode;
 	readonly users: User[];
-	readonly action: (users: number[]) => Promise<void>;
+	readonly action: (users: number[]) => Promise<number>;
 };
 
 export default function UserAdminClientLayout(props: UserAdminClientLayoutProps) {
@@ -44,10 +45,23 @@ export default function UserAdminClientLayout(props: UserAdminClientLayoutProps)
 	const [globalFilter, setGlobalFilter] = useState('');
 	const [selectedStudents, setSelectedStudents] = useState<Set<Key>>(new Set());
 
-	const handleDeleteClick = async () => {
-		await action([...selectedStudents].map(key => Number.parseInt(key.toString(), 10)));
+	const {add} = useToasts();
 
-		setSelectedStudents(new Set());
+	const handleDeleteClick = async () => {
+		try {
+			const count = await action([...selectedStudents].map(key => Number.parseInt(key.toString(), 10)));
+			add({
+				title: `${count} usuario${count === 1 ? '' : 's'} eliminado${count === 1 ? '' : 's'}.`,
+			});
+		} catch (error) {
+			add({
+				variant: 'error',
+				title: 'Error al borrar los usuarios.',
+				description: error instanceof Error ? error.message : undefined,
+			}, {
+				timeout: 5000,
+			});
+		}
 	};
 
 	return (

@@ -14,8 +14,9 @@ export default async function UsersLayout({children}: {children: React.ReactNode
 
 	const deleteUsersAction = async (users: number[]) => {
 		'use server';
-		await deleteUsers(users);
+		const count = await deleteUsers(users);
 		revalidatePath('/users');
+		return count;
 	};
 
 	return (

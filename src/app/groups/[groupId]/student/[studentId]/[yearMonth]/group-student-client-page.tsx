@@ -15,6 +15,7 @@ import {AttendanceChip, type AttendanceValue} from '@/components/attendance-chip
 import {Button} from '@/components/button.tsx';
 import updateStudentAttendancesAction
 	from '@/app/groups/[groupId]/student/[studentId]/[yearMonth]/update-student-attendances-action.ts';
+import {useToasts} from '@/components/toast.tsx';
 
 const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
 
@@ -62,6 +63,8 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 		},
 	});
 
+	const {add} = useToasts();
+
 	const days = useMemo(() => {
 		const days: CalendarDate[] = [];
 
@@ -104,6 +107,9 @@ export default function GroupStudentClientPage(props: GroupStudentClientPageProp
 								attendanceDate: item.date.toDate(serverTz),
 								type: item.type,
 							})));
+							add({
+								title: 'Asistencias actualizadas con éxito',
+							});
 						}}
 					>
 						<Icon name='save' className='me-1'/>

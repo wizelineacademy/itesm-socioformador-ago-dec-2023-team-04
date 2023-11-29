@@ -40,6 +40,7 @@ export default async function EditUserPage(props: EditUserPageProps) {
 		revalidatePath('/users');
 		return {
 			...state,
+			success: true,
 			formErrors: [],
 			fieldErrors: {},
 		};

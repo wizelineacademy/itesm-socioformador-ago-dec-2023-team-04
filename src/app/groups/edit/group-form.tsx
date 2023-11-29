@@ -18,6 +18,7 @@ import SelectStudentsDialog from '@/app/groups/edit/select-students-dialog.tsx';
 import ButtonGroup, {GroupedButton} from '@/components/button-group.tsx';
 import {NumberField} from '@/components/number-field.tsx';
 import {type StudentSearchResult} from '@/lib/students.ts';
+import SubmitButton from '@/components/submit-button.tsx';
 
 export type GroupFormProps = {
 	readonly colors: Color[];
@@ -83,18 +84,21 @@ export default function GroupForm(props: GroupFormProps) {
 
 	return (
 		<Form
+			successToast={{
+				title: 'Grupo modificado con éxito.',
+			}}
 			action={action} staticValues={{
 				tz: getLocalTimeZone(),
 				active: active ? undefined : false,
 				students: groupStudents.items.map(student => student.id),
 				users: [],
-				enabledMonday: daysActive.includes('monday') ? undefined : false,
-				enabledTuesday: daysActive.includes('tuesday') ? undefined : false,
-				enabledWednesday: daysActive.includes('wednesday') ? undefined : false,
-				enabledThursday: daysActive.includes('thursday') ? undefined : false,
-				enabledFriday: daysActive.includes('friday') ? undefined : false,
-				enabledSaturday: daysActive.includes('saturday') ? undefined : false,
-				enabledSunday: daysActive.includes('sunday') ? undefined : false,
+				enabledMonday: daysActive.includes('monday'),
+				enabledTuesday: daysActive.includes('tuesday'),
+				enabledWednesday: daysActive.includes('wednesday'),
+				enabledThursday: daysActive.includes('thursday'),
+				enabledFriday: daysActive.includes('friday'),
+				enabledSaturday: daysActive.includes('saturday'),
+				enabledSunday: daysActive.includes('sunday'),
 				duration,
 			}}
 		>
@@ -156,27 +160,25 @@ export default function GroupForm(props: GroupFormProps) {
 
 			</div>
 			<ButtonGroup label='Días de asistencia' className='mb-4' value={daysActive} onChange={setDaysActive}>
-				<GroupedButton name='enabledMonday' value='monday'>
+				<GroupedButton value='monday'>
 					Lunes
 				</GroupedButton>
-				<GroupedButton name='enabledTuesday' value='tuesday'>
+				<GroupedButton value='tuesday'>
 					Martes
 				</GroupedButton>
-				<GroupedButton name='enabledWednesday' value='wednesday'>
+				<GroupedButton value='wednesday'>
 					Miercoles
 				</GroupedButton>
-				<GroupedButton name='enabledThursday' value='thursday'>
+				<GroupedButton value='thursday'>
 					Jueves
 				</GroupedButton>
-				<GroupedButton
-					name='enabledFriday' value='friday'
-				>
+				<GroupedButton value='friday'>
 					Viernes
 				</GroupedButton>
-				<GroupedButton name='enabledSaturday' value='saturday'>
+				<GroupedButton value='saturday'>
 					Sabado
 				</GroupedButton>
-				<GroupedButton name='enabledSunday' value='sunday'>
+				<GroupedButton value='sunday'>
 					Domingo
 				</GroupedButton>
 			</ButtonGroup>
@@ -201,9 +203,7 @@ export default function GroupForm(props: GroupFormProps) {
 			</Switch>
 
 			<div className='flex justify-end'>
-				<Button color='secondary' size='sm' type='submit'>
-					<Icon name='save'/>Guardar
-				</Button>
+				<SubmitButton/>
 			</div>
 
 		</Form>

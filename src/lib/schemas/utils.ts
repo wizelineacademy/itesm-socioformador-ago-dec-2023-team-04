@@ -123,5 +123,5 @@ export const timeToDate = z.string().transform(value => parseTime(value)).or(z.i
 	return date;
 });
 
-export const boolean = z.literal('off')
+export const boolean = z.literal('false')
 	.transform(value => false).or(z.coerce.boolean());

@@ -1,5 +1,14 @@
 import {type NextRequest, NextResponse} from 'next/server';
-import {fromDate, getDayOfWeek, getLocalTimeZone, now, today} from '@internationalized/date';
+import {
+	fromDate,
+	getDayOfWeek,
+	getLocalTimeZone,
+	now,
+	Time,
+	toCalendarDateTime,
+	today, toTimeZone,
+	toZoned,
+} from '@internationalized/date';
 import {AttendanceType} from '@prisma/client';
 import prisma from '@/lib/prisma.ts';
 
@@ -11,7 +20,7 @@ const daysOfTheWeek = [
 	'Thursday',
 	'Friday',
 	'Saturday',
-];
+] as const;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export async function POST(request: NextRequest, {params: {studentId}}: {
@@ -21,8 +30,6 @@ export async function POST(request: NextRequest, {params: {studentId}}: {
 }) {
 	const id = Number.parseInt(studentId, 10);
 
-	const dayOfTheWeek = getDayOfWeek(today(getLocalTimeZone()), 'en-US');
-
 	const groups = await prisma.group.findMany({
 		where: {
 			active: true,
@@ -31,11 +38,15 @@ export async function POST(request: NextRequest, {params: {studentId}}: {
 					studentId: id,
 				},
 			},
-			[`enabled${daysOfTheWeek[dayOfTheWeek]}`]: true,
 		},
 	});
 
-	const addedAttendances = 0;
+	const filteredGroups = groups.filter(group => {
+		const groupDayOfTheWeek = getDayOfWeek(today(group.tz), 'en-US');
+		return group[`enabled${daysOfTheWeek[groupDayOfTheWeek]}`];
+	});
+
+	console.log(filteredGroups);
 
 	if (groups.length === 0) {
 		return NextResponse.json('No tienes clases hoy.', {
@@ -43,11 +54,10 @@ export async function POST(request: NextRequest, {params: {studentId}}: {
 		});
 	}
 
-	console.log(groups);
-
 	await prisma.$transaction(async tx => {
-		await Promise.all(groups.map(async group => {
-			const entryHour = fromDate(group.entryHour, group.tz).set(today(group.tz));
+		await Promise.all(filteredGroups.map(async group => {
+			const entryTime = new Time(group.entryHour.getUTCHours(), group.entryHour.getUTCMinutes());
+			const entryDateTime = toTimeZone(now('Etc/UTC').set(entryTime), group.tz);
 
 			const currentHour = now(group.tz);
 
@@ -62,28 +72,22 @@ export async function POST(request: NextRequest, {params: {studentId}}: {
 				},
 			});
 
-			console.log(existingAttendance);
-
 			if (existingAttendance !== null) {
 				return;
 			}
 
-			console.log(currentHour);
-			console.log(entryHour);
-
-			if (currentHour < entryHour.add({
+			if (currentHour < entryDateTime.add({
 				minutes: group.duration,
-			}) && currentHour > entryHour.subtract({
+			}) && currentHour > entryDateTime.subtract({
 				minutes: 30,
 			})) {
 				return tx.attendance.create({
 					data: {
-						attendanceDate: new Date(),
+						attendanceDate: currentHour.toDate(),
 						groupId: group.id,
 						studentId: id,
-						attendanceEntryHour: new Date(),
-						attendanceExitHour: new Date(),
-						type: currentHour < entryHour ? AttendanceType.ON_TIME : AttendanceType.LATE,
+						attendanceEntryHour: currentHour.toDate(),
+						type: currentHour < entryDateTime ? AttendanceType.ON_TIME : AttendanceType.LATE,
 					},
 				});
 			}

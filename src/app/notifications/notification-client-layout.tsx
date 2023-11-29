@@ -8,6 +8,7 @@ import TopBarPageTemplate from '@/components/top-bar-page-template.tsx';
 import TextField from '@/components/text-field.tsx';
 import DeleteButton from '@/components/delete-button.tsx';
 import Table from '@/components/table.tsx';
+import {useToasts} from '@/components/toast.tsx';
 
 const columnHelper = createColumnHelper<TutorNotification>();
 
@@ -29,7 +30,7 @@ const columns = [
 export type NotificationClientLayoutProps = {
 	readonly notifications: TutorNotification[];
 	readonly children: ReactNode;
-	readonly action: (notifications: number[]) => Promise<void>;
+	readonly action: (notifications: number[]) => Promise<number>;
 };
 
 export default function NotificationClientLayout(props: NotificationClientLayoutProps) {
@@ -38,9 +39,23 @@ export default function NotificationClientLayout(props: NotificationClientLayout
 
 	const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
 
+	const {add} = useToasts();
+
 	const handleDelete = async () => {
-		await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
-		setSelectedKeys(new Set());
+		try {
+			const count = await action([...selectedKeys].map(key => Number.parseInt(key.toString(), 10)));
+			add({
+				title: `${count} notificaci${count === 1 ? 'ón' : 'ones'} eliminada${count === 1 ? '' : 's'}.`,
+			});
+		} catch (error) {
+			add({
+				variant: 'error',
+				title: 'Error al borrar las notificaciones.',
+				description: error instanceof Error ? error.message : undefined,
+			}, {
+				timeout: 5000,
+			});
+		}
 	};
 
 	return (

@@ -9,6 +9,7 @@ import Select from '@/components/select.tsx';
 import TextArea from '@/components/text-area.tsx';
 import {formValidators} from '@/lib/schemas/utils.ts';
 import Form, {type FormState} from '@/components/form.tsx';
+import SubmitButton from '@/components/submit-button.tsx';
 
 export type NotificationFormProps = {
 	readonly tutor: Tutor[];
@@ -31,6 +32,9 @@ export default function NotificationForm(props: NotificationFormProps) {
 	return (
 		<Form
 			action={action}
+			successToast={{
+				title: 'Notificación creada con éxito',
+			}}
 			staticValues={{
 				studentId: student.id,
 			}}
@@ -60,13 +64,13 @@ export default function NotificationForm(props: NotificationFormProps) {
 			/>
 			<div className='flex justify-between'>
 				<Button
-					color='secondary' size='sm'
+					color='secondary'
 					variant='outlined'
 					onPress={() => {
 						router.push('/students');
 					}}
 				>Cancelar</Button>
-				<Button color='secondary' type='submit' size='sm'>Enviar</Button>
+				<SubmitButton/>
 			</div>
 		</Form>
 	);

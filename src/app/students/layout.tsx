@@ -14,8 +14,9 @@ export default async function StudentsLayout({children}: {children: React.ReactN
 
 	const deleteStudentsAction = async (students: number[]) => {
 		'use server';
-		await deleteStudents(students);
+		const count = await deleteStudents(students);
 		revalidatePath('/students');
+		return count;
 	};
 
 	return (

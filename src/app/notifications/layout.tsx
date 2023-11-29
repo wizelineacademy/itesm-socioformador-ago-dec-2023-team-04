@@ -1,5 +1,6 @@
 import React from 'react';
 import {type Metadata} from 'next';
+import {revalidatePath} from 'next/cache';
 import {getAllNotifications} from '@/lib/notification.ts';
 import NotificationClientLayout from '@/app/notifications/notification-client-layout.tsx';
 import {deleteNotifications} from '@/lib/notifications.ts';
@@ -14,7 +15,9 @@ export default async function NotificationsLayout({children}: {children: React.R
 
 	const deleteNotificationsAction = async (notifications: number[]) => {
 		'use server';
-		await deleteNotifications(notifications);
+		const count = await deleteNotifications(notifications);
+		revalidatePath('/notifications');
+		return count;
 	};
 
 	return (

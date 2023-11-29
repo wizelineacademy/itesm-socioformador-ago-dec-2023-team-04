@@ -39,7 +39,7 @@ export default async function EditGroupDetailPage(props: EditGroupDetailPageProp
 		revalidatePath('/groups');
 
 		return {
-			...state,
+			success: true,
 			formErrors: [],
 			fieldErrors: {},
 		};

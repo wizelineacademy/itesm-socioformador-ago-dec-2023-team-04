@@ -5,7 +5,6 @@ import {type FaceResult} from '@stock17944/human';
 import {useCountdown} from 'usehooks-ts';
 import {clamp, motion, useMotionTemplate, useMotionValue, useSpring, useTransform} from 'framer-motion';
 import {Item} from 'react-stately';
-import {type Metadata} from 'next';
 import useWebcam from '@/lib/hooks/use-webcam.ts';
 import useFaceBiometrics from '@/lib/hooks/use-face-biometrics.ts';
 import {type StudentWithSimilarity} from '@/lib/students.ts';
@@ -101,19 +100,16 @@ export default function AssistancePage() {
 	}, [detectionProgress]);
 
 	const result = useMemo(() => {
-		if (detectionProgress === 100 || submitting) {
+		if (detectionProgress === 100) {
 			return lastResult.current;
 		}
 
 		if (liveResult === undefined) {
-			detectionProgressController.stopCountdown();
-			detectionProgressController.resetCountdown();
 			lastResult.current = undefined;
 			return;
 		}
 
 		if (lastResult.current === undefined) {
-			detectionProgressController.startCountdown();
 			lastResult.current = liveResult;
 			return liveResult;
 		}
@@ -124,12 +120,8 @@ export default function AssistancePage() {
 			return lastResult.current;
 		}
 
-		detectionProgressController.resetCountdown();
-		detectionProgressController.startCountdown();
-		lastResult.current = liveResult;
 		return liveResult;
 		// The countdown controller is not stable
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [liveResult, detectionProgress]);
 
 	useEffect(() => {
@@ -141,7 +133,7 @@ export default function AssistancePage() {
 		videoRef.current.srcObject = cameraStream ?? null;
 	}, [cameraStream]);
 
-	const {data: recognizedStudent, isFetching} = useQuery(['detection', result], async () => {
+	const {data: recognizedStudent} = useQuery(['detection', result], async () => {
 		if (result === undefined) {
 			return;
 		}
@@ -162,27 +154,33 @@ export default function AssistancePage() {
 
 	useEffect(() => {
 		void (async () => {
-			if (detectionProgress !== 100 || !recognizedStudent) {
+			if (recognizedStudent === undefined) {
+				detectionProgressController.stopCountdown();
+				detectionProgressController.resetCountdown();
 				return;
 			}
 
-			setSubmitting(true);
+			detectionProgressController.startCountdown();
 
-			const response = await fetch(`api/students/${recognizedStudent.id}/assistance`, {
+			if (detectionProgress !== 100) {
+				return;
+			}
+
+			const recognition = recognizedStudent;
+
+			const response = await fetch(`api/students/${recognition.id}/assistance`, {
 				method: 'POST',
 			});
 
 			const timeout = setTimeout(() => {
 				detectionProgressController.resetCountdown();
 				setTimeout(() => {
-					setSubmitting(false);
 					detectionProgressController.startCountdown();
 				}, 3000);
 			}, 2000);
 			return () => {
 				if (detectionProgress > 0) {
 					clearTimeout(timeout);
-					setSubmitting(false);
 					detectionProgressController.resetCountdown();
 					detectionProgressController.startCountdown();
 				}
