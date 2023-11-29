@@ -14,10 +14,6 @@ export default function SidebarNav(props: SidebarNavProps) {
 	const {user} = props;
 	return (
 		<nav className='flex flex-col h-full w-full fill-stone-50'>
-			<SidebarButton href='/'>
-				<Icon name='home' className='me-2'/>
-				Inicio
-			</SidebarButton>
 			<SidebarButton href='/groups'>
 				<Icon name='groups' className='me-2'/>
 				Grupos
