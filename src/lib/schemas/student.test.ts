@@ -1,18 +1,19 @@
-import { studentInitSchema } from '@/lib/schemas/student.ts';
 import {expect, test} from '@jest/globals';
+import {type StudentInit, studentInitSchema} from '@/lib/schemas/student.ts';
 
 describe('studentInitSchema', () => {
 	test('should validate a valid student initialization object', () => {
-		const validStudentInit = {
+		const validStudentInit: StudentInit = {
 			registration: '1234',
 			givenName: 'Andy',
 			familyName: 'Garza',
 			biometricData: [1, 2, 3], // Sample biometric data
+			tutors: [1, 2, 3],
 		};
 
 		const validationResult = studentInitSchema.safeParse(validStudentInit);
 
-		expect(validationResult.success).toBe(true);
+		expect(validationResult.success).toBeTruthy();
 	});
 
 	test('should not validate an invalid student initialization object', () => {
@@ -23,16 +24,6 @@ describe('studentInitSchema', () => {
 
 		const validationResult = studentInitSchema.safeParse(invalidStudentInit);
 
-		expect(validationResult.success).toBe(false);
-
-		// Check if ZodError is thrown
-		if (validationResult.error) {
-			// Handle the error message or other properties of the ZodError if needed
-			console.error('Validation failed:', validationResult.error.message);
-		} else {
-			// Handle other cases if necessary
-			console.error('Unexpected validation error');
-		}
+		expect(validationResult.success).toBeFalsy();
 	});
-
 });

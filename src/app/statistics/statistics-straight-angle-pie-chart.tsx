@@ -31,7 +31,8 @@ export default function StatisticsStraightAnglePieChart({data}: {readonly data: 
 				label={renderCustomizedLabel}
 			>
 				{data.map((entry, index) => (
-					<Cell key={`cell-${index}`} fill={colors[index % colors.length]}/>
+					// eslint-disable-next-line react/no-array-index-key
+					<Cell key={index} fill={colors[index % colors.length]}/>
 				))}
 			</Pie>
 		</PieChart>

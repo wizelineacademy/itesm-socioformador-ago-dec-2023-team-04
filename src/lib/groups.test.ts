@@ -1,5 +1,5 @@
 import {expect, test} from '@jest/globals';
-import groupInitSchema  from '@/lib/schemas/group.ts';
+import groupInitSchema from '@/lib/schemas/group.ts';
 
 describe('Group Initialization Schema Validation', () => {
 	test('should validate a valid group initialization object', () => {

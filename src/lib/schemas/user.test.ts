@@ -1,5 +1,5 @@
 import {expect, test} from '@jest/globals';
-import { userInitSchema } from '@/lib/schemas/user.ts';
+import {userInitSchema} from '@/lib/schemas/user.ts';
 
 describe('User Initialization Schema Validation', () => {
 	test('should validate a valid user initialization object', () => {
@@ -26,6 +26,5 @@ describe('User Initialization Schema Validation', () => {
 
 		const validationResult = userInitSchema.safeParse(invalidUserInit);
 		expect(validationResult.success).toBe(false);
-
 	});
 });

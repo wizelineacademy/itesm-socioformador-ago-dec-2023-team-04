@@ -1,5 +1,5 @@
 import {expect, test} from '@jest/globals';
-import { tutorSchema } from '@/lib/schemas/tutor.ts';
+import {tutorInitSchema} from '@/lib/schemas/tutor.ts';
 
 describe('Tutor Schema Validation', () => {
 	test('should validate a valid tutor object', () => {
@@ -11,8 +11,8 @@ describe('Tutor Schema Validation', () => {
 			students: JSON.stringify([1, 2, 3]),
 		};
 
-		const validationResult = tutorSchema.safeParse(validTutor);
-		expect(validationResult.success).toBe(true);
+		const validationResult = tutorInitSchema.safeParse(validTutor);
+		expect(validationResult.success).toBeTruthy();
 	});
 
 	test('should invalidate an invalid tutor object', () => {
@@ -24,7 +24,7 @@ describe('Tutor Schema Validation', () => {
 			students: JSON.stringify([1, 'two', 3]), // Invalid student data
 		};
 
-		const validationResult = tutorSchema.safeParse(invalidTutor);
-		expect(validationResult.success).toBe(false);
+		const validationResult = tutorInitSchema.safeParse(invalidTutor);
+		expect(validationResult.success).toBeFalsy();
 	});
 });

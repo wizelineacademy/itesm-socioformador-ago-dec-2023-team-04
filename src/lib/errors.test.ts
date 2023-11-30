@@ -1,7 +1,5 @@
 import {expect, test} from '@jest/globals';
-import { AuthenticationError, AuthorizationError } from '@/lib/errors.ts';
-//import '@testing-library/jest-dom/extend-expect';
-
+import {AuthenticationError, AuthorizationError} from '@/lib/errors.ts';
 
 describe('AuthenticationError', () => {
 	test('debería crear una instancia de AuthenticationError', () => {

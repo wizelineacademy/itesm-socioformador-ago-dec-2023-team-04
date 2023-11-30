@@ -3,10 +3,9 @@ import {AttendanceType} from '@prisma/client';
 import Icon from '@/components/icon.tsx';
 import StatisticsStraightAnglePieChart from '@/app/statistics/statistics-straight-angle-pie-chart.tsx';
 import {
-	getLastMonthAttendanceJustificatedAbsence,
 	getLastMonthAttendanceLate,
-	getLastMonthAttendanceOnTime
-} from "@/lib/attendance.ts";
+	getLastMonthAttendanceOnTime,
+} from '@/lib/attendance.ts';
 
 type StatisticsCardProps = {
 	readonly id: number;
@@ -20,8 +19,7 @@ export default async function GroupStatisticsCard(props: StatisticsCardProps) {
 
 	const lastMonthOnTime = await getLastMonthAttendanceOnTime(id);
 	const lastMonthLate = await getLastMonthAttendanceLate(id);
-	const lastMonthJustifiedAbsence = await getLastMonthAttendanceJustificatedAbsence(id);
-	const lastMonthAbsence = (studentCount * 30) - lastMonthOnTime - lastMonthLate - lastMonthJustifiedAbsence;
+	const lastMonthAbsence = (studentCount * 30) - lastMonthOnTime - lastMonthLate;
 	const averageAttendance = (lastMonthOnTime + lastMonthAbsence) / (studentCount * 30);
 
 	const data = [
@@ -32,7 +30,7 @@ export default async function GroupStatisticsCard(props: StatisticsCardProps) {
 			type: 'LATE', value: lastMonthLate,
 		},
 		{
-			type: 'JUSTIFICATED_ABSENCE', value: lastMonthJustifiedAbsence,
+			type: 'JUSTIFICATED_ABSENCE', value: 0,
 		},
 		{type: 'ABSENCE', value: lastMonthAbsence},
 	];

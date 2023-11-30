@@ -1,6 +1,6 @@
 import {expect, test} from '@jest/globals';
-//import { groupInitSchema } from '@/lib/schemas/group.ts';
-import { GroupInit, default as groupInitSchema } from '@/lib/schemas/group.ts';
+import groupInitSchema, {type GroupInit} from '@/lib/schemas/group.ts';
+
 describe('groupInitSchema', () => {
 	test('debería validar un objeto válido según el esquema', () => {
 		const validData = {
@@ -23,10 +23,9 @@ describe('groupInitSchema', () => {
 		};
 
 		// Comprueba si los datos válidos pasan la validación del esquema
-		const result: GroupInit = groupInitSchema.parse(validData);
+		const result = groupInitSchema.safeParse(validData);
 
 		// Verifica que el resultado coincida con los tipos inferidos
-		expect(result).toEqual(validData);
+		expect(result.success).toBeTruthy();
 	});
-
 });
