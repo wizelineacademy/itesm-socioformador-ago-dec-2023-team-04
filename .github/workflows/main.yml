@@ -45,7 +45,20 @@ jobs:
         uses: wearerequired/lint-action@v2
         with:
           xo: true
-          
+  test:
+    name: Run project test suites
+    runs-on: ubuntu-latest
+    steps:
+      - name: JEST Report
+        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+        with:
+          # The GitHub Token. This is only used, if none is provided via Env.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cypress tests
+        uses: cypress-io/github-action@v6.5.0
+        with:
+          component: true
+  
   deploy-db:
     name: Deploy database schema
     runs-on: ubuntu-latest
