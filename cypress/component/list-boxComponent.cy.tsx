@@ -1,9 +1,9 @@
-import React from 'react'
-import Component from '@/components/list-box.tsx'
+import React from 'react';
+import ListBox from '@/components/list-box.tsx';
 
-describe('<Component />', () => {
-  it('renders', () => {
-    // see: https://on.cypress.io/mounting-react
-    cy.mount(<Component />)
-  })
-})
+describe('<ListBox />', () => {
+	it('renders', () => {
+		// See: https://on.cypress.io/mounting-react
+		cy.mount(<ListBox/>);
+	});
+});
