@@ -57,11 +57,8 @@ jobs:
           node-version: 18
       - name: Install Node.js dependencies
         run: npm ci
-      - name: JEST Report
-        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
-        with:
-          # The GitHub Token. This is only used, if none is provided via Env.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run tests
+        run: npm run test
           
   component-tests:
     name: Run project component tests
